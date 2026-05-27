@@ -27,6 +27,9 @@ type MobileBottomSheetProps = {
 
 const DEFAULT_SNAPS = [0.25, 0.5, 0.9];
 
+/** Release speed (px/ms) above which a drag counts as a directional flick. */
+const FLICK_VELOCITY = 0.5;
+
 function getViewportHeight() {
   if (typeof window === "undefined") return 800;
   return window.innerHeight;
@@ -111,59 +114,69 @@ export function MobileBottomSheet({
     return () => window.removeEventListener("keydown", onKey);
   }, [open, close]);
 
-  // Drag binding on the handle (and anywhere outside scrollable content).
+  // Drag binding on the handle. Tracks the finger 1:1 while dragging, then snaps
+  // to the nearest point (or the next point in a flick's direction) on release.
   const bind = useDrag(
-    ({ last, velocity: [, vy], direction: [, dy], movement: [, my], cancel }) => {
-      const current = y.get();
-      // Convert "movement" (positive = downward in screen space) into a delta on
-      // our `y` axis (visible height — bigger when up).
-      const next = clamp(
-        current - my,
-        0,
-        snapPositions[snapPositions.length - 1],
-      );
+    ({
+      first,
+      last,
+      velocity: [, vy],
+      direction: [, dy],
+      movement: [, my],
+      memo,
+    }) => {
+      const highest = snapPositions[snapPositions.length - 1];
+      const lowest = snapPositions[0];
+      // Capture the resting position once at drag start so `movement` (which is
+      // cumulative from the start) maps directly onto the sheet height. Reading
+      // the live spring value every frame would re-apply the movement against an
+      // already-updated position and make the sheet jump.
+      const startY: number = first ? y.get() : memo;
+      // `movement` is positive when dragging downward; our `y` axis (visible
+      // height) shrinks as the sheet is pulled down, hence the subtraction.
+      const next = clamp(startY - my, 0, highest);
 
       if (!last) {
         api.start({ y: next, immediate: true });
-        return;
+        return startY;
       }
 
-      // Drag ended — pick a snap target.
-      const flickDown = vy > 0.5 && dy > 0;
-      const flickUp = vy > 0.5 && dy < 0;
-      const lowest = snapPositions[0];
-      const highest = snapPositions[snapPositions.length - 1];
+      // Released — decide where to land.
+      const flickDown = vy > FLICK_VELOCITY && dy > 0;
+      const flickUp = vy > FLICK_VELOCITY && dy < 0;
 
-      if (flickDown && next <= lowest * 1.05) {
-        cancel();
+      // Close when dropped below the midpoint to the lowest snap, or flicked
+      // down from near the bottom.
+      if (next < lowest / 2 || (flickDown && next <= lowest * 1.1)) {
         close();
-        return;
+        return startY;
       }
 
-      let target = snapPositions[0];
+      // Nearest snap point to where the finger let go.
+      let nearestIdx = 0;
       let bestDist = Infinity;
-      for (const s of snapPositions) {
+      snapPositions.forEach((s, i) => {
         const d = Math.abs(s - next);
         if (d < bestDist) {
           bestDist = d;
-          target = s;
+          nearestIdx = i;
         }
-      }
-      if (flickUp) target = highest;
-      if (flickDown && target === snapPositions[0]) {
-        cancel();
-        close();
-        return;
-      }
+      });
+
+      // A flick nudges one step in its direction; otherwise stay on the nearest.
+      let targetIdx = nearestIdx;
+      if (flickUp) targetIdx = Math.min(nearestIdx + 1, snapPositions.length - 1);
+      else if (flickDown) targetIdx = Math.max(nearestIdx - 1, 0);
+
       api.start({
-        y: target,
+        y: snapPositions[targetIdx],
         immediate: reduceMotion,
         config: reduceMotion ? config.stiff : { tension: 320, friction: 32 },
       });
+      return startY;
     },
     {
       axis: "y",
-      from: () => [0, -y.get()],
       pointer: { touch: true },
       filterTaps: true,
     },
