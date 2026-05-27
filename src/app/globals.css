@@ -156,6 +156,26 @@ pre,
   }
 }
 
+/* Pulse applied to a bean's row/card when the search command locates it. */
+.bean-locate-highlight {
+  border-radius: 0.5rem;
+  animation: bean-locate-pulse 1.8s ease-out 1;
+}
+
+@keyframes bean-locate-pulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--color-roast-medium);
+    background-color: color-mix(in srgb, var(--color-roast-medium) 18%, transparent);
+  }
+  60% {
+    background-color: color-mix(in srgb, var(--color-roast-medium) 18%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 6px transparent;
+    background-color: transparent;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

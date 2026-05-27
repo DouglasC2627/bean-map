@@ -105,6 +105,7 @@ export function SeasonalChart({
                 return (
                   <tr
                     key={bean.id}
+                    data-bean-id={bean.id}
                     className="hover:bg-parchment/30 dark:hover:bg-roast-dark/30"
                   >
                     <td className="sticky left-0 z-10 max-w-40 truncate bg-background px-2 py-0.5">

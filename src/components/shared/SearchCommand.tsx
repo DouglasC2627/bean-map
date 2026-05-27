@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { create } from "zustand";
 import {
   CommandDialog,
@@ -50,9 +51,28 @@ function getRecentsSnapshot() {
   return getRecentSearches().join(",");
 }
 
+/**
+ * Where a search result should take the user, decided by the current route:
+ * - "map": select the bean and fly the map to it (Explore / map view).
+ * - "locate": scroll to and highlight the bean's row/card on this page
+ *   (Beans, Insights).
+ * - "navigate": no in-page target here, so open the map focused on the bean.
+ */
+type SearchMode = "map" | "locate" | "navigate";
+
+function modeForPath(pathname: string): SearchMode {
+  if (pathname === "/") return "map";
+  if (pathname.startsWith("/beans") || pathname.startsWith("/explore/insights"))
+    return "locate";
+  return "navigate";
+}
+
 export function SearchCommand({ beans, flavorNotes }: Props) {
   const { open, setOpen } = useSearchUi();
   const [query, setQuery] = useState("");
+  const pathname = usePathname();
+  const router = useRouter();
+  const mode = modeForPath(pathname);
 
   const recentsKey = useSyncExternalStore(
     subscribeRecents,
@@ -94,10 +114,17 @@ export function SearchCommand({ beans, flavorNotes }: Props) {
   const onSelect = (bean: CoffeeBean) => {
     pushRecentSearch(bean.id);
     notifyRecentsChanged();
-    useBeanMap.getState().selectBean(bean.id);
-    useBeanMap.getState().requestFlyTo(bean.coordinates, 5);
     setOpen(false);
     setQuery("");
+
+    if (mode === "locate") {
+      useBeanMap.getState().requestLocate(bean.id);
+    } else if (mode === "navigate") {
+      router.push(`/?bean=${bean.slug}`);
+    } else {
+      useBeanMap.getState().selectBean(bean.id);
+      useBeanMap.getState().requestFlyTo(bean.coordinates, 5);
+    }
   };
 
   const onRemoveRecent = (e: React.MouseEvent, beanId: string) => {
@@ -115,7 +142,11 @@ export function SearchCommand({ beans, flavorNotes }: Props) {
   return (
     <CommandDialog open={open} onOpenChange={setOpen}>
       <CommandInput
-        placeholder="Search beans by name, country, region, or flavor…"
+        placeholder={
+          mode === "locate"
+            ? "Find a bean on this page…"
+            : "Search beans by name, country, region, or flavor…"
+        }
         value={query}
         onValueChange={setQuery}
       />

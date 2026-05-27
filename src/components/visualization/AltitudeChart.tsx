@@ -83,7 +83,7 @@ export function AltitudeChart({ beans, onSelectBean, className, maxRows }: Props
           const widthPct = Math.max(2, ((high - low) / MAX_ALT) * 100);
           const Tag: React.ElementType = onSelectBean ? "button" : "div";
           return (
-            <li key={bean.id}>
+            <li key={bean.id} data-bean-id={bean.id}>
               <Tag
                 type={onSelectBean ? "button" : undefined}
                 onClick={onSelectBean ? () => onSelectBean(bean) : undefined}

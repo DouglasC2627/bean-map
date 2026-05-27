@@ -90,6 +90,10 @@ export interface BeanMapState {
     zoom: number;
   } | null;
   requestFlyTo: (coords: [number, number], zoom?: number) => void;
+  // In-page locate (Beans / Insights): scroll to and highlight a bean's
+  // row/card on the current page rather than flying the map to it.
+  locateRequest: { id: number; beanId: string } | null;
+  requestLocate: (beanId: string) => void;
 }
 
 const DEFAULT_FILTERS: FilterState = {
@@ -214,6 +218,12 @@ export const useBeanMap = create<BeanMapState>((set) => ({
         coords,
         zoom,
       },
+    })),
+
+  locateRequest: null,
+  requestLocate: (beanId) =>
+    set((s) => ({
+      locateRequest: { id: (s.locateRequest?.id ?? 0) + 1, beanId },
     })),
 }));
 

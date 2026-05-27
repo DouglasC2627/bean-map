@@ -5,6 +5,7 @@ import Link from "next/link";
 import { LayoutGrid, Map as MapIcon, Table as TableIcon } from "lucide-react";
 import type { CoffeeBean, FlavorNotesData } from "@/types";
 import { useBeanMap, filterBeans } from "@/store";
+import { useLocateBeanOnPage } from "@/lib/use-locate-bean";
 import {
   cn,
   countryFlagEmoji,
@@ -33,6 +34,7 @@ export function BeansBrowser({ beans, flavorNotes }: Props) {
   const [sortKey, setSortKey] = useState<SortKey>("name");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const filters = useBeanMap((s) => s.filters);
+  useLocateBeanOnPage();
 
   const filtered = useMemo(
     () => filterBeans(beans, filters, flavorNotes),
@@ -168,6 +170,7 @@ export function BeansBrowser({ beans, flavorNotes }: Props) {
               {sorted.map((b) => (
                 <tr
                   key={b.id}
+                  data-bean-id={b.id}
                   className="border-t border-border hover:bg-parchment/30 dark:hover:bg-roast-dark/30"
                 >
                   <td className="px-3 py-2">
@@ -230,7 +233,10 @@ function BeanCard({
   flavorNotes: FlavorNotesData;
 }) {
   return (
-    <li className="rounded-lg border border-border bg-surface/60 p-4 transition hover:border-roast-medium">
+    <li
+      data-bean-id={bean.id}
+      className="rounded-lg border border-border bg-surface/60 p-4 transition hover:border-roast-medium"
+    >
       <div className="mb-1 flex items-center gap-2 text-xs text-muted-foreground">
         <span aria-hidden>{countryFlagEmoji(bean.countryCode)}</span>
         <span>{bean.country}</span>

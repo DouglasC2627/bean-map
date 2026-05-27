@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import type { CoffeeBean, FlavorNotesData } from "@/types";
 import { useBeanMap, filterBeans } from "@/store";
+import { useLocateBeanOnPage } from "@/lib/use-locate-bean";
 import { ActiveFilters } from "@/components/filter/ActiveFilters";
 import { AltitudeChart } from "@/components/visualization/AltitudeChart";
 import { SeasonalChart } from "@/components/visualization/SeasonalChart";
@@ -16,6 +17,7 @@ interface Props {
 export function InsightsClient({ beans, flavorNotes }: Props) {
   const router = useRouter();
   const filters = useBeanMap((s) => s.filters);
+  useLocateBeanOnPage();
   const filtered = useMemo(
     () => filterBeans(beans, filters, flavorNotes),
     [beans, filters, flavorNotes],

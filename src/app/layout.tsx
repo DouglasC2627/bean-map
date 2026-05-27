@@ -4,6 +4,8 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "./globals.css";
 import { ThemeProvider } from "@/components/shared/ThemeProvider";
 import { TopNav } from "@/components/layout/TopNav";
+import { SearchCommand } from "@/components/shared/SearchCommand";
+import { getBeans, getFlavorNotes } from "@/lib/data";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -30,6 +32,10 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  // Mounted once here so the search dialog is available on every page; its
+  // behaviour adapts to the current route (see SearchCommand).
+  const beans = getBeans();
+  const flavorNotes = getFlavorNotes();
   return (
     <html
       lang="en"
@@ -46,6 +52,7 @@ export default function RootLayout({
           <NuqsAdapter>
             <TopNav />
             <main className="flex-1 flex flex-col">{children}</main>
+            <SearchCommand beans={beans} flavorNotes={flavorNotes} />
           </NuqsAdapter>
         </ThemeProvider>
       </body>

@@ -5,7 +5,6 @@ import { Suspense } from "react";
 import type { CoffeeBean, BrewingMethod, FlavorNotesData } from "@/types";
 import { BeanPanel } from "@/components/bean/BeanPanel";
 import { FilterPanel } from "@/components/filter/FilterPanel";
-import { SearchCommand } from "@/components/shared/SearchCommand";
 import { UrlStateSync } from "@/components/shared/UrlStateSync";
 import { ComparisonTray } from "@/components/compare/ComparisonTray";
 import { FlavorWheelOverlay } from "@/components/map/FlavorWheelOverlay";
@@ -38,7 +37,6 @@ export function MapView({ beans, methods, flavorNotes }: Props) {
       <FilterPanel beans={beans} flavorNotes={flavorNotes} />
       <FlavorWheelOverlay beans={beans} flavorNotes={flavorNotes} />
       <BeanPanel beans={beans} methods={methods} flavorNotes={flavorNotes} />
-      <SearchCommand beans={beans} flavorNotes={flavorNotes} />
       <ComparisonTray
         beans={beans}
         methods={methods}
