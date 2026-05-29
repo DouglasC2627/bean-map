@@ -216,7 +216,7 @@ export function MobileBottomSheet({
       >
         <div
           {...bind()}
-          className="flex shrink-0 cursor-grab touch-none items-center justify-center pt-2 pb-1 active:cursor-grabbing"
+          className="flex shrink-0 cursor-grab touch-none items-center justify-center pt-4 pb-3 active:cursor-grabbing"
           aria-label="Drag to resize"
           role="separator"
         >

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { Crosshair, SlidersHorizontal, X } from "lucide-react";
+import { Crosshair, Flower2, SlidersHorizontal, X } from "lucide-react";
 import type {
   CoffeeBean,
   FlavorNotesData,
@@ -78,6 +78,7 @@ export function FilterPanel({ beans, flavorNotes }: Props) {
     requestFitBounds,
     isFilterPanelOpen,
     setFilterPanelOpen,
+    setFlavorWheelOpen,
   } = useBeanMap();
 
   const [showFlavor, setShowFlavor] = useState(false);
@@ -103,7 +104,8 @@ export function FilterPanel({ beans, flavorNotes }: Props) {
       ([a, b]) => a !== 1 || b !== 10,
     )
       ? 1
-      : 0);
+      : 0) +
+    (filters.flavorNoteIds.length ? 1 : 0);
 
   // Group countries present in the dataset
   const availableByContinent = useMemo(() => {
@@ -307,6 +309,27 @@ export function FilterPanel({ beans, flavorNotes }: Props) {
               <span>{filters.altitudeRange[1]}</span>
             </div>
           </div>
+        </Section>
+
+        {/* Flavor Notes — opens the interactive wheel as a popover */}
+        <Section title="Flavor Notes">
+          <button
+            type="button"
+            onClick={() => setFlavorWheelOpen(true)}
+            className="flex w-full items-center justify-between gap-2 rounded-md border border-border bg-surface/60 px-3 py-2 text-sm transition hover:border-roast-medium"
+          >
+            <span className="flex items-center gap-2">
+              <Flower2 className="h-4 w-4" />
+              Flavor wheel
+            </span>
+            {filters.flavorNoteIds.length > 0 ? (
+              <span className="rounded-full bg-roast-medium px-1.5 py-0.5 text-[10px] text-cream">
+                {filters.flavorNoteIds.length}
+              </span>
+            ) : (
+              <span className="text-xs text-muted-foreground">Open</span>
+            )}
+          </button>
         </Section>
 
         {/* Flavor Profile (collapsible) */}
