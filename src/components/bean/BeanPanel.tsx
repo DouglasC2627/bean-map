@@ -25,6 +25,7 @@ import {
   flavorNoteLabel,
 } from "@/lib/utils";
 import { findSimilarBeans } from "@/lib/similar";
+import { flavorGradient } from "@/lib/flavor-gradient";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { fadeUpItem, springSoft, staggerContainer } from "@/lib/motion";
 import { BrewCard } from "@/components/brewing/BrewCard";
@@ -138,15 +139,20 @@ export function BeanPanel({ beans, methods, flavorNotes }: Props) {
 }
 
 /**
- * Decorative coffee-toned banner behind the bean name. With no photography in
- * the dataset, this stands in as the panel's "hero"; the inner layer lags the
- * scroll for a subtle parallax. Static when reduced motion is requested.
+ * Parallax gradient backdrop for the panel header. Its colours are generated
+ * from the bean's flavour profile — dominant flavour-note categories drive the
+ * hue, the numeric profile drives the gradient geometry (see {@link
+ * flavorGradient}) — so every bean gets a distinct, meaningful header. Fills its
+ * relatively-positioned parent and lags the scroll for a subtle parallax;
+ * static when reduced motion is requested.
  */
 function ParallaxHero({
   bean,
+  flavorNotes,
   scrollRef,
 }: {
   bean: CoffeeBean;
+  flavorNotes: FlavorNotesData;
   scrollRef: React.RefObject<HTMLElement | null>;
 }) {
   const reduce = useReducedMotion();
@@ -155,17 +161,15 @@ function ParallaxHero({
   const scale = useTransform(scrollY, [0, 180], [1, 1.12]);
 
   return (
-    <div className="relative h-20 overflow-hidden">
-      <motion.div
-        aria-hidden
-        style={reduce ? undefined : { y, scale }}
-        className="absolute -inset-x-2 -top-6 -bottom-6 bg-linear-to-br from-roast-medium/25 via-parchment to-tan/40 dark:from-roast-dark dark:via-espresso dark:to-roast-dark"
-      >
-        <span className="absolute -bottom-4 right-1 select-none text-[5.5rem] leading-none opacity-20">
-          {countryFlagEmoji(bean.countryCode)}
-        </span>
-      </motion.div>
-    </div>
+    <motion.div
+      aria-hidden
+      style={{
+        backgroundImage: flavorGradient(bean, flavorNotes),
+        ...(reduce ? {} : { y, scale }),
+      }}
+      // Extra headroom up top so the parallax shift never reveals an edge.
+      className="pointer-events-none absolute -inset-x-2 -top-12 bottom-0"
+    />
   );
 }
 
@@ -202,9 +206,21 @@ function BeanPanelContent({
     >
       <motion.div
         variants={fadeUpItem}
-        className="relative border-b border-border"
+        className="relative overflow-hidden border-b border-border"
       >
-        <ParallaxHero bean={bean} scrollRef={scrollRef} />
+        {/* Flavour gradient hero strip (parallax) that melts into the panel base,
+            so the header reads as one piece and the text sits on a calm ground. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 h-32 overflow-hidden"
+        >
+          <ParallaxHero
+            bean={bean}
+            flavorNotes={flavorNotes}
+            scrollRef={scrollRef}
+          />
+          <div className="absolute inset-0 bg-linear-to-b from-transparent via-background/40 to-background" />
+        </div>
         <button
           type="button"
           onClick={onClose}
@@ -213,7 +229,7 @@ function BeanPanelContent({
         >
           <X className="h-5 w-5" />
         </button>
-        <div className="px-5 pb-5">
+        <div className="relative px-5 pb-5 pt-24">
           <div className="mb-1 flex items-center gap-2 text-sm text-muted-foreground">
             <span aria-hidden className="text-lg leading-none">
               {countryFlagEmoji(bean.countryCode)}

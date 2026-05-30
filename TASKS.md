@@ -352,7 +352,7 @@ An interactive world map showcasing coffee beans from around the world, their or
 - [x] Bean cards in lists: staggered fade-up on scroll into view (`whileInView`, row-capped delay)
 - [x] Comparison tray: `layout` + `AnimatePresence` — cards fly in/out and reflow as beans are added/removed
 - [x] Filter chips: entrance/exit animation when toggled (scale+fade `AnimatePresence`)
-- [x] Hero image in bean panel: subtle parallax on scroll (decorative coffee-gradient hero band; no bean photography in dataset)
+- [x] Hero image in bean panel: subtle parallax on scroll (per-bean gradient generated from the bean's flavor profile via `src/lib/flavor-gradient.ts` — dominant flavor-note category colors drive the hue, numeric profile drives the geometry; no external imagery)
 - [x] Page transitions: fade between map and list views (`app/template.tsx`)
 - [x] Loading skeletons: shimmer animation on data loading states (`.skeleton`, `Skeleton` component, map + `/beans` loading)
 - [x] `prefers-reduced-motion`: disable all animations, instant transitions (global rule in globals.css; chart animations gated on `motion-safe:`)
