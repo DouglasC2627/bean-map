@@ -22,6 +22,8 @@ type MobileBottomSheetProps = {
   initialSnap?: number;
   label?: string;
   className?: string;
+  /** Forwarded to the sheet's scrollable content area (e.g. for parallax). */
+  scrollRef?: React.Ref<HTMLDivElement>;
   children: ReactNode;
 };
 
@@ -46,6 +48,7 @@ export function MobileBottomSheet({
   initialSnap = 1,
   label = "Bottom sheet",
   className,
+  scrollRef,
   children,
 }: MobileBottomSheetProps) {
   const titleId = useId();
@@ -225,7 +228,10 @@ export function MobileBottomSheet({
         <span id={titleId} className="sr-only">
           {label}
         </span>
-        <div className="flex-1 overflow-y-auto overscroll-contain">
+        <div
+          ref={scrollRef}
+          className="flex-1 overflow-y-auto overscroll-contain"
+        >
           {children}
         </div>
       </animated.div>

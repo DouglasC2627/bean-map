@@ -172,7 +172,7 @@ export function FilterPanel({ beans, flavorNotes }: Props) {
           // mobile: bottom sheet
           "bottom-0 left-0 right-0 max-h-[85vh] rounded-t-2xl border-t border-border",
           // desktop: left sidebar
-          "sm:top-14 sm:left-0 sm:bottom-0 sm:right-auto sm:w-[280px] sm:max-h-none sm:rounded-none sm:border-t-0 sm:border-r",
+          "sm:top-14 sm:left-0 sm:bottom-0 sm:right-auto sm:w-70 sm:max-h-none sm:rounded-none sm:border-t-0 sm:border-r",
           isFilterPanelOpen
             ? "translate-y-0 sm:translate-x-0"
             : "translate-y-full sm:translate-y-0 sm:-translate-x-full",

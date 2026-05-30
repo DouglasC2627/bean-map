@@ -14,8 +14,11 @@ const CoffeeMap = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="flex h-full min-h-[70vh] flex-1 animate-pulse items-center justify-center bg-parchment text-muted-foreground dark:bg-roast-dark">
-        Loading map…
+      <div className="relative flex h-full min-h-[70vh] flex-1 items-center justify-center overflow-hidden bg-parchment dark:bg-roast-dark">
+        <div className="skeleton absolute inset-0" />
+        <span className="relative text-sm text-muted-foreground">
+          Loading map…
+        </span>
       </div>
     ),
   },

@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import type {
   CoffeeBean,
@@ -9,6 +10,7 @@ import type {
 } from "@/types";
 import { useBeanMap, type FlavorRanges } from "@/store";
 import { cn, countryFlagEmoji } from "@/lib/utils";
+import { chipPop } from "@/lib/motion";
 
 const PROCESSING_LABELS: Record<ProcessingMethod, string> = {
   washed: "Washed",
@@ -95,49 +97,51 @@ export function ActiveFilters({ beans, flavorNotes, className }: Props) {
         Filters:
       </span>
 
-      {filters.regions.map((cc) => (
-        <Chip key={`region-${cc}`} onRemove={() => removeRegion(cc)}>
-          <span aria-hidden>{countryFlagEmoji(cc)}</span>
-          {countryNames.get(cc) ?? cc}
-        </Chip>
-      ))}
-
-      {filters.processingMethods.map((p) => (
-        <Chip key={`proc-${p}`} onRemove={() => toggleProcessing(p)}>
-          {PROCESSING_LABELS[p]}
-        </Chip>
-      ))}
-
-      {filters.roastLevels.map((r) => (
-        <Chip key={`roast-${r}`} onRemove={() => toggleRoast(r)}>
-          {ROAST_LABELS[r]} roast
-        </Chip>
-      ))}
-
-      {altitudeChanged && (
-        <Chip onRemove={() => setAltitudeRange([0, 2500])}>
-          {filters.altitudeRange[0]}–{filters.altitudeRange[1]} masl
-        </Chip>
-      )}
-
-      {changedFlavorAxes.map((axis) => {
-        const [a, b] = filters.flavorRanges[axis];
-        return (
-          <Chip
-            key={`flavor-${axis}`}
-            onRemove={() => setFlavorRange(axis, [1, 10])}
-          >
-            {FLAVOR_LABELS[axis]} {a}–{b}
-          </Chip>
-        );
-      })}
-
-      {flavorNotes &&
-        filters.flavorNoteIds.map((id) => (
-          <Chip key={`note-${id}`} onRemove={() => toggleFlavorNote(id)}>
-            {findFlavorLabel(flavorNotes, id)}
+      <AnimatePresence initial={false}>
+        {filters.regions.map((cc) => (
+          <Chip key={`region-${cc}`} onRemove={() => removeRegion(cc)}>
+            <span aria-hidden>{countryFlagEmoji(cc)}</span>
+            {countryNames.get(cc) ?? cc}
           </Chip>
         ))}
+
+        {filters.processingMethods.map((p) => (
+          <Chip key={`proc-${p}`} onRemove={() => toggleProcessing(p)}>
+            {PROCESSING_LABELS[p]}
+          </Chip>
+        ))}
+
+        {filters.roastLevels.map((r) => (
+          <Chip key={`roast-${r}`} onRemove={() => toggleRoast(r)}>
+            {ROAST_LABELS[r]} roast
+          </Chip>
+        ))}
+
+        {altitudeChanged && (
+          <Chip key="altitude" onRemove={() => setAltitudeRange([0, 2500])}>
+            {filters.altitudeRange[0]}–{filters.altitudeRange[1]} masl
+          </Chip>
+        )}
+
+        {changedFlavorAxes.map((axis) => {
+          const [a, b] = filters.flavorRanges[axis];
+          return (
+            <Chip
+              key={`flavor-${axis}`}
+              onRemove={() => setFlavorRange(axis, [1, 10])}
+            >
+              {FLAVOR_LABELS[axis]} {a}–{b}
+            </Chip>
+          );
+        })}
+
+        {flavorNotes &&
+          filters.flavorNoteIds.map((id) => (
+            <Chip key={`note-${id}`} onRemove={() => toggleFlavorNote(id)}>
+              {findFlavorLabel(flavorNotes, id)}
+            </Chip>
+          ))}
+      </AnimatePresence>
 
       {totalChips > 1 && (
         <button
@@ -160,7 +164,14 @@ function Chip({
   onRemove: () => void;
 }) {
   return (
-    <span className="inline-flex items-center gap-1 rounded-full border border-border bg-parchment px-2 py-0.5 text-xs text-roast-dark dark:bg-roast-dark dark:text-parchment">
+    <motion.span
+      layout
+      variants={chipPop}
+      initial="hidden"
+      animate="show"
+      exit="exit"
+      className="inline-flex items-center gap-1 rounded-full border border-border bg-parchment px-2 py-0.5 text-xs text-roast-dark dark:bg-roast-dark dark:text-parchment"
+    >
       {children}
       <button
         type="button"
@@ -170,6 +181,6 @@ function Chip({
       >
         <X className="h-3 w-3" />
       </button>
-    </span>
+    </motion.span>
   );
 }

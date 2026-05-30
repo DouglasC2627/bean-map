@@ -3,6 +3,7 @@ import { DM_Serif_Display, Inter, JetBrains_Mono } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "./globals.css";
 import { ThemeProvider } from "@/components/shared/ThemeProvider";
+import { MotionProvider } from "@/components/shared/MotionProvider";
 import { TopNav } from "@/components/layout/TopNav";
 import { SearchCommand } from "@/components/shared/SearchCommand";
 import { getBeans, getFlavorNotes } from "@/lib/data";
@@ -50,9 +51,11 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <NuqsAdapter>
-            <TopNav />
-            <main className="flex-1 flex flex-col">{children}</main>
-            <SearchCommand beans={beans} flavorNotes={flavorNotes} />
+            <MotionProvider>
+              <TopNav />
+              <main className="flex-1 flex flex-col">{children}</main>
+              <SearchCommand beans={beans} flavorNotes={flavorNotes} />
+            </MotionProvider>
           </NuqsAdapter>
         </ThemeProvider>
       </body>

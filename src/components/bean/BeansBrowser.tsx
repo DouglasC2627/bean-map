@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { LayoutGrid, Map as MapIcon, Table as TableIcon } from "lucide-react";
 import type { CoffeeBean, FlavorNotesData } from "@/types";
 import { useBeanMap, filterBeans } from "@/store";
@@ -12,6 +13,7 @@ import {
   flavorNoteLabel,
   formatAltitude,
 } from "@/lib/utils";
+import { easeOut } from "@/lib/motion";
 import { ActiveFilters } from "@/components/filter/ActiveFilters";
 import { CompareToggle } from "@/components/compare/CompareToggle";
 
@@ -137,8 +139,13 @@ export function BeansBrowser({ beans, flavorNotes }: Props) {
         </div>
       ) : view === "grid" ? (
         <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {sorted.map((bean) => (
-            <BeanCard key={bean.id} bean={bean} flavorNotes={flavorNotes} />
+          {sorted.map((bean, i) => (
+            <BeanCard
+              key={bean.id}
+              bean={bean}
+              flavorNotes={flavorNotes}
+              index={i}
+            />
           ))}
         </ul>
       ) : (
@@ -228,14 +235,25 @@ export function BeansBrowser({ beans, flavorNotes }: Props) {
 function BeanCard({
   bean,
   flavorNotes,
+  index,
 }: {
   bean: CoffeeBean;
   flavorNotes: FlavorNotesData;
+  index: number;
 }) {
   return (
-    <li
+    <motion.li
       data-bean-id={bean.id}
-      className="rounded-lg border border-border bg-surface/60 p-4 transition hover:border-roast-medium"
+      initial={{ opacity: 0, y: 14 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px 0px" }}
+      transition={{
+        duration: 0.35,
+        ease: easeOut,
+        // Cascade within a row group; capped so later cards don't lag.
+        delay: Math.min((index % 8) * 0.04, 0.28),
+      }}
+      className="rounded-lg border border-border bg-surface/60 p-4 transition-colors hover:border-roast-medium"
     >
       <div className="mb-1 flex items-center gap-2 text-xs text-muted-foreground">
         <span aria-hidden>{countryFlagEmoji(bean.countryCode)}</span>
@@ -280,6 +298,6 @@ function BeanCard({
         </div>
         <CompareToggle beanId={bean.id} variant="compact" />
       </div>
-    </li>
+    </motion.li>
   );
 }

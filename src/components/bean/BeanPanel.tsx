@@ -1,7 +1,14 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import {
+  AnimatePresence,
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import { X } from "lucide-react";
 import type {
   CoffeeBean,
@@ -19,6 +26,7 @@ import {
 } from "@/lib/utils";
 import { findSimilarBeans } from "@/lib/similar";
 import { useMediaQuery } from "@/lib/use-media-query";
+import { fadeUpItem, springSoft, staggerContainer } from "@/lib/motion";
 import { BrewCard } from "@/components/brewing/BrewCard";
 import { BrewDetailModal } from "@/components/brewing/BrewDetailModal";
 import { FlavorRadar } from "@/components/visualization/FlavorRadar";
@@ -42,6 +50,10 @@ export function BeanPanel({ beans, methods, flavorNotes }: Props) {
   const isOpen = Boolean(bean);
   const isMobile = useMediaQuery("(max-width: 639px)");
 
+  // Scroll containers, one per surface, drive the hero parallax.
+  const asideRef = useRef<HTMLElement>(null);
+  const sheetScrollRef = useRef<HTMLDivElement>(null);
+
   const [openRec, setOpenRec] = useState<BrewRecommendation | null>(null);
 
   const sortedRecs = useMemo(
@@ -59,36 +71,46 @@ export function BeanPanel({ beans, methods, flavorNotes }: Props) {
     [bean, beans],
   );
 
-  const content = bean ? (
-    <BeanPanelContent
-      bean={bean}
-      methodById={methodById}
-      flavorNotes={flavorNotes}
-      sortedRecs={sortedRecs}
-      similar={similar}
-      onSelectBean={(id, coords) => {
-        selectBean(id);
-        requestFlyTo(coords, 5);
-      }}
-      onOpenRec={setOpenRec}
-      onClose={clearSelection}
-    />
-  ) : null;
+  const renderContent = (scrollRef: React.RefObject<HTMLElement | null>) =>
+    bean ? (
+      <BeanPanelContent
+        bean={bean}
+        methodById={methodById}
+        flavorNotes={flavorNotes}
+        sortedRecs={sortedRecs}
+        similar={similar}
+        scrollRef={scrollRef}
+        onSelectBean={(id, coords) => {
+          selectBean(id);
+          requestFlyTo(coords, 5);
+        }}
+        onOpenRec={setOpenRec}
+        onClose={clearSelection}
+      />
+    ) : null;
 
   return (
     <>
-      {/* Desktop side panel (sm and up). */}
-      <aside
-        aria-label={bean ? `Profile of ${bean.name}` : "Bean profile"}
-        aria-hidden={!isOpen}
-        className={cn(
-          "fixed z-30 hidden overflow-x-hidden overflow-y-auto bg-background/95 shadow-xl backdrop-blur-sm transition-transform duration-300 ease-out sm:block",
-          "sm:top-14 sm:right-0 sm:bottom-0 sm:left-auto sm:w-[50vw] sm:max-w-none sm:rounded-none sm:border-l lg:w-105",
-          isOpen ? "sm:translate-x-0" : "sm:translate-x-full",
+      {/* Desktop side panel (sm and up) — slides in from the right. */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.aside
+            key="bean-panel"
+            ref={asideRef}
+            aria-label={bean ? `Profile of ${bean.name}` : "Bean profile"}
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={springSoft}
+            className={cn(
+              "fixed z-30 hidden overflow-x-hidden overflow-y-auto bg-background/95 shadow-xl backdrop-blur-sm sm:block",
+              "sm:top-14 sm:right-0 sm:bottom-0 sm:left-auto sm:w-[50vw] sm:max-w-none sm:rounded-none sm:border-l lg:w-105",
+            )}
+          >
+            {renderContent(asideRef)}
+          </motion.aside>
         )}
-      >
-        {content}
-      </aside>
+      </AnimatePresence>
 
       {/* Mobile bottom sheet — draggable, gesture-driven, with snap points. */}
       <MobileBottomSheet
@@ -96,9 +118,10 @@ export function BeanPanel({ beans, methods, flavorNotes }: Props) {
         onClose={clearSelection}
         snapPoints={[0.3, 0.6, 0.92]}
         initialSnap={1}
+        scrollRef={sheetScrollRef}
         label={bean ? `Profile of ${bean.name}` : "Bean profile"}
       >
-        {content}
+        {renderContent(sheetScrollRef)}
       </MobileBottomSheet>
 
       {bean && openRec && (
@@ -114,12 +137,45 @@ export function BeanPanel({ beans, methods, flavorNotes }: Props) {
   );
 }
 
+/**
+ * Decorative coffee-toned banner behind the bean name. With no photography in
+ * the dataset, this stands in as the panel's "hero"; the inner layer lags the
+ * scroll for a subtle parallax. Static when reduced motion is requested.
+ */
+function ParallaxHero({
+  bean,
+  scrollRef,
+}: {
+  bean: CoffeeBean;
+  scrollRef: React.RefObject<HTMLElement | null>;
+}) {
+  const reduce = useReducedMotion();
+  const { scrollY } = useScroll({ container: scrollRef });
+  const y = useTransform(scrollY, [0, 180], [0, 36]);
+  const scale = useTransform(scrollY, [0, 180], [1, 1.12]);
+
+  return (
+    <div className="relative h-20 overflow-hidden">
+      <motion.div
+        aria-hidden
+        style={reduce ? undefined : { y, scale }}
+        className="absolute -inset-x-2 -top-6 -bottom-6 bg-linear-to-br from-roast-medium/25 via-parchment to-tan/40 dark:from-roast-dark dark:via-espresso dark:to-roast-dark"
+      >
+        <span className="absolute -bottom-4 right-1 select-none text-[5.5rem] leading-none opacity-20">
+          {countryFlagEmoji(bean.countryCode)}
+        </span>
+      </motion.div>
+    </div>
+  );
+}
+
 interface ContentProps {
   bean: CoffeeBean;
   methodById: Map<string, BrewingMethod>;
   flavorNotes: FlavorNotesData;
   sortedRecs: BrewRecommendation[];
   similar: CoffeeBean[];
+  scrollRef: React.RefObject<HTMLElement | null>;
   onSelectBean: (id: string, coords: [number, number]) => void;
   onOpenRec: (rec: BrewRecommendation) => void;
   onClose: () => void;
@@ -131,14 +187,33 @@ function BeanPanelContent({
   flavorNotes,
   sortedRecs,
   similar,
+  scrollRef,
   onSelectBean,
   onOpenRec,
   onClose,
 }: ContentProps) {
   return (
-    <>
-      <div className="flex items-start justify-between border-b border-border p-5">
-        <div>
+    <motion.div
+      // Re-key on bean so children re-stagger when switching between beans.
+      key={bean.id}
+      variants={staggerContainer}
+      initial="hidden"
+      animate="show"
+    >
+      <motion.div
+        variants={fadeUpItem}
+        className="relative border-b border-border"
+      >
+        <ParallaxHero bean={bean} scrollRef={scrollRef} />
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close panel"
+          className="absolute right-3 top-3 rounded-md bg-background/70 p-1 text-muted-foreground backdrop-blur-sm hover:bg-parchment hover:text-foreground dark:hover:bg-roast-dark"
+        >
+          <X className="h-5 w-5" />
+        </button>
+        <div className="px-5 pb-5">
           <div className="mb-1 flex items-center gap-2 text-sm text-muted-foreground">
             <span aria-hidden className="text-lg leading-none">
               {countryFlagEmoji(bean.countryCode)}
@@ -150,17 +225,9 @@ function BeanPanelContent({
             {bean.region} · {formatAltitude(bean.altitudeMasl)}
           </p>
         </div>
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Close panel"
-          className="rounded-md p-1 text-muted-foreground hover:bg-parchment hover:text-foreground dark:hover:bg-roast-dark"
-        >
-          <X className="h-5 w-5" />
-        </button>
-      </div>
+      </motion.div>
 
-      <section className="space-y-2 p-5">
+      <motion.section variants={fadeUpItem} className="space-y-2 p-5">
         <div className="flex items-center justify-between">
           <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Flavor Profile
@@ -172,9 +239,12 @@ function BeanPanelContent({
             { id: bean.id, label: bean.name, profile: bean.flavorProfile },
           ]}
         />
-      </section>
+      </motion.section>
 
-      <section className="space-y-2 border-t border-border p-5">
+      <motion.section
+        variants={fadeUpItem}
+        className="space-y-2 border-t border-border p-5"
+      >
         <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Tasting Notes
         </h3>
@@ -188,9 +258,12 @@ function BeanPanelContent({
             </span>
           ))}
         </div>
-      </section>
+      </motion.section>
 
-      <section className="grid grid-cols-2 gap-4 border-t border-border p-5 text-sm">
+      <motion.section
+        variants={fadeUpItem}
+        className="grid grid-cols-2 gap-4 border-t border-border p-5 text-sm"
+      >
         <div>
           <div className="text-xs uppercase tracking-wider text-muted-foreground">
             Processing
@@ -215,9 +288,12 @@ function BeanPanelContent({
           </div>
           <div>{bean.harvestMonths.map(monthName).join(", ")}</div>
         </div>
-      </section>
+      </motion.section>
 
-      <section className="border-t border-border p-5">
+      <motion.section
+        variants={fadeUpItem}
+        className="border-t border-border p-5"
+      >
         <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Recommended brewing
         </h3>
@@ -232,10 +308,13 @@ function BeanPanelContent({
             />
           ))}
         </div>
-      </section>
+      </motion.section>
 
       {similar.length > 0 && (
-        <section className="border-t border-border p-5">
+        <motion.section
+          variants={fadeUpItem}
+          className="border-t border-border p-5"
+        >
           <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Similar beans
           </h3>
@@ -263,10 +342,13 @@ function BeanPanelContent({
               </li>
             ))}
           </ul>
-        </section>
+        </motion.section>
       )}
 
-      <section className="border-t border-border p-5 text-sm">
+      <motion.section
+        variants={fadeUpItem}
+        className="border-t border-border p-5 text-sm"
+      >
         <p>{bean.description}</p>
         <Link
           href={`/bean/${bean.slug}`}
@@ -274,7 +356,7 @@ function BeanPanelContent({
         >
           View full profile →
         </Link>
-      </section>
-    </>
+      </motion.section>
+    </motion.div>
   );
 }
