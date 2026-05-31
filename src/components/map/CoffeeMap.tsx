@@ -16,6 +16,7 @@ import { useTheme } from "next-themes";
 import type { CoffeeBean, FlavorNotesData } from "@/types";
 import { useBeanMap, filterBeans } from "@/store";
 import { RegionHighlight } from "./RegionHighlight";
+import { BeanBelt } from "./BeanBelt";
 
 const LIGHT_STYLE =
   process.env.NEXT_PUBLIC_MAPBOX_STYLE_LIGHT ??
@@ -353,6 +354,7 @@ export function CoffeeMap({ beans, flavorNotes }: Props) {
       >
         {mapLoaded && (
           <>
+            <BeanBelt />
             <RegionHighlight />
             <Source
               id="beans"
