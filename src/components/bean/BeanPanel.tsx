@@ -208,18 +208,20 @@ function BeanPanelContent({
         variants={fadeUpItem}
         className="relative overflow-hidden border-b border-border"
       >
-        {/* Flavour gradient hero strip (parallax) that melts into the panel base,
-            so the header reads as one piece and the text sits on a calm ground. */}
+        {/* Flavour gradient hero (parallax) fills the whole header and sits
+            behind the name + altitude; a bottom-weighted scrim keeps the text
+            legible over any bean's colours while leaving a tint at the base so
+            the text reads as part of the coloured header. */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-32 overflow-hidden"
+          className="pointer-events-none absolute inset-0 overflow-hidden"
         >
           <ParallaxHero
             bean={bean}
             flavorNotes={flavorNotes}
             scrollRef={scrollRef}
           />
-          <div className="absolute inset-0 bg-linear-to-b from-transparent via-background/40 to-background" />
+          <div className="absolute inset-0 bg-linear-to-b from-transparent via-background/40 to-background/92" />
         </div>
         <button
           type="button"
