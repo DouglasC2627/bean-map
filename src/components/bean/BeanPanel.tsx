@@ -227,7 +227,7 @@ function BeanPanelContent({
           type="button"
           onClick={onClose}
           aria-label="Close panel"
-          className="absolute right-3 top-3 rounded-md bg-background/70 p-1 text-muted-foreground backdrop-blur-sm hover:bg-parchment hover:text-foreground dark:hover:bg-roast-dark"
+          className="absolute right-3 top-3 z-10 rounded-md bg-background/70 p-1 text-muted-foreground backdrop-blur-sm hover:bg-parchment hover:text-foreground dark:hover:bg-roast-dark"
         >
           <X className="h-5 w-5" />
         </button>

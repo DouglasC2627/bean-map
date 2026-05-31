@@ -204,7 +204,14 @@ export const useBeanMap = create<BeanMapState>((set) => ({
   setFilterPanelOpen: (open) => set({ isFilterPanelOpen: open }),
 
   isFlavorWheelOpen: false,
-  setFlavorWheelOpen: (open) => set({ isFlavorWheelOpen: open }),
+  // Opening the wheel closes the bean panel — they share the right edge and
+  // would otherwise overlap.
+  setFlavorWheelOpen: (open) =>
+    set(
+      open
+        ? { isFlavorWheelOpen: true, selectedBeanId: null, isBeanPanelOpen: false }
+        : { isFlavorWheelOpen: false },
+    ),
 
   fitBoundsRequestId: 0,
   requestFitBounds: () =>

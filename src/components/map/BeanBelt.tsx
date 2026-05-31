@@ -17,18 +17,37 @@ function parallel(lat: number, step = 5): [number, number][] {
 const NORTH = parallel(TROPIC);
 const SOUTH = parallel(-TROPIC);
 
+// Split bean belt into slices. Each slice's top/bottom edges are densified so they hug the
+// tropics when warped onto the globe.
+function bandSegment(lngStart: number, lngEnd: number, step = 5): [number, number][] {
+  const top: [number, number][] = [];
+  const bottom: [number, number][] = [];
+  for (let lng = lngStart; lng < lngEnd; lng += step) {
+    top.push([lng, TROPIC]);
+    bottom.push([lng, -TROPIC]);
+  }
+  top.push([lngEnd, TROPIC]);
+  bottom.push([lngEnd, -TROPIC]);
+  return [...top, ...bottom.reverse(), top[0]];
+}
+
+const SEGMENT_WIDTH = 30;
+const BAND_FEATURES: GeoJSON.Feature[] = [];
+for (let lng = -180; lng < 180; lng += SEGMENT_WIDTH) {
+  BAND_FEATURES.push({
+    type: "Feature",
+    properties: { kind: "band" },
+    geometry: {
+      type: "Polygon",
+      coordinates: [bandSegment(lng, lng + SEGMENT_WIDTH)],
+    },
+  });
+}
+
 const BELT: GeoJSON.FeatureCollection = {
   type: "FeatureCollection",
   features: [
-    {
-      type: "Feature",
-      properties: { kind: "band" },
-      geometry: {
-        type: "Polygon",
-        // Top edge eastbound, bottom edge westbound, then close.
-        coordinates: [[...NORTH, ...[...SOUTH].reverse(), NORTH[0]]],
-      },
-    },
+    ...BAND_FEATURES,
     {
       type: "Feature",
       properties: { kind: "line", name: "Bean Belt" },
