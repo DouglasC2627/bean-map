@@ -44,11 +44,7 @@ export function InsightsClient({ beans, flavorNotes }: Props) {
           </p>
         </header>
         <div className="overflow-hidden rounded-lg border border-border bg-surface/40 p-4">
-          <AltitudeChart
-            beans={filtered}
-            onSelectBean={onSelectBean}
-            maxRows={40}
-          />
+          <AltitudeChart beans={filtered} onSelectBean={onSelectBean} />
         </div>
       </section>
 

@@ -129,11 +129,11 @@ bean-map/
 │
 ├── public/
 │   └── data/       # regions.geojson (fetched at runtime by the map)
+│       └── merge-geojson.py      # Merge per-region GADM extracts → regions.geojson
 │
 ├── scripts/
 │   ├── validate-data.ts          # Zod validation + cross-checks — runs before `next build`
 │   ├── expand-brewing-recs.mjs   # Generate missing brewing recs by affinity
-│   ├── generate-regions.mjs      # Generate placeholder region polygons
 │   └── new-bean.mjs              # Interactive scaffolder (`npm run new:bean`)
 │
 ├── .env.example    # Env var template
