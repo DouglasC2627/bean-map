@@ -92,26 +92,35 @@ export function BeanPanel({ beans, methods, flavorNotes }: Props) {
 
   return (
     <>
-      {/* Desktop side panel (sm and up) — slides in from the right. */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.aside
-            key="bean-panel"
-            ref={asideRef}
-            aria-label={bean ? `Profile of ${bean.name}` : "Bean profile"}
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={springSoft}
-            className={cn(
-              "fixed z-30 hidden overflow-x-hidden overflow-y-auto bg-background/95 shadow-xl backdrop-blur-sm sm:block",
-              "sm:top-14 sm:right-0 sm:bottom-0 sm:left-auto sm:w-[50vw] sm:max-w-none sm:rounded-none sm:border-l lg:w-105",
-            )}
-          >
-            {renderContent(asideRef)}
-          </motion.aside>
-        )}
-      </AnimatePresence>
+      {/* Desktop side panel (sm and up) — slides in from the right.
+          The panel is positioned absolutely inside a full-viewport clip layer
+          rather than fixed against the viewport directly: its slide starts fully
+          off-screen (x: 100%), and relying on the root's `overflow-x: clip` to
+          contain a translated *fixed* child is unreliable — WebKit/Safari
+          ignores it and instead widens the layout viewport to fit the off-screen
+          panel, zooming the whole page out. An `overflow-hidden` positioned
+          ancestor clips the slide in every browser. `pointer-events-none` lets
+          map interaction pass through the layer; the panel re-enables them. */}
+      <div className="pointer-events-none fixed inset-0 z-30 hidden overflow-hidden sm:block">
+        <AnimatePresence>
+          {isOpen && (
+            <motion.aside
+              key="bean-panel"
+              ref={asideRef}
+              aria-label={bean ? `Profile of ${bean.name}` : "Bean profile"}
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={springSoft}
+              className={cn(
+                "pointer-events-auto absolute top-14 right-0 bottom-0 w-[50vw] max-w-none overflow-x-hidden overflow-y-auto border-l bg-background/95 shadow-xl backdrop-blur-sm lg:w-105",
+              )}
+            >
+              {renderContent(asideRef)}
+            </motion.aside>
+          )}
+        </AnimatePresence>
+      </div>
 
       {/* Mobile bottom sheet — draggable, gesture-driven, with snap points. */}
       <MobileBottomSheet
