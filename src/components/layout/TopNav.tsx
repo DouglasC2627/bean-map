@@ -32,7 +32,7 @@ export function TopNav() {
   }, [menuOpen]);
 
   return (
-    <header className="sticky top-0 z-40 h-14 border-b border-border bg-background/70 backdrop-blur-md">
+    <header className="sticky top-0 z-40 h-14 shrink-0 border-b border-border bg-background/70 backdrop-blur-md">
       <div className="mx-auto grid h-full max-w-screen-2xl grid-cols-[1fr_auto_1fr] items-center px-4">
         <Link href="/" className="flex items-center gap-2 justify-self-start">
           <Coffee className="h-5 w-5 text-roast-medium" />

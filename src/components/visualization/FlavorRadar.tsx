@@ -173,28 +173,36 @@ export function FlavorRadar({
         </ul>
       )}
 
-      {/* Screen-reader-friendly table */}
-      <table className="sr-only">
-        <caption>Flavor profile values, scale 1 to 10</caption>
-        <thead>
-          <tr>
-            <th>Bean</th>
-            {AXES.map((a) => (
-              <th key={a.key}>{a.label}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {series.map((s) => (
-            <tr key={s.id}>
-              <th>{s.label}</th>
+      {/* Screen-reader-only data table. The `sr-only` utility sets width:1px,
+          but a <table> ignores that and lays out at its full content width —
+          which overflows and, because the page uses `overflow-x: clip` (not a
+          scroll container), widens the mobile layout viewport and zooms the
+          whole page out. Wrapping the table in an sr-only <div> (which does
+          collapse to 1px and clip its overflow) keeps it out of layout while
+          remaining in the accessibility tree. */}
+      <div className="sr-only">
+        <table>
+          <caption>Flavor profile values, scale 1 to 10</caption>
+          <thead>
+            <tr>
+              <th>Bean</th>
               {AXES.map((a) => (
-                <td key={a.key}>{s.profile[a.key]}</td>
+                <th key={a.key}>{a.label}</th>
               ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {series.map((s) => (
+              <tr key={s.id}>
+                <th>{s.label}</th>
+                {AXES.map((a) => (
+                  <td key={a.key}>{s.profile[a.key]}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

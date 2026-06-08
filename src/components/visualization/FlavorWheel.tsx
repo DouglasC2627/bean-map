@@ -499,35 +499,43 @@ export function FlavorWheel({
         )}
       </svg>
 
-      <table className="sr-only">
-        <caption>Coffee flavor wheel — categories, subcategories, and notes</caption>
-        <thead>
-          <tr>
-            <th>Category</th>
-            <th>Subcategory</th>
-            <th>Note</th>
-            <th>Beans</th>
-          </tr>
-        </thead>
-        <tbody>
-          {flavorNotes.notes.map((n) => {
-            const sub = flavorNotes.subcategories.find(
-              (s) => s.id === n.subcategoryId,
-            );
-            const cat = sub
-              ? flavorNotes.categories.find((c) => c.id === sub.categoryId)
-              : undefined;
-            return (
-              <tr key={n.id}>
-                <td>{cat?.name ?? ""}</td>
-                <td>{sub?.name ?? ""}</td>
-                <td>{n.name}</td>
-                <td>{counts.byId.get(n.id) ?? 0}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      {/* Wrapped in an sr-only <div>, not applied to the <table> directly: a
+          table ignores the utility's width:1px and lays out at full content
+          width, overflowing and widening the mobile layout viewport. The div
+          collapses and clips it. See FlavorRadar for the full explanation. */}
+      <div className="sr-only">
+        <table>
+          <caption>
+            Coffee flavor wheel — categories, subcategories, and notes
+          </caption>
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Subcategory</th>
+              <th>Note</th>
+              <th>Beans</th>
+            </tr>
+          </thead>
+          <tbody>
+            {flavorNotes.notes.map((n) => {
+              const sub = flavorNotes.subcategories.find(
+                (s) => s.id === n.subcategoryId,
+              );
+              const cat = sub
+                ? flavorNotes.categories.find((c) => c.id === sub.categoryId)
+                : undefined;
+              return (
+                <tr key={n.id}>
+                  <td>{cat?.name ?? ""}</td>
+                  <td>{sub?.name ?? ""}</td>
+                  <td>{n.name}</td>
+                  <td>{counts.byId.get(n.id) ?? 0}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
