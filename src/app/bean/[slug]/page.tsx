@@ -77,6 +77,15 @@ export default async function BeanDetailPage({ params }: Params) {
         <p className="text-base leading-relaxed">{bean.description}</p>
       </section>
 
+      {bean.funFact && (
+        <aside className="rounded-lg border border-border bg-parchment/40 p-4 dark:bg-roast-dark/40">
+          <div className="text-xs font-semibold uppercase tracking-wider text-roast-medium">
+            Did you know?
+          </div>
+          <p className="mt-1 text-sm leading-relaxed">{bean.funFact}</p>
+        </aside>
+      )}
+
       <section className="grid gap-6 border-t border-border py-6 sm:grid-cols-2">
         <div>
           <h2 className="font-display text-xl">Flavor profile</h2>

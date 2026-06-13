@@ -377,6 +377,16 @@ function BeanPanelContent({
         className="border-t border-border p-5 text-sm"
       >
         <p>{bean.description}</p>
+        {bean.funFact && (
+          <div className="mt-3 rounded-md border border-border bg-parchment/40 p-3 dark:bg-roast-dark/40">
+            <div className="text-[10px] font-semibold uppercase tracking-wider text-roast-medium">
+              Did you know?
+            </div>
+            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+              {bean.funFact}
+            </p>
+          </div>
+        )}
         <Link
           href={`/bean/${bean.slug}`}
           className="mt-4 inline-block rounded-md bg-roast-medium px-3 py-1.5 text-sm text-cream hover:bg-roast-dark"

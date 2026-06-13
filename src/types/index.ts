@@ -89,6 +89,7 @@ export interface CoffeeBean {
   flavorNotes: string[];
   harvestMonths: number[]; // 1-12
   description: string;
+  funFact?: string; // optional trivia surfaced as a "Did you know?" note
   relatedBeanIds: string[];
   brewingRecommendations: BrewRecommendation[];
 }

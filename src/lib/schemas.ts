@@ -106,6 +106,7 @@ export const coffeeBeanSchema = z.object({
   flavorNotes: z.array(z.string()),
   harvestMonths: z.array(z.number().int().min(1).max(12)).min(1),
   description: z.string(),
+  funFact: z.string().optional(),
   relatedBeanIds: z.array(z.string()),
   brewingRecommendations: z.array(brewRecommendationSchema),
 });
