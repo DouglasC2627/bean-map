@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Star } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, Star } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -23,6 +24,19 @@ import {
 import { BrewCalculator } from "./BrewCalculator";
 import { BrewTimer } from "./BrewTimer";
 
+// Maps a brewing method id to its `/learn/brewing/[slug]` guide.
+// Only methods with a published guide appear here.
+const BREW_GUIDE_SLUG: Record<string, string> = {
+  v60: "v60",
+  chemex: "chemex",
+  kalita: "kalita-wave",
+  "french-press": "french-press",
+  aeropress: "aeropress",
+  espresso: "espresso",
+  "cold-brew": "cold-brew",
+  moka: "moka-pot",
+};
+
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -41,6 +55,7 @@ export function BrewDetailModal({
   const [tempUnit, setTempUnit] = useState<"C" | "F">("C");
 
   const grindIndex = GRIND_SCALE.findIndex((g) => g.id === rec.grindSize);
+  const guideSlug = BREW_GUIDE_SLUG[rec.methodId];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -192,6 +207,16 @@ export function BrewDetailModal({
           </h4>
           <p className="text-sm">{rec.tastingNotes}</p>
         </section>
+
+        {guideSlug && (
+          <Link
+            href={`/learn/brewing/${guideSlug}`}
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-roast-medium hover:underline"
+          >
+            Read the full {method?.name ?? "brewing"} guide
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        )}
 
         <BrewCalculator recommendation={rec} />
       </DialogContent>

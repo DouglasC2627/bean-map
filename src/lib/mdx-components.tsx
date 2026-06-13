@@ -35,6 +35,39 @@ export const mdxComponents: MDXComponents = {
       {children}
     </ol>
   ),
+  table: ({ children, ...props }) => (
+    <div className="my-4 overflow-x-auto">
+      <table
+        className="w-full border-collapse text-left text-sm"
+        {...props}
+      >
+        {children}
+      </table>
+    </div>
+  ),
+  thead: ({ children, ...props }) => (
+    <thead
+      className="border-b border-border text-xs uppercase tracking-wider text-muted-foreground"
+      {...props}
+    >
+      {children}
+    </thead>
+  ),
+  tr: ({ children, ...props }) => (
+    <tr className="border-b border-border/60 last:border-0" {...props}>
+      {children}
+    </tr>
+  ),
+  th: ({ children, ...props }) => (
+    <th className="px-3 py-2 font-semibold" {...props}>
+      {children}
+    </th>
+  ),
+  td: ({ children, ...props }) => (
+    <td className="px-3 py-2 align-top" {...props}>
+      {children}
+    </td>
+  ),
   blockquote: ({ children, ...props }) => (
     <blockquote
       className="my-4 border-l-2 border-roast-medium bg-parchment/40 px-4 py-2 italic dark:bg-roast-dark/40"

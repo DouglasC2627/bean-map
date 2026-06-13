@@ -6,6 +6,7 @@ import { ChevronLeft } from "lucide-react";
 import {
   getArticle,
   getArticleSlugs,
+  mdxRenderOptions,
 } from "@/lib/mdx";
 import { mdxComponents } from "@/lib/mdx-components";
 
@@ -55,7 +56,11 @@ export default async function ProcessingArticlePage({ params }: Params) {
         </p>
       </header>
       <div className="prose-bean">
-        <MDXRemote source={article.content} components={mdxComponents} />
+        <MDXRemote
+          source={article.content}
+          components={mdxComponents}
+          options={mdxRenderOptions}
+        />
       </div>
     </article>
   );

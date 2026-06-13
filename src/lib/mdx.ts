@@ -1,8 +1,25 @@
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
+import remarkGfm from "remark-gfm";
+import type { MDXRemoteProps } from "next-mdx-remote/rsc";
 
 export type LearnCategory = "processing" | "brewing";
+
+/**
+ * Options passed to <MDXRemote> for our trusted, repo-local articles.
+ *
+ * - `remarkGfm` enables GitHub-flavored markdown (notably tables).
+ * - `blockJS: false` is REQUIRED: next-mdx-remote v6 defaults to stripping all
+ *   `{expression}` JSX attributes as a security measure, which silently drops
+ *   props like `<BrewTimer totalSeconds={195} stages={[...]} />`. Our content is
+ *   authored in this repo (never user-supplied), so this is safe. We leave
+ *   `blockDangerousJS` at its default (true) for defense-in-depth.
+ */
+export const mdxRenderOptions: NonNullable<MDXRemoteProps["options"]> = {
+  mdxOptions: { remarkPlugins: [remarkGfm] },
+  blockJS: false,
+};
 
 export interface ArticleFrontmatter {
   title: string;

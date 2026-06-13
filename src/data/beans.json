@@ -41,6 +41,7 @@
       1
     ],
     "description": "The floral benchmark of East African coffee. Delicate jasmine and bergamot aromatics over a tea-like body, with a sparkling citric acidity.",
+    "funFact": "Coffee was almost certainly first discovered in Ethiopia, and the country is the genetic homeland of Arabica. Yirgacheffe's farmers still grow thousands of wild, unnamed 'heirloom' varieties — which is part of why the cup is so complex.",
     "relatedBeanIds": [
       "et-sidamo",
       "et-guji",
@@ -321,6 +322,7 @@
       2
     ],
     "description": "High-altitude Guji lots are prized for their stone-fruit sweetness and crystalline lime acidity.",
+    "funFact": "Guji was only recognized as a distinct origin in the 2010s, having previously been blended anonymously into 'Sidamo.' Its forest-grown heirloom trees produce some of the most floral, fruit-forward naturals in Ethiopia.",
     "relatedBeanIds": [
       "et-yirgacheffe",
       "et-sidamo"
@@ -462,6 +464,7 @@
       1
     ],
     "description": "The classic Kenyan profile: ripping blackcurrant acidity, syrupy body, and intense savoury-sweet complexity.",
+    "funFact": "Kenya's distinctive bright, blackcurrant cup owes much to its volcanic, phosphorus-rich red soil and a rigorous double-fermentation washing process. The 'AA' on the bag refers to bean size, not quality grade.",
     "relatedBeanIds": [
       "ke-kirinyaga",
       "rw-nyamasheke"
@@ -741,6 +744,7 @@
       6
     ],
     "description": "Red Bourbon from Lake Kivu's shores: clean, balanced, with orchard-fruit sweetness and gentle acidity.",
+    "funFact": "Rwanda's specialty industry was built largely after 1994 as part of national recovery, with washing stations becoming community hubs. Its biggest pest, the 'potato defect,' can make a single bad bean taint an entire cup.",
     "relatedBeanIds": [
       "bu-kayanza",
       "ke-nyeri"
@@ -882,6 +886,7 @@
       10
     ],
     "description": "Bright, tea-like cups from the southern Kilimanjaro slopes with a gentle citric lift.",
+    "funFact": "Coffee grows on the lower slopes of Mount Kilimanjaro, Africa's highest peak, often intercropped with bananas for shade. Tanzania is famous for 'peaberry' lots — beans where a single round seed forms instead of the usual two flat halves.",
     "relatedBeanIds": [
       "ke-nyeri",
       "rw-nyamasheke"
@@ -1161,6 +1166,7 @@
       3
     ],
     "description": "Volcanic-soil Antigua lots yield velvety chocolate-and-orange cups with a rounded body.",
+    "funFact": "Antigua sits in a valley ringed by three volcanoes, and periodic ashfall continuously replenishes the soil with minerals. Growers trademark the 'Genuine Antigua' seal to fight widespread mislabeling.",
     "relatedBeanIds": [
       "gt-huehue",
       "cr-tarrazu"
@@ -1442,6 +1448,7 @@
       2
     ],
     "description": "Honey-processed Tarrazú lots show dense sweetness, stone-fruit character, and a clean citric finish.",
+    "funFact": "Costa Rica pioneered the 'honey' and 'black honey' processing styles now used worldwide, and in 1989 it became the only country to legally ban planting lower-quality Robusta in favor of 100% Arabica.",
     "relatedBeanIds": [
       "pa-boquete",
       "gt-huehue"
@@ -1582,6 +1589,7 @@
       3
     ],
     "description": "The iconic Panama Gesha: ethereal florals, tea-like body, and a perfumed finish that lingers for minutes.",
+    "funFact": "Panama Gesha rewrote coffee's price records: at the 2019 Best of Panama auction a Gesha lot sold for over $1,000 per pound green. The variety was smuggled out of Ethiopia's Gori Gesha forest in the 1930s and sat unnoticed in Panama for decades.",
     "relatedBeanIds": [
       "cr-tarrazu",
       "et-yirgacheffe"
@@ -2290,6 +2298,7 @@
       12
     ],
     "description": "The quintessential Colombian: balanced, sweet, with red-fruit and caramel notes.",
+    "funFact": "Colombia's mountainous terrain means most coffee is still picked by hand on tiny family farms, and the country harvests nearly year-round thanks to varied micro-climates. 'Juan Valdez' was invented in 1958 to market exactly this image.",
     "relatedBeanIds": [
       "co-narino",
       "co-tolima"
@@ -2713,6 +2722,7 @@
       9
     ],
     "description": "Classic Brazilian naturals: low acidity, nutty-chocolate body, and a crowd-pleasing sweetness.",
+    "funFact": "Brazil has been the world's largest coffee producer for over 150 years and grows roughly a third of all coffee on the planet. The flat Cerrado plateau is one of the few origins where premium coffee is fully machine-harvested.",
     "relatedBeanIds": [
       "br-sul-minas",
       "hn-copan"
@@ -2995,6 +3005,7 @@
       8
     ],
     "description": "Clean, sweet Cajamarca lots with gentle citrus and a rounded cocoa finish.",
+    "funFact": "Peru is one of the world's largest producers of certified organic and Fairtrade coffee, much of it grown by smallholder cooperatives high in the Andes who never used agrochemicals to begin with.",
     "relatedBeanIds": [
       "co-huila",
       "bo-caranavi"
@@ -3279,6 +3290,7 @@
       3
     ],
     "description": "Wet-hulled (Giling Basah) Sumatran coffee: heavy-bodied, earthy, herbal, low-acid, and distinctive.",
+    "funFact": "Sumatra's earthy, full body comes from 'Giling Basah' (wet-hulling), a humid-climate shortcut found almost nowhere else. The parchment is stripped while the bean is still soft, which also gives the green bean its signature blue-green, foot-shaped look.",
     "relatedBeanIds": [
       "id-java",
       "in-malabar"
@@ -3419,6 +3431,7 @@
       10
     ],
     "description": "Estate-grown Java with a smooth, woody-spicy profile and lower acidity than African washed coffees.",
+    "funFact": "'Java' became slang for coffee because Dutch colonial plantations here were among the first to supply Europe at scale in the 1700s. Aged 'Old Brown Java' is deliberately matured for years to deepen its heavy, spicy body.",
     "relatedBeanIds": [
       "id-sumatra"
     ],
@@ -3559,6 +3572,7 @@
       12
     ],
     "description": "Ancient heirloom varieties grown on Yemeni terraces; deeply complex, wine-like, with dried-fruit sweetness.",
+    "funFact": "Yemen has cultivated coffee on hand-built mountain terraces for over 500 years, and the port of Mokha (Mocha) gave its name both to the drink and to the chocolate-coffee pairing. Many trees here are still rain-fed with no irrigation at all.",
     "relatedBeanIds": [
       "et-sidamo",
       "id-java"
@@ -3700,6 +3714,7 @@
       3
     ],
     "description": "Green beans exposed to monsoon winds for months, resulting in a low-acid, heavy, musty-sweet cup.",
+    "funFact": "Monsooned Malabar was a happy accident: beans shipped to Europe in wooden sailing vessels swelled and mellowed during months at sea. When faster steamships ended the effect, Indian producers recreated it by deliberately exposing beans to monsoon winds for weeks.",
     "relatedBeanIds": [
       "id-sumatra",
       "id-java"
@@ -3982,6 +3997,7 @@
       1
     ],
     "description": "Volcanic-slope estate coffee with a smooth, buttery-nutty profile and mellow sweetness.",
+    "funFact": "Kona is grown on the slopes of two active volcanoes, Hualālai and Mauna Loa, and is among the only commercial coffee produced in the United States. Hawaii's afternoon cloud cover acts as natural shade for the trees.",
     "relatedBeanIds": [
       "jm-blue-mountain"
     ],
@@ -4123,6 +4139,7 @@
       2
     ],
     "description": "Mist-shrouded Blue Mountain slopes produce a famously smooth, balanced cup with a gentle herbal note.",
+    "funFact": "Jamaica Blue Mountain is one of the most counterfeited coffees on earth — far more is sold than is grown. Genuine lots are traditionally shipped in wooden barrels rather than jute sacks, a holdover from British colonial trade.",
     "relatedBeanIds": [
       "us-kona"
     ],
@@ -5115,6 +5132,7 @@
       1
     ],
     "description": "Specialty Arabica from the cool highlands of Da Lat, honey-processed for a sweet, creamy cup of milk chocolate and toasted hazelnut.",
+    "funFact": "Vietnam went from a minor producer to the world's #2 coffee exporter in just a few decades, though most of its crop is Robusta. The country also gave the world egg coffee (cà phê trứng) — espresso topped with whipped egg yolk and condensed milk.",
     "relatedBeanIds": [
       "id-java",
       "th-doichang",
@@ -6107,6 +6125,7 @@
       12
     ],
     "description": "Grown in the rugged Sierra Maestra, this is a heavy, low-acid cup with leathery tobacco, dark chocolate, and a rich brown-sugar sweetness.",
+    "funFact": "Coffee in Cuba's Sierra Maestra is grown among the ruins of 19th-century French-Haitian plantations, now a UNESCO World Heritage Site. Cubans traditionally drink it as 'café cubano' — espresso whipped with sugar into a foamy espuma.",
     "relatedBeanIds": [
       "do-barahona",
       "jm-blue-mountain",
@@ -7098,6 +7117,7 @@
       1
     ],
     "description": "The wild, dry-processed classic of eastern Ethiopia: explosive blueberry and red-wine fruit over a dark-chocolate base.",
+    "funFact": "Harrar is one of the world's oldest coffee trade names, dry-processed for centuries on the eastern highlands. Its wild blueberry note appears with no added flavoring — it comes entirely from sun-drying the cherries with the fruit still on.",
     "relatedBeanIds": [
       "et-sidamo",
       "et-guji",
