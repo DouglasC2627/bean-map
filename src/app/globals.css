@@ -3,6 +3,17 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Chrome (notably on Windows) ships no font that renders regional-indicator
+   flag emoji, so it falls back to showing the two-letter country code. This
+   webfont contains only flag glyphs, so listing it first in font-family makes
+   flags render everywhere while all other text falls through to the next font. */
+@font-face {
+  font-family: "Twemoji Country Flags";
+  src: url("/fonts/TwemojiCountryFlags.woff2") format("woff2");
+  font-display: swap;
+  unicode-range: U+1F1E6-1F1FF;
+}
+
 @theme inline {
   /* Coffee palette (task 1.1) */
   --color-cream: #faf6f1;
@@ -104,19 +115,19 @@ body {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), system-ui, sans-serif;
+  font-family: "Twemoji Country Flags", var(--font-sans), system-ui, sans-serif;
 }
 
 h1,
 h2,
 h3 {
-  font-family: var(--font-display), Georgia, serif;
+  font-family: "Twemoji Country Flags", var(--font-display), Georgia, serif;
 }
 
 code,
 pre,
 .mono {
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: "Twemoji Country Flags", var(--font-mono), ui-monospace, monospace;
 }
 
 @layer base {

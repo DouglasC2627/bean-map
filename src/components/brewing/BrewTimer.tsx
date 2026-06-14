@@ -51,6 +51,7 @@ export function BrewTimer({
   const baseMsRef = useRef(0);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const lastStageRef = useRef(-1);
+  const completedRef = useRef(false);
 
   // Restore preference
   useEffect(() => {
@@ -70,34 +71,56 @@ export function BrewTimer({
     }
   }, []);
 
-  const playBeep = useCallback(() => {
+  const getAudioContext = useCallback((): AudioContext | null => {
     const Ctor = getAudioContextCtor();
-    if (!Ctor) return;
+    if (!Ctor) return null;
     if (!audioCtxRef.current) {
       try {
         audioCtxRef.current = new Ctor();
       } catch {
-        return;
+        return null;
       }
     }
     const ctx = audioCtxRef.current;
-    if (!ctx) return;
-    // iOS may suspend the context until a user gesture.
-    if (ctx.state === "suspended") {
+    if (ctx && ctx.state === "suspended") {
+      // iOS may suspend the context until a user gesture.
       ctx.resume().catch(() => undefined);
     }
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    const now = ctx.currentTime;
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(880, now);
-    gain.gain.setValueAtTime(0, now);
-    gain.gain.linearRampToValueAtTime(0.18, now + 0.01);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.14);
-    osc.connect(gain).connect(ctx.destination);
-    osc.start(now);
-    osc.stop(now + 0.16);
+    return ctx;
   }, []);
+
+  // Schedule a single sine tone on the shared audio context.
+  const playTone = useCallback(
+    (ctx: AudioContext, freq: number, startAt: number, duration: number) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(freq, startAt);
+      gain.gain.setValueAtTime(0, startAt);
+      gain.gain.linearRampToValueAtTime(0.18, startAt + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, startAt + duration);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(startAt);
+      osc.stop(startAt + duration + 0.02);
+    },
+    [],
+  );
+
+  const playBeep = useCallback(() => {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    playTone(ctx, 880, ctx.currentTime, 0.14);
+  }, [getAudioContext, playTone]);
+
+  // A distinct three-note rising chime to signal the brew is finished.
+  const playCompletionChime = useCallback(() => {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    playTone(ctx, 660, now, 0.18);
+    playTone(ctx, 880, now + 0.2, 0.18);
+    playTone(ctx, 1175, now + 0.4, 0.32);
+  }, [getAudioContext, playTone]);
 
   const tick = useCallback(() => {
     if (startRef.current == null) return;
@@ -156,6 +179,19 @@ export function BrewTimer({
       }
     }
   }, [elapsedMs, sortedStages, soundOn, running, playBeep]);
+
+  // Play the time-up chime once when the countdown reaches the total.
+  useEffect(() => {
+    if (totalSeconds <= 0) return;
+    const done = elapsedMs >= totalSeconds * 1000;
+    if (done && !completedRef.current) {
+      completedRef.current = true;
+      setStageAnnouncement("Brew complete");
+      if (soundOn) playCompletionChime();
+    } else if (!done && completedRef.current) {
+      completedRef.current = false;
+    }
+  }, [elapsedMs, totalSeconds, soundOn, playCompletionChime]);
 
   const start = useCallback(() => {
     // Resume / create context within the user gesture so iOS allows audio later.

@@ -6,6 +6,7 @@ import type { CoffeeBean, FlavorNotesData } from "@/types";
 import { useBeanMap, filterBeans } from "@/store";
 import { useLocateBeanOnPage } from "@/lib/use-locate-bean";
 import { ActiveFilters } from "@/components/filter/ActiveFilters";
+import { CollapsibleSection } from "@/components/shared/CollapsibleSection";
 import { AltitudeChart } from "@/components/visualization/AltitudeChart";
 import { SeasonalChart } from "@/components/visualization/SeasonalChart";
 
@@ -35,31 +36,23 @@ export function InsightsClient({ beans, flavorNotes }: Props) {
         Showing {filtered.length} of {beans.length} beans
       </div>
 
-      <section>
-        <header className="mb-3">
-          <h2 className="font-display text-xl">Altitude ranges</h2>
-          <p className="text-sm text-muted-foreground">
-            Sorted by midpoint altitude (highest first). Click a bar to open a
-            bean on the map.
-          </p>
-        </header>
+      <CollapsibleSection
+        title="Altitude ranges"
+        description="Sorted by midpoint altitude (highest first). Click a bar to open a bean on the map."
+      >
         <div className="overflow-hidden rounded-lg border border-border bg-surface/40 p-4">
           <AltitudeChart beans={filtered} onSelectBean={onSelectBean} />
         </div>
-      </section>
+      </CollapsibleSection>
 
-      <section>
-        <header className="mb-3">
-          <h2 className="font-display text-xl">Harvest calendar</h2>
-          <p className="text-sm text-muted-foreground">
-            When each origin is in season. The current month is highlighted in
-            cherry red.
-          </p>
-        </header>
+      <CollapsibleSection
+        title="Harvest calendar"
+        description="When each origin is in season. The current month is highlighted in cherry red."
+      >
         <div className="overflow-hidden rounded-lg border border-border bg-surface/40 p-4">
           <SeasonalChart beans={filtered} onSelectBean={onSelectBean} />
         </div>
-      </section>
+      </CollapsibleSection>
     </div>
   );
 }
