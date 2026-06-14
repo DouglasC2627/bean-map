@@ -2,7 +2,7 @@
 
 An interactive world map of specialty coffee — origins, flavor profiles, brewing recommendations, and an interactive flavor wheel tailored to each bean.
 
-**Status:** *Still Under Development* — Phases 1 & 2 complete; Phase 3 substantially complete. 30 bean profiles with full SCA flavor-note tagging, custom Mapbox styles, SSR bean pages, responsive panel with a draggable mobile bottom sheet, dark/light mode, faceted filters, ⌘K search, brewing recommendation cards with dose calculator + interactive brew timer, /beans browser with grid/table toggle, Euclidean similar-beans, side-by-side bean comparison, D3 flavor wheel with category/subcategory/note filtering, an MDX-powered Learn section, and shareable URLs.
+**Status:** *Still Under Development* — Phases 1 & 2 complete; Phase 3 substantially complete. 55 bean profiles across 41 countries with full SCA flavor-note tagging, a Bean Belt overlay tracing the equatorial coffee-growing band on the globe, custom Mapbox styles, SSR bean pages with per-bean flavor-driven gradient art and "Did you know?" trivia, a responsive panel with a draggable mobile bottom sheet, dark/light mode, faceted filters, ⌘K search, brewing recommendation cards with dose calculator + interactive brew timer, a /beans browser with grid/table toggle, Euclidean similar-beans, side-by-side bean comparison, a D3 flavor wheel with category/subcategory/note filtering, a complete MDX-powered Learn section (13 articles with embedded SVG diagrams and timers), and shareable URLs.
 
 ## Tech stack
 
@@ -14,21 +14,21 @@ An interactive world map of specialty coffee — origins, flavor profiles, brewi
 - **Search:** [Fuse.js](https://www.fusejs.io/) (weighted, fuzzy)
 - **Data viz:** [d3-hierarchy](https://github.com/d3/d3-hierarchy) + [d3-shape](https://github.com/d3/d3-shape) (sunburst flavor wheel); pure SVG everywhere else
 - **Gestures:** [`@use-gesture/react`](https://use-gesture.netlify.app/) + [`@react-spring/web`](https://www.react-spring.dev/) (draggable mobile bottom sheet)
-- **Content:** [`next-mdx-remote`](https://github.com/hashicorp/next-mdx-remote) (RSC) + [`gray-matter`](https://github.com/jonschlinkert/gray-matter) for the Learn section
+- **Content:** [`next-mdx-remote`](https://github.com/hashicorp/next-mdx-remote) (RSC) + [`gray-matter`](https://github.com/jonschlinkert/gray-matter) + [`remark-gfm`](https://github.com/remarkjs/remark-gfm) (tables) for the Learn section
 - **Data:** JSON seed files validated with [Zod](https://zod.dev/) at build time
 - **Theme:** [next-themes](https://github.com/pacocoursey/next-themes) (Mapbox style swaps on toggle)
 - **Deploy:** [Vercel](https://vercel.com/)
 
 ## Feature highlights
 
-- **Interactive map** — Mapbox globe with clustered bean markers, on-hover region highlights. Click a marker to fly to the origin and open its profile.
-- **Bean profiles** — Each bean carries a 6-axis flavor profile (acidity, body, sweetness, bitterness, complexity, fruitiness), tagged tasting notes, varieties, processing, harvest months, and an SSR detail page. A similar-beans section uses Euclidean distance over the flavor profile to surface related origins from other countries.
+- **Interactive map** — Mapbox globe with clustered bean markers, on-hover region highlights, and a **Bean Belt** overlay: the equatorial band between the Tropics of Cancer and Capricorn (~23.44°) where virtually all coffee grows, drawn as densified, globe-hugging dashed parallels with a shaded fill and a curved label. Click a marker to fly to the origin and open its profile.
+- **Bean profiles** — 55 beans across 41 countries. Each carries a 6-axis flavor profile (acidity, body, sweetness, bitterness, complexity, fruitiness), tagged tasting notes, varieties, processing, harvest months, and an SSR detail page whose header is filled with a deterministic gradient generated from the bean's own flavor profile (see [src/lib/flavor-gradient.ts](src/lib/flavor-gradient.ts)). Selected beans include a "Did you know?" trivia note, and a similar-beans section uses Euclidean distance over the flavor profile to surface related origins from other countries. Processing fields link straight to the matching Learn article.
 - **Brewing recommendations** — Per-bean cards sorted by affinity score with a "Best Match" highlight. Open any card for a full recipe — grind-scale visualization, water temperature with °C/°F toggle, ratio, pour schedule, equipment list, and an embedded dose calculator that scales by cup count and persists the user's preferred cup size.
-- **Interactive brew timer** — Drift-free `requestAnimationFrame` timer with circular progress ring, automatic stage advancement, opt-in Web Audio API beep on stage transitions, `Space` to start/pause, and `prefers-reduced-motion` support. Lives inside the brew detail modal and is exposed as `<BrewTimer />` to MDX articles.
-- **SCA flavor wheel** — D3-driven sunburst at [/explore/flavors](http://localhost:3000/explore/flavors) and as a toggleable overlay on the map. Click any segment — category, subcategory, or specific note — to filter beans across the whole app. Includes a screen-reader-only data table and is lazy-loaded so D3 stays out of the initial bundle.
+- **Interactive brew timer** — Drift-free `requestAnimationFrame` timer with circular progress ring, automatic stage advancement, opt-in Web Audio API beep on stage transitions, `Space` to start/pause, and `prefers-reduced-motion` support. Lives inside the brew detail modal (which also links out to the matching brewing guide) and is exposed as `<BrewTimer />` to MDX articles.
+- **SCA flavor wheel** — D3-driven sunburst at [/explore/flavors](http://localhost:3000/explore/flavors) and as a toggleable overlay on the map. Click any segment — category, subcategory, or specific note — to filter beans across the whole app. The SVG scales fluidly to any viewport (no horizontal overflow on mobile), includes a screen-reader-only data table, and is lazy-loaded so D3 stays out of the initial bundle.
 - **Bean comparison** — Add up to three beans to the comparison tray, then open the side-by-side view with overlaid radar charts, a parameter table, and a "best for [method]" highlight. Shareable via `/compare?beans=slug1,slug2,slug3`.
 - **Insights** — `/explore/insights` shows aggregate visualizations across the (filtered) catalog: an altitude bar chart with green→brown gradient sorted by midpoint elevation, and a Gantt-style harvest calendar that highlights the current month.
-- **Learn section** — MDX-rendered articles at `/learn` for processing methods and brewing guides. Articles can embed `<BrewTimer />` and `<Callout>` components. The pipeline ships with one stub per category (washed processing, V60); the remaining 11 articles are scaffolded as TODOs.
+- **Learn section** — 13 MDX-rendered articles at `/learn`: 5 processing methods (washed, natural, honey, anaerobic, wet-hulled) and 8 brewing guides (V60, Chemex, Kalita Wave, French Press, AeroPress, Espresso, Cold Brew, Moka Pot). Each processing article embeds a theme-aware `<ProcessDiagram />` SVG of the workflow; brewing guides embed a live `<BrewTimer />`. GitHub-flavored markdown tables are supported via `remark-gfm`.
 - **Mobile** — Bean panel becomes a draggable bottom sheet with three snap points (peek, half, full), flick-to-close, and a dimmed backdrop. Filters open as a bottom sheet too.
 - **Search** — ⌘K opens a fuzzy search across name, country, region, and flavor notes. Recent searches persist in `localStorage`.
 - **SCA flavor-notes hierarchy** — 9 categories / 29 subcategories / 84 specific notes in [src/data/flavor-notes.json](src/data/flavor-notes.json), cross-validated against every bean at build time.
@@ -97,29 +97,32 @@ bean-map/
 │   │   └── globals.css        # Tailwind v4 theme + coffee palette
 │   │
 │   ├── components/
-│   │   ├── map/               # CoffeeMap, MapView, RegionHighlight, FlavorWheelOverlay
+│   │   ├── map/               # CoffeeMap, MapView, BeanBelt, RegionHighlight, FlavorWheelOverlay
 │   │   ├── bean/              # BeanPanel, BeansBrowser
 │   │   ├── filter/            # FilterPanel, FlavorSliders, ActiveFilters
 │   │   ├── brewing/           # BrewCard, BrewDetailModal, BrewCalculator, BrewTimer
 │   │   ├── compare/           # ComparisonTray, ComparisonView, CompareToggle
-│   │   ├── visualization/     # FlavorRadar, FlavorWheel(+Lazy), AltitudeChart, SeasonalChart
+│   │   ├── visualization/     # FlavorRadar, FlavorWheel(+Lazy), ProcessDiagram, AltitudeChart, SeasonalChart
 │   │   ├── layout/            # TopNav, MobileBottomSheet
 │   │   ├── shared/            # ThemeProvider, ThemeToggle, SearchCommand, UrlStateSync
 │   │   └── ui/                # shadcn/ui primitives (Button, Dialog, Sheet, Slider, …)
 │   │
 │   ├── content/    # MDX articles for the Learn section
-│   │   ├── processing/        # washed.mdx (+ stubs to come)
-│   │   └── brewing/           # v60.mdx (+ stubs to come)
+│   │   ├── processing/        # washed, natural, honey, anaerobic, wet-hulled
+│   │   └── brewing/           # v60, chemex, kalita-wave, french-press, aeropress, espresso, cold-brew, moka-pot
 │   │
 │   ├── lib/
 │   │   ├── data.ts               # Cached bean / method / flavor-notes loaders
 │   │   ├── schemas.ts            # Zod schemas mirroring src/types
 │   │   ├── search.ts             # Fuse.js index + recent-searches helpers
 │   │   ├── similar.ts            # Euclidean distance over flavor profile
-│   │   ├── mdx.ts                # Article frontmatter + content loaders (gray-matter)
-│   │   ├── mdx-components.tsx    # MDX components map (BrewTimer, Callout, prose styles)
+│   │   ├── flavor-gradient.ts    # Deterministic CSS gradient from a bean's flavor profile
+│   │   ├── flavor-icons.ts       # Category → illustration/emoji map for the flavor wheel
+│   │   ├── mdx.ts                # Article loaders + shared MDXRemote render options (gray-matter, remark-gfm)
+│   │   ├── mdx-components.tsx    # MDX components map (BrewTimer, ProcessDiagram, Callout, tables, prose styles)
 │   │   ├── url-state.ts          # nuqs parsers for filters / viewport / selection
-│   │   ├── altitude-color.ts     # Shared color ramp for altitude visualizations
+│   │   ├── motion.ts             # Shared Framer Motion variants
+│   │   ├── use-locate-bean.ts    # Fly-to-and-select helper shared across views
 │   │   ├── use-media-query.ts    # SSR-safe matchMedia hook + prefers-reduced-motion helper
 │   │   └── utils.ts              # cn(), country flags, formatters, flavor-note label lookup
 │   │
@@ -129,6 +132,7 @@ bean-map/
 │
 ├── public/
 │   └── data/       # regions.geojson (fetched at runtime by the map)
+│       ├── extracted-geojsons/   # Per-region GADM source extracts
 │       └── merge-geojson.py      # Merge per-region GADM extracts → regions.geojson
 │
 ├── scripts/
@@ -179,16 +183,18 @@ readingTimeMinutes: 6
 
 ## Heading
 
-Markdown body. You can also drop in registered components:
+Markdown body — including GitHub-flavored tables (via `remark-gfm`). You can also drop in registered components:
 
 <BrewTimer totalSeconds={180} bloomSeconds={30} stages={[...]} />
+
+<ProcessDiagram highlight={2} caption="..." steps={[{ label: "Depulp", sub: "remove skin" }]} />
 
 <Callout title="Note">
 Body text inside an aside.
 </Callout>
 ```
 
-Slugs are inferred from the filename. The hub and routes (`/learn`, `/learn/processing/[slug]`, `/learn/brewing/[slug]`) pick up new files automatically — no registry update needed.
+Slugs are inferred from the filename. The hub and routes (`/learn`, `/learn/processing/[slug]`, `/learn/brewing/[slug]`) pick up new files automatically — no registry update needed. The articles render through a shared `mdxRenderOptions` (see [src/lib/mdx.ts](src/lib/mdx.ts)) that enables `remark-gfm` and JSX-expression props — keep authored content trusted, since it is rendered with `blockJS` disabled.
 
 ## Deployment
 
