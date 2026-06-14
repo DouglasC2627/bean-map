@@ -1,0 +1,54 @@
+---
+title: Espresso
+description: Nine bars of pressure forcing hot water through a compact puck of fine grounds — coffee at its most concentrated and demanding.
+summary: The hardest brew to dial in and the most rewarding. Master dose, grind, and the shot clock.
+readingTimeMinutes: 8
+---
+
+## The setup
+
+Espresso isn't a bean or a roast — it's a *method*: roughly 9 bars of pressure (about nine times atmospheric) driving water through finely-ground, tightly-tamped coffee in 25–30 seconds. That intensity extracts a syrupy shot crowned with **crema**, the hazelnut-colored foam of emulsified oils and CO₂. It's also the least forgiving brew in coffee: a grind adjustment of microns swings the shot from sour to bitter.
+
+You'll need:
+
+- Espresso machine with a pressurized group (9 bar)
+- A capable burr grinder — this matters more than the machine
+- Portafilter, tamper, scale, timer (a 0.1g scale ideal)
+
+The three numbers to track: **dose** (coffee in), **yield** (espresso out), and **time**.
+
+## Recipe — the 1:2 ratio
+
+| Variable | Target | Note |
+| --- | --- | --- |
+| Dose | 18g | Level, distributed, tamped flat |
+| Yield | 36g | A "normale" — 1:2 by weight |
+| Time | 25–30s | Start the clock when the pump engages |
+| Temp | 93°C | Cooler for dark roasts, hotter for light |
+
+Dial in by holding dose constant and **adjusting only the grind**:
+
+- Shot pulls **too fast** (under ~22s, sour, thin) → grind **finer**.
+- Shot pulls **too slow** (over ~32s, bitter, dark) → grind **coarser**.
+
+## Time your shot
+
+<BrewTimer
+  totalSeconds={30}
+  methodName="Espresso shot (18g → 36g)"
+  stages={[
+    { label: "Pump on", atSeconds: 0, waterMl: 0, note: "First drops by ~5–8s" },
+    { label: "Steady flow", atSeconds: 10, waterMl: 0, note: "Honey-like stream" },
+    { label: "Reaching 36g", atSeconds: 27, waterMl: 0, note: "Stop at target yield" },
+  ]}
+/>
+
+## Common mistakes
+
+- **Chasing the machine, ignoring the grinder.** A great grinder on a modest machine beats the reverse.
+- **Uneven tamping or distribution.** A tilted puck channels — water blasts through the weak spot and the shot tastes both sour and bitter at once.
+- **Skipping the scale.** "By eye" yields drift; weigh in and out every time while learning.
+
+<Callout>
+Dense, sweet beans built for espresso — Brazil, washed Central Americans, classic Italian-style blends — give forgiving, chocolatey shots. Light single-origin "filter" roasts can be stunning but need a finer grind and a hotter, longer shot to avoid sourness.
+</Callout>

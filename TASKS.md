@@ -361,24 +361,24 @@ An interactive world map showcasing coffee beans from around the world, their or
 - [x] Set up MDX rendering pipeline with `next-mdx-remote`
 - [x] Create `src/app/learn/page.tsx` (Learn hub with article grid)
 - [x] Create `src/app/learn/processing/[slug]/page.tsx` (article renderer)
-- [ ] Write 5 MDX articles in `/content/processing/`:
+- [x] Write 5 MDX articles in `/content/processing/`:
   - [x] `washed.mdx` - Washed/wet processing
-  - [ ] `natural.mdx` - Natural/dry processing
-  - [ ] `honey.mdx` - Honey processing (yellow, red, black)
-  - [ ] `anaerobic.mdx` - Anaerobic fermentation
-  - [ ] `wet-hulled.mdx` - Wet-hulled (Giling Basah)
-- [ ] Each article: overview, step-by-step process, impact on flavor, origin regions that use it, embedded SVG diagrams
-- [ ] Link from bean profiles to relevant processing article
+  - [x] `natural.mdx` - Natural/dry processing
+  - [x] `honey.mdx` - Honey processing (yellow, red, black)
+  - [x] `anaerobic.mdx` - Anaerobic fermentation
+  - [x] `wet-hulled.mdx` - Wet-hulled (Giling Basah)
+- [x] Each article: overview, step-by-step process, impact on flavor, origin regions that use it, embedded SVG diagrams
+- [x] Link from bean profiles to relevant processing article
 
 ### 3.9 Educational Content - Brewing Guides
 - [x] Create `src/app/learn/brewing/[slug]/page.tsx` (article renderer)
-- [ ] Write 8 MDX guides in `/content/brewing/`:
+- [x] Write 8 MDX guides in `/content/brewing/`:
   - [x] `v60.mdx`
-  - [ ] `chemex.mdx`, `kalita-wave.mdx`, `french-press.mdx`
-  - [ ] `aeropress.mdx`, `espresso.mdx`, `cold-brew.mdx`, `moka-pot.mdx`
-- [ ] Each guide: equipment list, step-by-step instructions with timing, common mistakes, tips for different beans
+  - [x] `chemex.mdx`, `kalita-wave.mdx`, `french-press.mdx`
+  - [x] `aeropress.mdx`, `espresso.mdx`, `cold-brew.mdx`, `moka-pot.mdx`
+- [x] Each guide: equipment list, step-by-step instructions with timing, common mistakes, tips for different beans
 - [x] Embed interactive `BrewTimer` component within guides
-- [ ] Link from brew detail modal to relevant guide
+- [x] Link from brew detail modal to relevant guide
 
 ### 3.10 Interactive Brew Timer
 - [x] Build `src/components/brewing/BrewTimer.tsx`

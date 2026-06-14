@@ -69,7 +69,13 @@ export default async function BeanDetailPage({ params }: Params) {
           {bean.name}
         </h1>
         <p className="mt-2 text-muted-foreground">
-          {bean.region} · {formatAltitude(bean.altitudeMasl)} · {bean.processing}
+          {bean.region} · {formatAltitude(bean.altitudeMasl)} ·{" "}
+          <Link
+            href={`/learn/processing/${bean.processing}`}
+            className="capitalize text-roast-medium hover:underline"
+          >
+            {bean.processing.replace("-", " ")}
+          </Link>
         </p>
       </header>
 
@@ -108,6 +114,17 @@ export default async function BeanDetailPage({ params }: Params) {
             <div className="flex justify-between">
               <dt className="text-muted-foreground">Varieties</dt>
               <dd className="text-right">{bean.varieties.join(", ")}</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-muted-foreground">Processing</dt>
+              <dd>
+                <Link
+                  href={`/learn/processing/${bean.processing}`}
+                  className="capitalize text-roast-medium hover:underline"
+                >
+                  {bean.processing.replace("-", " ")}
+                </Link>
+              </dd>
             </div>
             <div className="flex justify-between">
               <dt className="text-muted-foreground">Roast</dt>

@@ -1,5 +1,6 @@
 import type { MDXComponents } from "mdx/types";
 import { BrewTimer } from "@/components/brewing/BrewTimer";
+import { ProcessDiagram } from "@/components/visualization/ProcessDiagram";
 
 export const mdxComponents: MDXComponents = {
   h1: ({ children, ...props }) => (
@@ -109,4 +110,5 @@ export const mdxComponents: MDXComponents = {
     </aside>
   ),
   BrewTimer,
+  ProcessDiagram,
 };

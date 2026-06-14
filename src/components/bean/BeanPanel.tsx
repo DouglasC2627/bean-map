@@ -295,7 +295,12 @@ function BeanPanelContent({
           <div className="text-xs uppercase tracking-wider text-muted-foreground">
             Processing
           </div>
-          <div className="capitalize">{bean.processing}</div>
+          <Link
+            href={`/learn/processing/${bean.processing}`}
+            className="capitalize text-roast-medium hover:underline"
+          >
+            {bean.processing.replace("-", " ")}
+          </Link>
         </div>
         <div>
           <div className="text-xs uppercase tracking-wider text-muted-foreground">
