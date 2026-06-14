@@ -278,18 +278,20 @@ export function FlavorWheel({
   return (
     <div
       className={cn(
-        "relative inline-block select-none motion-safe:animate-[radar-fade_400ms_ease-out]",
+        "relative mx-auto w-full select-none motion-safe:animate-[radar-fade_400ms_ease-out]",
         className,
       )}
+      style={{ maxWidth: size }}
       onMouseLeave={() => setHover(null)}
     >
       <svg
-        width={size}
-        height={size}
         viewBox={`0 0 ${size} ${size}`}
         role="img"
         aria-label="Coffee flavor wheel"
-        className="overflow-visible"
+        // Render fluidly: the viewBox keeps the internal coordinate space at
+        // `size`, while width:100% + height:auto scale the wheel down to fit
+        // narrow viewports (mobile) instead of overflowing horizontally.
+        className="block h-auto w-full overflow-visible"
       >
         <g transform={`translate(${center}, ${center})`}>
           {allNodes.map((n) => {

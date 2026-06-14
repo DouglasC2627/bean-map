@@ -407,15 +407,15 @@ An interactive world map showcasing coffee beans from around the world, their or
 - [x] Backdrop: map dims slightly when sheet is at half or full
 
 ### Phase 3 Verification
-- [ ] Radar chart renders correctly for each bean with animated entrance
-- [ ] Flavor wheel displays full SCA hierarchy, clicking filters beans on map
-- [ ] Altitude chart and harvest calendar show correct data for filtered beans
-- [ ] Comparison tray: add up to 3 beans, overlaid radar chart renders, parameter table is accurate
-- [ ] Comparison URL is shareable and loads correctly
-- [ ] Animations are smooth (60fps), respect reduced-motion preference
-- [ ] All 13 MDX articles render with embedded components (timer, diagrams)
-- [ ] Brew timer counts down accurately with pour stage alerts
-- [ ] Mobile bottom sheet drags smoothly between snap points
+- [x] Radar chart renders correctly for each bean with animated entrance
+- [x] Flavor wheel displays full SCA hierarchy, clicking filters beans on map
+- [x] Altitude chart and harvest calendar show correct data for filtered beans
+- [x] Comparison tray: add up to 3 beans, overlaid radar chart renders, parameter table is accurate
+- [x] Comparison URL is shareable and loads correctly
+- [x] Animations are smooth (60fps), respect reduced-motion preference
+- [x] All 13 MDX articles render with embedded components (timer, diagrams)
+- [x] Brew timer counts down accurately with pour stage alerts
+- [x] Mobile bottom sheet drags smoothly between snap points
 
 ---
 
