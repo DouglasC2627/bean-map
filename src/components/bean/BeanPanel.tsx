@@ -242,7 +242,7 @@ function BeanPanelContent({
         </button>
         <div className="relative px-5 pb-5 pt-24">
           <div className="mb-1 flex items-center gap-2 text-sm text-muted-foreground">
-            <span aria-hidden className="text-lg leading-none">
+            <span aria-hidden className="flag text-lg leading-none">
               {countryFlagEmoji(bean.countryCode)}
             </span>
             <span>{bean.country}</span>

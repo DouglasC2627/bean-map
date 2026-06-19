@@ -214,7 +214,7 @@ function BeanRow({
 }) {
   return (
     <div className="flex w-full items-center gap-2">
-      <span aria-hidden className="text-base leading-none">
+      <span aria-hidden className="flag text-base leading-none">
         {countryFlagEmoji(bean.countryCode)}
       </span>
       <div className="min-w-0 flex-1">

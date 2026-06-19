@@ -189,7 +189,7 @@ export function BeansBrowser({ beans, flavorNotes }: Props) {
                     </Link>
                   </td>
                   <td className="px-3 py-2">
-                    <span aria-hidden className="mr-1">
+                    <span aria-hidden className="flag mr-1">
                       {countryFlagEmoji(b.countryCode)}
                     </span>
                     {b.country}
@@ -256,7 +256,7 @@ function BeanCard({
       className="rounded-lg border border-border bg-surface/60 p-4 transition-colors hover:border-roast-medium"
     >
       <div className="mb-1 flex items-center gap-2 text-xs text-muted-foreground">
-        <span aria-hidden>{countryFlagEmoji(bean.countryCode)}</span>
+        <span aria-hidden className="flag">{countryFlagEmoji(bean.countryCode)}</span>
         <span>{bean.country}</span>
         <span>·</span>
         <span>{bean.region}</span>

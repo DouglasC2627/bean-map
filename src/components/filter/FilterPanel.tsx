@@ -236,7 +236,7 @@ export function FilterPanel({ beans, flavorNotes }: Props) {
                         onChange={() => toggleRegion(cc)}
                         className="h-4 w-4 accent-roast-medium"
                       />
-                      <span aria-hidden>{countryFlagEmoji(cc)}</span>
+                      <span aria-hidden className="flag">{countryFlagEmoji(cc)}</span>
                       <span>{countryNames.get(cc) ?? cc}</span>
                     </label>
                   ))}

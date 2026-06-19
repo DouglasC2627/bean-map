@@ -100,7 +100,7 @@ export function ActiveFilters({ beans, flavorNotes, className }: Props) {
       <AnimatePresence initial={false}>
         {filters.regions.map((cc) => (
           <Chip key={`region-${cc}`} onRemove={() => removeRegion(cc)}>
-            <span aria-hidden>{countryFlagEmoji(cc)}</span>
+            <span aria-hidden className="flag">{countryFlagEmoji(cc)}</span>
             {countryNames.get(cc) ?? cc}
           </Chip>
         ))}

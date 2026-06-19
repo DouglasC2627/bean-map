@@ -5,8 +5,10 @@
 
 /* Chrome (notably on Windows) ships no font that renders regional-indicator
    flag emoji, so it falls back to showing the two-letter country code. This
-   webfont contains only flag glyphs, so listing it first in font-family makes
-   flags render everywhere while all other text falls through to the next font. */
+   webfont contains only flag glyphs. It is applied ONLY via the .flag class
+   (below), not the global font stack: it is a COLR/CPAL color font, and
+   prepending it to body/heading/mono text caused macOS Safari to bleed the
+   flag palette onto the rest of the run, tinting country names. */
 @font-face {
   font-family: "Twemoji Country Flags";
   src: url("/fonts/TwemojiCountryFlags.woff2") format("woff2");
@@ -115,19 +117,25 @@ body {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "Twemoji Country Flags", var(--font-sans), system-ui, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
 }
 
 h1,
 h2,
 h3 {
-  font-family: "Twemoji Country Flags", var(--font-display), Georgia, serif;
+  font-family: var(--font-display), Georgia, serif;
 }
 
 code,
 pre,
 .mono {
-  font-family: "Twemoji Country Flags", var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+/* Render flag emoji via the self-hosted color font, scoped to the flag glyph
+   only so its palette never leaks onto adjacent text (see @font-face note). */
+.flag {
+  font-family: "Twemoji Country Flags", var(--font-sans), system-ui, sans-serif;
 }
 
 @layer base {

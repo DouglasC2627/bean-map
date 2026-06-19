@@ -157,7 +157,7 @@ function ComparisonBody({
             className="rounded-lg border border-border bg-surface/60 p-4"
           >
             <div className="mb-1 flex items-center gap-2 text-xs text-muted-foreground">
-              <span aria-hidden>{countryFlagEmoji(b.countryCode)}</span>
+              <span aria-hidden className="flag">{countryFlagEmoji(b.countryCode)}</span>
               <span>{b.country}</span>
             </div>
             <Link
@@ -212,7 +212,7 @@ function ComparisonBody({
               <Row label="Country">
                 {beans.map((b) => (
                   <Cell key={b.id}>
-                    <span aria-hidden className="mr-1">
+                    <span aria-hidden className="flag mr-1">
                       {countryFlagEmoji(b.countryCode)}
                     </span>
                     {b.country}

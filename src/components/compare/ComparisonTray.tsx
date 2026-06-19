@@ -83,7 +83,7 @@ export function ComparisonTray({ beans, methods, flavorNotes }: Props) {
                       transition={springSoft}
                       className="flex shrink-0 items-center gap-2 rounded-md border border-border bg-surface/60 px-3 py-1.5"
                     >
-                      <span aria-hidden>
+                      <span aria-hidden className="flag">
                         {countryFlagEmoji(bean.countryCode)}
                       </span>
                       <div className="text-xs leading-tight">
