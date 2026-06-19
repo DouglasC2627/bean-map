@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Coffee, Menu, Search, X } from "lucide-react";
+import Image from "next/image";
+import { Menu, Search, X } from "lucide-react";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { useSearchUi } from "@/components/shared/SearchCommand";
 import { cn } from "@/lib/utils";
@@ -35,7 +36,14 @@ export function TopNav() {
     <header className="sticky top-0 z-40 h-14 shrink-0 border-b border-border bg-background/70 backdrop-blur-md">
       <div className="mx-auto grid h-full max-w-screen-2xl grid-cols-[1fr_auto_1fr] items-center px-4">
         <Link href="/" className="flex items-center gap-2 justify-self-start">
-          <Coffee className="h-5 w-5 text-roast-medium" />
+          <Image
+            src="/logo.png"
+            alt="BeanMap logo"
+            width={24}
+            height={24}
+            className="h-6 w-6"
+            priority
+          />
           <span className="font-display text-lg tracking-tight">BeanMap</span>
         </Link>
 
