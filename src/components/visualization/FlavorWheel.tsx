@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   hierarchy,
   type HierarchyRectangularNode,
@@ -144,6 +145,7 @@ export function FlavorWheel({
   className,
   compactCenter = false,
 }: Props) {
+  const t = useTranslations("flavorWheel");
   const [hover, setHover] = useState<{
     id: string;
     name: string;
@@ -287,7 +289,7 @@ export function FlavorWheel({
       <svg
         viewBox={`0 0 ${size} ${size}`}
         role="img"
-        aria-label="Coffee flavor wheel"
+        aria-label={t("aria")}
         // Render fluidly: the viewBox keeps the internal coordinate space at
         // `size`, while width:100% + height:auto scale the wheel down to fit
         // narrow viewports (mobile) instead of overflowing horizontally.
@@ -330,7 +332,7 @@ export function FlavorWheel({
                     onToggle(n.data.id);
                   }
                 }}
-                aria-label={`${n.data.name}, ${count} bean${count === 1 ? "" : "s"}${isSelected ? ", selected" : ""}`}
+                aria-label={`${t("segmentAria", { name: n.data.name, count })}${isSelected ? t("selectedSuffix") : ""}`}
                 aria-pressed={isSelected}
               />
             );
@@ -442,10 +444,10 @@ export function FlavorWheel({
               className="fill-muted-foreground text-[10px] uppercase tracking-wider"
             >
               {centerKind === "note"
-                ? "Note"
+                ? t("kindNote")
                 : centerKind === "subcategory"
-                  ? "Subcategory"
-                  : "Category"}
+                  ? t("kindSubcategory")
+                  : t("kindCategory")}
             </text>
             <text
               x={center}
@@ -464,7 +466,7 @@ export function FlavorWheel({
               dominantBaseline="central"
               className="fill-muted-foreground text-[10px] font-mono"
             >
-              {centerCount} bean{centerCount === 1 ? "" : "s"}
+              {t("beanCount", { count: centerCount ?? 0 })}
             </text>
           </>
         ) : (
@@ -476,7 +478,7 @@ export function FlavorWheel({
               dominantBaseline="central"
               className="fill-muted-foreground text-[10px] uppercase tracking-wider"
             >
-              Flavor
+              {t("centerFlavor")}
             </text>
             <text
               x={center}
@@ -486,7 +488,7 @@ export function FlavorWheel({
               fontSize={innerR * 0.3}
               className="fill-foreground font-display"
             >
-              Wheel
+              {t("centerWheel")}
             </text>
             <text
               x={center}
@@ -495,7 +497,7 @@ export function FlavorWheel({
               dominantBaseline="central"
               className="fill-muted-foreground text-[9px]"
             >
-              Hover or tap a segment
+              {t("centerHint")}
             </text>
           </>
         )}
@@ -507,15 +509,13 @@ export function FlavorWheel({
           collapses and clips it. See FlavorRadar for the full explanation. */}
       <div className="sr-only">
         <table>
-          <caption>
-            Coffee flavor wheel — categories, subcategories, and notes
-          </caption>
+          <caption>{t("tableCaption")}</caption>
           <thead>
             <tr>
-              <th>Category</th>
-              <th>Subcategory</th>
-              <th>Note</th>
-              <th>Beans</th>
+              <th>{t("colCategory")}</th>
+              <th>{t("colSubcategory")}</th>
+              <th>{t("colNote")}</th>
+              <th>{t("colBeans")}</th>
             </tr>
           </thead>
           <tbody>

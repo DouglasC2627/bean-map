@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ChevronDown,
@@ -11,6 +11,7 @@ import {
   X,
 } from "lucide-react";
 import type { BrewingMethod, CoffeeBean, FlavorNotesData } from "@/types";
+import { Link } from "@/i18n/navigation";
 import { useBeanMap } from "@/store";
 import { countryFlagEmoji } from "@/lib/utils";
 import { springSoft } from "@/lib/motion";
@@ -23,6 +24,7 @@ interface Props {
 }
 
 export function ComparisonTray({ beans, methods, flavorNotes }: Props) {
+  const t = useTranslations("compareTray");
   const ids = useBeanMap((s) => s.comparisonBeanIds);
   const removeFromComparison = useBeanMap((s) => s.removeFromComparison);
   const isOpen = useBeanMap((s) => s.isComparisonOpen);
@@ -43,7 +45,7 @@ export function ComparisonTray({ beans, methods, flavorNotes }: Props) {
       <AnimatePresence>
         {selected.length > 0 && (
           <motion.div
-            aria-label="Comparison tray"
+            aria-label={t("tray")}
             initial={{ y: "100%" }}
             animate={{ y: isOpen ? 0 : "calc(100% - 2.25rem)" }}
             exit={{ y: "100%" }}
@@ -53,14 +55,12 @@ export function ComparisonTray({ beans, methods, flavorNotes }: Props) {
             <button
               type="button"
               onClick={() => setOpen(!isOpen)}
-              aria-label={
-                isOpen ? "Collapse comparison tray" : "Expand comparison tray"
-              }
+              aria-label={isOpen ? t("collapse") : t("expand")}
               className="flex w-full items-center justify-between border-b border-border bg-parchment/60 px-4 py-2 text-xs font-medium uppercase tracking-wider text-roast-dark dark:bg-roast-dark/40 dark:text-parchment"
             >
               <span className="inline-flex items-center gap-2">
                 <GitCompareArrows className="h-3.5 w-3.5" />
-                Comparison ({selected.length}/3)
+                {t("heading", { count: selected.length })}
               </span>
               {isOpen ? (
                 <ChevronDown className="h-4 w-4" />
@@ -95,7 +95,7 @@ export function ComparisonTray({ beans, methods, flavorNotes }: Props) {
                       <button
                         type="button"
                         onClick={() => removeFromComparison(bean.id)}
-                        aria-label={`Remove ${bean.name} from comparison`}
+                        aria-label={t("remove", { name: bean.name })}
                         className="ml-1 rounded p-0.5 text-muted-foreground hover:bg-parchment hover:text-foreground dark:hover:bg-roast-dark"
                       >
                         <X className="h-3 w-3" />
@@ -109,10 +109,10 @@ export function ComparisonTray({ beans, methods, flavorNotes }: Props) {
                 <Link
                   href={`/compare?beans=${selected.map((b) => b.slug).join(",")}`}
                   className="inline-flex shrink-0 items-center gap-1 rounded-md border border-border px-2.5 py-1.5 text-xs text-muted-foreground hover:border-roast-medium hover:text-foreground"
-                  title="Open as a shareable page"
+                  title={t("shareTitle")}
                 >
                   <ExternalLink className="h-3 w-3" />
-                  Share link
+                  {t("shareLink")}
                 </Link>
 
                 <button
@@ -120,7 +120,7 @@ export function ComparisonTray({ beans, methods, flavorNotes }: Props) {
                   onClick={() => setShowFull(true)}
                   className="shrink-0 rounded-md bg-roast-medium px-3 py-1.5 text-xs font-medium text-cream hover:bg-roast-dark"
                 >
-                  Compare →
+                  {t("compare")}
                 </button>
               </div>
             </div>

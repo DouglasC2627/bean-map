@@ -1,16 +1,17 @@
 "use client";
 
 import { useId } from "react";
+import { useTranslations } from "next-intl";
 import type { FlavorProfile } from "@/types";
 import { cn } from "@/lib/utils";
 
-const AXES: Array<{ key: keyof FlavorProfile; label: string }> = [
-  { key: "acidity", label: "Acidity" },
-  { key: "fruitiness", label: "Fruitiness" },
-  { key: "complexity", label: "Complexity" },
-  { key: "bitterness", label: "Bitterness" },
-  { key: "body", label: "Body" },
-  { key: "sweetness", label: "Sweetness" },
+const AXES: Array<{ key: keyof FlavorProfile }> = [
+  { key: "acidity" },
+  { key: "fruitiness" },
+  { key: "complexity" },
+  { key: "bitterness" },
+  { key: "body" },
+  { key: "sweetness" },
 ];
 
 const SIZE = 240;
@@ -58,6 +59,8 @@ export function FlavorRadar({
   className,
 }: Props) {
   const titleId = useId();
+  const t = useTranslations("radar");
+  const tAxes = useTranslations("axes");
 
   return (
     <div className={cn("flex flex-col items-center", className)}>
@@ -70,7 +73,7 @@ export function FlavorRadar({
         className="overflow-visible motion-safe:animate-[radar-fade_400ms_ease-out]"
       >
         <title id={titleId}>
-          Flavor radar chart for {series.map((s) => s.label).join(", ")}
+          {t("title", { names: series.map((s) => s.label).join(", ") })}
         </title>
 
         {/* Rings */}
@@ -147,7 +150,7 @@ export function FlavorRadar({
                   dominantBaseline="middle"
                   fontFamily="var(--font-mono, ui-monospace, SFMono-Regular)"
                 >
-                  {axis.label}
+                  {tAxes(axis.key)}
                 </text>
               );
             })}
@@ -182,12 +185,12 @@ export function FlavorRadar({
           remaining in the accessibility tree. */}
       <div className="sr-only">
         <table>
-          <caption>Flavor profile values, scale 1 to 10</caption>
+          <caption>{t("caption")}</caption>
           <thead>
             <tr>
-              <th>Bean</th>
+              <th>{t("bean")}</th>
               {AXES.map((a) => (
-                <th key={a.key}>{a.label}</th>
+                <th key={a.key}>{tAxes(a.key)}</th>
               ))}
             </tr>
           </thead>

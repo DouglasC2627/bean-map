@@ -1,0 +1,358 @@
+{
+  "metadata": {
+    "home": {
+      "title": "BeanMap — 咖啡產地、風味與沖煮",
+      "description": "一張互動式的世界咖啡豆地圖，呈現產地、風味輪廓與推薦沖煮方式。"
+    },
+    "beans": {
+      "title": "咖啡豆目錄 · BeanMap",
+      "description": "瀏覽 BeanMap 中的每一款咖啡豆檔案。"
+    },
+    "compare": {
+      "title": "比較咖啡豆 · BeanMap",
+      "description": "並列比較咖啡豆檔案。",
+      "titleWith": "{names} · 在 BeanMap 比較",
+      "descriptionWith": "比較 {names} 的風味輪廓、產地與沖煮契合度。"
+    },
+    "flavors": {
+      "title": "風味輪 · BeanMap",
+      "description": "探索咖啡的風味類別、子類別與風味調。點選風味輪上的任一區塊即可在地圖上篩選咖啡豆。"
+    },
+    "insights": {
+      "title": "風土透視 · BeanMap",
+      "description": "依海拔、採收季節及其他面向探索咖啡產地。"
+    },
+    "learn": {
+      "title": "學堂 · BeanMap",
+      "description": "關於咖啡處理法與沖煮技巧的背景知識。"
+    }
+  },
+  "nav": {
+    "logoAlt": "BeanMap 標誌",
+    "explore": "地圖",
+    "beans": "咖啡豆目錄",
+    "insights": "風土透視",
+    "flavors": "風味",
+    "learn": "學堂",
+    "searchBeans": "搜尋咖啡豆",
+    "searchPlaceholder": "搜尋咖啡豆…",
+    "search": "搜尋",
+    "openMenu": "開啟選單",
+    "closeMenu": "關閉選單",
+    "switchLanguage": "切換語言"
+  },
+  "filters": {
+    "toggle": "切換篩選",
+    "close": "關閉篩選",
+    "title": "篩選",
+    "reset": "重設",
+    "matchCount": "符合 <mono>{matching}</mono> / 共 {total} 款咖啡豆",
+    "showOnMap": "在地圖上顯示",
+    "viewOnMap": "在地圖上檢視",
+    "region": "產區",
+    "regions": {
+      "africa": "非洲",
+      "central-america": "中美洲",
+      "south-america": "南美洲",
+      "asia-pacific": "亞太",
+      "islands": "島嶼"
+    },
+    "processingMethod": "處理法",
+    "roastLevel": "烘焙度",
+    "altitude": "海拔（公尺）",
+    "flavorNotes": "風味",
+    "flavorWheel": "風味輪",
+    "hide": "隱藏",
+    "open": "開啟",
+    "flavorProfile": "風味輪廓"
+  },
+  "activeFilters": {
+    "label": "篩選條件：",
+    "roastChip": "{label}",
+    "remove": "移除篩選"
+  },
+  "search": {
+    "placeholderLocate": "在本頁尋找咖啡豆…",
+    "placeholderGlobal": "依名稱、國家、產區或風味搜尋咖啡豆…",
+    "recentHeading": "最近",
+    "clearAll": "全部清除",
+    "noMatches": "沒有符合的結果。試試國家、產區或風味調。",
+    "beansHeading": "咖啡豆",
+    "removeRecent": "從最近紀錄移除"
+  },
+  "beans": {
+    "heading": "咖啡豆目錄",
+    "subtitle": "瀏覽、排序並篩選每一款咖啡豆檔案。"
+  },
+  "beansBrowser": {
+    "countOf": "共 {total} 款中的 {shown} 款",
+    "grid": "網格",
+    "table": "表格",
+    "empty": "沒有符合目前篩選條件的咖啡豆。",
+    "col": {
+      "name": "名稱",
+      "country": "國家",
+      "region": "產區",
+      "altitude": "海拔",
+      "processing": "處理法",
+      "roast": "烘焙度",
+      "acidity": "酸度",
+      "body": "醇厚度",
+      "sweetness": "甜度"
+    },
+    "map": "地圖",
+    "viewProfile": "查看檔案",
+    "showOnMap": "在地圖上顯示"
+  },
+  "bean": {
+    "title": "{name} — BeanMap",
+    "notFoundTitle": "找不到咖啡豆 — BeanMap",
+    "viewOnMap": "← 在地圖上檢視",
+    "didYouKnow": "你知道嗎？",
+    "flavorProfile": "風味輪廓",
+    "details": "詳細資料",
+    "varieties": "品種",
+    "processing": "處理法",
+    "roast": "烘焙度",
+    "harvest": "採收期",
+    "tastingNotes": "風味描述",
+    "brewingRecommendations": "沖煮建議",
+    "similarBeans": "相似咖啡豆",
+    "affinity": "契合度 {score}/10",
+    "grind": "研磨",
+    "temp": "水溫",
+    "ratio": "粉水比",
+    "brew": "沖煮",
+    "profileOf": "{name} 的檔案",
+    "beanProfile": "咖啡豆檔案",
+    "closePanel": "關閉面板",
+    "recommendedBrewing": "推薦沖煮",
+    "viewFullProfile": "查看完整檔案 →"
+  },
+  "compare": {
+    "heading": "比較咖啡豆",
+    "subtitle": "從地圖或清單中最多挑選 3 款咖啡豆並排比較。",
+    "empty": "尚未選擇咖啡豆。開啟一款咖啡豆並點擊「<compare>比較</compare>」即可加入。",
+    "openMap": "開啟地圖",
+    "browseBeans": "瀏覽咖啡豆"
+  },
+  "compareTray": {
+    "tray": "比較盤",
+    "collapse": "收合比較盤",
+    "expand": "展開比較盤",
+    "heading": "比較（{count}/3）",
+    "remove": "從比較中移除 {name}",
+    "shareTitle": "開啟為可分享的頁面",
+    "shareLink": "分享連結",
+    "compare": "比較 →"
+  },
+  "axes": {
+    "acidity": "酸度",
+    "body": "醇厚度",
+    "sweetness": "甜度",
+    "bitterness": "苦度",
+    "complexity": "複雜度",
+    "fruitiness": "果香度"
+  },
+  "radar": {
+    "title": "{names} 的風味雷達圖",
+    "caption": "風味輪廓數值，範圍 1 至 10",
+    "bean": "咖啡豆"
+  },
+  "compareView": {
+    "title": "比較咖啡豆",
+    "subtitle": "{count} 款咖啡豆的風味、產地與沖煮契合度並列比較。",
+    "close": "關閉比較",
+    "flavorOverlay": "風味輪廓疊圖",
+    "originProcessing": "產地與處理法",
+    "attribute": "屬性",
+    "country": "國家",
+    "altitude": "海拔",
+    "processing": "處理法",
+    "roast": "烘焙度",
+    "varieties": "品種",
+    "harvest": "採收期",
+    "topFlavorNotes": "主要風味調",
+    "brewingComparison": "沖煮比較",
+    "parameter": "參數",
+    "bestTitle": "此沖煮方式的最佳契合度",
+    "best": "最佳",
+    "affinity": "契合度",
+    "grind": "研磨",
+    "waterTemp": "水溫",
+    "ratio": "粉水比",
+    "brewTime": "沖煮時間",
+    "difficulty": "難度",
+    "tastingNotes": "風味描述"
+  },
+  "flavors": {
+    "heading": "風味輪",
+    "subtitle": "將游標移至風味輪區塊可查看對應咖啡豆數量，點選任一區塊即可篩選地圖。選取某個內圈類別會包含其中所有風味。"
+  },
+  "insights": {
+    "heading": "風土透視",
+    "subtitle": "跨咖啡豆目錄的彙整視圖。探索頁的篩選條件在此同樣適用。"
+  },
+  "insightsClient": {
+    "showing": "顯示 {total} 款中的 {shown} 款",
+    "altitudeRanges": "海拔範圍",
+    "altitudeDesc": "依海拔中點排序（由高至低）。點選長條即可在地圖上開啟該咖啡豆。",
+    "harvestCalendar": "採收行事曆",
+    "harvestDesc": "各產地的產季。當前月份以櫻桃紅標示。"
+  },
+  "seasonal": {
+    "allBeans": "咖啡豆目錄",
+    "bean": "咖啡豆",
+    "empty": "沒有可顯示的咖啡豆。",
+    "harvestAria": "{month} 採收",
+    "notHarvestedAria": "{month} 非採收期",
+    "currentMonthNote": "標示欄位：當前月份（{month}）。"
+  },
+  "flavorsExplorer": {
+    "beansMatching": "符合的咖啡豆",
+    "ofTotal": "／ 共 {total} 款",
+    "selection": "已選取",
+    "category": "類別",
+    "subcategory": "子類別",
+    "note": "風味調",
+    "clickToFilter": "點選風味輪上的區塊即可篩選。",
+    "showOnMap": "在地圖上顯示",
+    "matchingBeans": "符合的咖啡豆（{count}）",
+    "allBeans": "咖啡豆目錄（{count}）",
+    "noMatch": "沒有符合此組合的咖啡豆。請換一種風味或清除選取。",
+    "aboutHeading": "關於咖啡風味輪",
+    "aboutP1": "咖啡風味輪是精品咖啡社群用來描述味道的一套結構化詞彙。它由內而外閱讀：最內圈是廣義的<strong>類別</strong>（果香、花香、堅果／可可、甜感等），中圈將各類別細分為<strong>子類別</strong>（莓果、柑橘、紅糖…），最外圈則列出品鑑者實際會說出的具體<strong>風味調</strong>——黑莓、佛手柑、焦糖。",
+    "aboutP2": "最初的風味輪由精品咖啡協會（SCA）與世界咖啡研究組織（World Coffee Research）共同開發，是關於咖啡師、烘豆師與杯測師如何描述咖啡感官體驗、具研究依據的共識。杯測時會對照這套詞彙進行品鑑，使不同產地與烘焙度的風味輪廓能一致地比較。",
+    "aboutP3": "在本頁中，點選風味輪上的任何位置即可篩選咖啡豆目錄。點選外圈的風味調可尋找單一風味，點選子類別可擴大搜尋，點選類別則可看到所有風味觸及該家族的咖啡豆。"
+  },
+  "learn": {
+    "heading": "學堂",
+    "subtitle": "關於咖啡如何處理與沖煮的背景知識。",
+    "processingHeading": "處理法",
+    "brewingHeading": "沖煮指南",
+    "processingEmpty": "水洗、日曬、蜜處理、厭氧發酵與濕剝處理的文章即將推出。",
+    "brewingEmpty": "V60、Chemex、Kalita Wave、法式濾壓壺、愛樂壓、義式濃縮、冷萃與摩卡壺的指南即將推出。",
+    "minRead": "閱讀時間 {minutes} 分鐘",
+    "backToLearn": "返回學堂",
+    "processingLabel": "處理法",
+    "brewingLabel": "沖煮指南",
+    "notFoundTitle": "找不到頁面 · BeanMap"
+  },
+  "brew": {
+    "best": "最佳",
+    "grind": "研磨",
+    "temperature": "水溫",
+    "ratio": "粉水比",
+    "time": "時間",
+    "difficulty": "難度",
+    "difficultyLabel": "難度",
+    "affinityOf": "契合度 {score} / 10",
+    "doseCalculator": "粉量計算器",
+    "cups": "杯數",
+    "decreaseCups": "減少杯數",
+    "increaseCups": "增加杯數",
+    "cupSize": "杯量",
+    "coffee": "咖啡",
+    "water": "水",
+    "recipeFallback": "為這款咖啡豆量身調整的沖煮配方。",
+    "brewTime": "沖煮時間",
+    "toggleTempUnit": "切換溫度單位",
+    "bloom": "第一次注水前先悶蒸 <mono>{seconds} 秒</mono>。",
+    "pourSchedule": "注水排程",
+    "equipment": "器材",
+    "whyThisWorks": "原理說明",
+    "readGuide": "閱讀完整的 {name} 指南",
+    "brewingFallbackName": "沖煮"
+  },
+  "timer": {
+    "methodTimer": "{method} 計時器",
+    "brewTimer": "沖煮計時器",
+    "mute": "靜音階段提示",
+    "enableSound": "開啟階段提示音",
+    "of": "／ {time}",
+    "announce": "{label}　注水 {ml}ml",
+    "complete": "沖煮完成",
+    "bloom": "悶蒸",
+    "bloomUntil": "直到 {time}",
+    "ready": "準備就緒",
+    "next": "下一步：<name>{label}</name> 於 {time}",
+    "lastPour": "最後一次注水",
+    "noStages": "無注水階段",
+    "pause": "暫停",
+    "start": "開始",
+    "pauseAria": "暫停計時器",
+    "startAria": "開始計時器",
+    "reset": "重設",
+    "resetAria": "重設計時器",
+    "spaceHint": "按 <kbd>空白鍵</kbd> 開始／暫停。"
+  },
+  "enums": {
+    "processing": {
+      "washed": "水洗",
+      "natural": "日曬",
+      "honey": "蜜處理",
+      "anaerobic": "厭氧發酵",
+      "wet-hulled": "濕剝（半水洗）"
+    },
+    "roast": {
+      "light": "淺焙",
+      "medium-light": "中淺焙",
+      "medium": "中焙",
+      "medium-dark": "中深焙",
+      "dark": "深焙"
+    },
+    "grind": {
+      "extra-fine": "極細",
+      "fine": "細",
+      "medium-fine": "中細",
+      "medium": "中等",
+      "medium-coarse": "中粗",
+      "coarse": "粗",
+      "extra-coarse": "極粗"
+    }
+  },
+  "flavorWheel": {
+    "title": "風味輪",
+    "close": "關閉風味輪",
+    "hint": "點選任一區塊即可篩選地圖。",
+    "aria": "咖啡風味輪",
+    "kindCategory": "類別",
+    "kindSubcategory": "子類別",
+    "kindNote": "風味調",
+    "beanCount": "{count} 款咖啡豆",
+    "centerFlavor": "風味",
+    "centerWheel": "輪",
+    "centerHint": "將游標移至或點按區塊",
+    "segmentAria": "{name}，{count} 款咖啡豆",
+    "selectedSuffix": "，已選取",
+    "tableCaption": "咖啡風味輪——類別、子類別與風味調",
+    "colCategory": "類別",
+    "colSubcategory": "子類別",
+    "colNote": "風味調",
+    "colBeans": "咖啡豆"
+  },
+  "compareToggle": {
+    "remove": "從比較中移除",
+    "full": "比較已滿（最多 3 款）",
+    "add": "加入比較",
+    "inComparison": "比較中",
+    "fullShort": "比較已滿",
+    "compare": "比較"
+  },
+  "map": {
+    "beanBelt": "咖啡帶",
+    "tokenMissingTitle": "缺少 Mapbox token",
+    "tokenMissingBody": "請將 <code>NEXT_PUBLIC_MAPBOX_TOKEN</code> 加入 <code>.env.local</code>（參見 <code>.env.example</code>）並重新啟動開發伺服器。"
+  },
+  "common": {
+    "masl": "公尺",
+    "minRead": "閱讀時間 {minutes} 分鐘",
+    "clear": "清除",
+    "clearAll": "全部清除",
+    "close": "關閉",
+    "loading": "載入中…",
+    "toggleTheme": "切換主題",
+    "dragToResize": "拖曳以調整大小",
+    "bottomSheet": "底部面板"
+  }
+}

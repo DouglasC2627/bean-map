@@ -1,13 +1,33 @@
 import Fuse from "fuse.js";
-import type { CoffeeBean } from "@/types";
+import type { CoffeeBean, FlavorNotesData } from "@/types";
+import { flavorNoteLabel } from "@/lib/utils";
 
-export function createBeanSearch(beans: CoffeeBean[]): Fuse<CoffeeBean> {
-  return new Fuse(beans, {
+/**
+ * A bean augmented with its resolved (and possibly localized) flavor-note
+ * labels, so search matches both the stable English note ids ("jasmine") and
+ * the display labels in the active locale ("茉莉").
+ */
+export interface SearchableBean extends CoffeeBean {
+  flavorNoteLabels: string[];
+}
+
+export function createBeanSearch(
+  beans: CoffeeBean[],
+  flavorNotes?: FlavorNotesData,
+): Fuse<SearchableBean> {
+  const list: SearchableBean[] = beans.map((b) => ({
+    ...b,
+    flavorNoteLabels: flavorNotes
+      ? b.flavorNotes.map((id) => flavorNoteLabel(flavorNotes, id))
+      : b.flavorNotes,
+  }));
+  return new Fuse(list, {
     keys: [
-      { name: "name", weight: 0.45 },
+      { name: "name", weight: 0.4 },
       { name: "country", weight: 0.2 },
-      { name: "region", weight: 0.2 },
-      { name: "flavorNotes", weight: 0.15 },
+      { name: "region", weight: 0.15 },
+      { name: "flavorNotes", weight: 0.1 },
+      { name: "flavorNoteLabels", weight: 0.15 },
     ],
     threshold: 0.3,
     ignoreLocation: true,

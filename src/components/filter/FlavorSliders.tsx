@@ -1,27 +1,29 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useBeanMap } from "@/store";
 import type { FlavorRanges } from "@/store";
 import { Slider } from "@/components/ui/slider";
 
-const AXES: Array<{ key: keyof FlavorRanges; label: string }> = [
-  { key: "acidity", label: "Acidity" },
-  { key: "body", label: "Body" },
-  { key: "sweetness", label: "Sweetness" },
-  { key: "bitterness", label: "Bitterness" },
+const AXES: Array<keyof FlavorRanges> = [
+  "acidity",
+  "body",
+  "sweetness",
+  "bitterness",
 ];
 
 export function FlavorSliders() {
+  const tAxes = useTranslations("axes");
   const { filters, setFlavorRange } = useBeanMap();
 
   return (
     <div className="space-y-4">
       {AXES.map((axis) => {
-        const range = filters.flavorRanges[axis.key];
+        const range = filters.flavorRanges[axis];
         return (
-          <div key={axis.key}>
+          <div key={axis}>
             <div className="mb-1 flex items-baseline justify-between">
-              <span className="text-sm">{axis.label}</span>
+              <span className="text-sm">{tAxes(axis)}</span>
               <span className="font-mono text-xs text-muted-foreground">
                 {range[0]}–{range[1]}
               </span>
@@ -33,7 +35,7 @@ export function FlavorSliders() {
               value={range}
               onValueChange={(v) => {
                 if (Array.isArray(v) && v.length === 2) {
-                  setFlavorRange(axis.key, [v[0], v[1]]);
+                  setFlavorRange(axis, [v[0], v[1]]);
                 }
               }}
             />

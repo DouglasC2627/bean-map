@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { ArrowRight, Star } from "lucide-react";
 import {
   Dialog,
@@ -15,6 +15,7 @@ import type {
   BrewingMethod,
   CoffeeBean,
 } from "@/types";
+import { Link } from "@/i18n/navigation";
 import {
   GRIND_SCALE,
   celsiusToFahrenheit,
@@ -52,6 +53,8 @@ export function BrewDetailModal({
   recommendation: rec,
   method,
 }: Props) {
+  const t = useTranslations("brew");
+  const tEnum = useTranslations("enums");
   const [tempUnit, setTempUnit] = useState<"C" | "F">("C");
 
   const grindIndex = GRIND_SCALE.findIndex((g) => g.id === rec.grindSize);
@@ -65,13 +68,13 @@ export function BrewDetailModal({
             {method?.name ?? rec.methodId} · {bean.name}
           </DialogTitle>
           <DialogDescription>
-            {method?.description ?? "Brewing recipe tuned for this bean."}
+            {method?.description ?? t("recipeFallback")}
           </DialogDescription>
         </DialogHeader>
 
         <section>
           <h4 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Grind
+            {t("grind")}
           </h4>
           <div className="flex items-end gap-1">
             {GRIND_SCALE.map((g, i) => (
@@ -96,7 +99,7 @@ export function BrewDetailModal({
                       : "text-muted-foreground",
                   )}
                 >
-                  {g.label.split("-").join(" ")}
+                  {tEnum(`grind.${g.id}`)}
                 </div>
               </div>
             ))}
@@ -107,27 +110,27 @@ export function BrewDetailModal({
         </section>
 
         <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <Stat label="Temperature">
+          <Stat label={t("temperature")}>
             <button
               type="button"
               onClick={() => setTempUnit(tempUnit === "C" ? "F" : "C")}
               className="font-mono text-base hover:text-roast-medium"
-              aria-label="Toggle temperature unit"
+              aria-label={t("toggleTempUnit")}
             >
               {tempUnit === "C"
                 ? `${rec.waterTempC}°C`
                 : `${celsiusToFahrenheit(rec.waterTempC)}°F`}
             </button>
           </Stat>
-          <Stat label="Ratio">
+          <Stat label={t("ratio")}>
             <span className="font-mono text-base">{rec.ratio}</span>
           </Stat>
-          <Stat label="Brew time">
+          <Stat label={t("brewTime")}>
             <span className="font-mono text-base">
               {formatBrewTime(rec.brewSeconds)}
             </span>
           </Stat>
-          <Stat label="Difficulty">
+          <Stat label={t("difficultyLabel")}>
             <div className="flex items-center gap-0.5">
               {Array.from({ length: 5 }, (_, i) => (
                 <Star
@@ -146,9 +149,10 @@ export function BrewDetailModal({
 
         {rec.bloomSeconds && (
           <p className="text-xs text-muted-foreground">
-            Bloom for{" "}
-            <span className="font-mono">{rec.bloomSeconds}s</span> before the
-            first pour.
+            {t.rich("bloom", {
+              seconds: rec.bloomSeconds,
+              mono: (chunks) => <span className="font-mono">{chunks}</span>,
+            })}
           </p>
         )}
 
@@ -162,7 +166,7 @@ export function BrewDetailModal({
         {rec.pourStages && rec.pourStages.length > 0 && (
           <section>
             <h4 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Pour schedule
+              {t("pourSchedule")}
             </h4>
             <ol className="space-y-1.5">
               {rec.pourStages.map((stage, i) => (
@@ -186,7 +190,7 @@ export function BrewDetailModal({
         {method?.equipment && method.equipment.length > 0 && (
           <section>
             <h4 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Equipment
+              {t("equipment")}
             </h4>
             <ul className="flex flex-wrap gap-1.5 text-xs">
               {method.equipment.map((e) => (
@@ -203,7 +207,7 @@ export function BrewDetailModal({
 
         <section>
           <h4 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Why this works
+            {t("whyThisWorks")}
           </h4>
           <p className="text-sm">{rec.tastingNotes}</p>
         </section>
@@ -213,7 +217,7 @@ export function BrewDetailModal({
             href={`/learn/brewing/${guideSlug}`}
             className="inline-flex items-center gap-1.5 text-sm font-medium text-roast-medium hover:underline"
           >
-            Read the full {method?.name ?? "brewing"} guide
+            {t("readGuide", { name: method?.name ?? t("brewingFallbackName") })}
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         )}

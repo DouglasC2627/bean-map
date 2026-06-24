@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Star } from "lucide-react";
 import type { BrewRecommendation, BrewingMethod } from "@/types";
 import { cn, formatBrewTime } from "@/lib/utils";
@@ -17,6 +18,8 @@ export function BrewCard({
   isBest,
   onClick,
 }: Props) {
+  const t = useTranslations("brew");
+  const tEnum = useTranslations("enums");
   return (
     <button
       type="button"
@@ -28,7 +31,7 @@ export function BrewCard({
     >
       {isBest && (
         <span className="absolute -top-2 right-2 rounded-full bg-roast-medium px-1.5 py-0.5 text-[10px] uppercase tracking-wider text-cream">
-          Best
+          {t("best")}
         </span>
       )}
       <div className="flex items-baseline justify-between gap-2">
@@ -38,13 +41,13 @@ export function BrewCard({
         <AffinityDots score={rec.affinity} />
       </div>
       <dl className="grid grid-cols-2 gap-x-2 gap-y-0.5 font-mono text-[11px] text-muted-foreground">
-        <dt className="sr-only">Grind</dt>
-        <dd className="capitalize">{rec.grindSize.replace(/-/g, " ")}</dd>
-        <dt className="sr-only">Temperature</dt>
+        <dt className="sr-only">{t("grind")}</dt>
+        <dd>{tEnum(`grind.${rec.grindSize}`)}</dd>
+        <dt className="sr-only">{t("temperature")}</dt>
         <dd>{rec.waterTempC}°C</dd>
-        <dt className="sr-only">Ratio</dt>
+        <dt className="sr-only">{t("ratio")}</dt>
         <dd>{rec.ratio}</dd>
-        <dt className="sr-only">Time</dt>
+        <dt className="sr-only">{t("time")}</dt>
         <dd>{formatBrewTime(rec.brewSeconds)}</dd>
       </dl>
       <div className="flex items-center gap-0.5">
@@ -60,7 +63,7 @@ export function BrewCard({
           />
         ))}
         <span className="ml-1 text-[10px] text-muted-foreground">
-          difficulty
+          {t("difficulty")}
         </span>
       </div>
     </button>
@@ -68,10 +71,11 @@ export function BrewCard({
 }
 
 function AffinityDots({ score }: { score: number }) {
+  const t = useTranslations("brew");
   const filled = Math.round(score);
   return (
     <div
-      aria-label={`Affinity ${score} of 10`}
+      aria-label={t("affinityOf", { score })}
       className="flex shrink-0 items-center gap-[2px]"
     >
       {Array.from({ length: 10 }, (_, i) => (

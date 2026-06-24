@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Pause, Play, RotateCcw, Volume2, VolumeX } from "lucide-react";
 import type { PourStage } from "@/types";
 import { cn, formatBrewTime } from "@/lib/utils";
@@ -31,6 +32,7 @@ export function BrewTimer({
   methodName,
   className,
 }: BrewTimerProps) {
+  const t = useTranslations("timer");
   const titleId = useId();
   const sortedStages = useMemo(
     () =>
@@ -174,11 +176,13 @@ export function BrewTimer({
       setStageIndex(idx);
       if (idx > prev && idx >= 0) {
         const stage = sortedStages[idx];
-        setStageAnnouncement(`${stage.label} — pour ${stage.waterMl}ml`);
+        setStageAnnouncement(
+          t("announce", { label: stage.label, ml: stage.waterMl }),
+        );
         if (soundOn && running) playBeep();
       }
     }
-  }, [elapsedMs, sortedStages, soundOn, running, playBeep]);
+  }, [elapsedMs, sortedStages, soundOn, running, playBeep, t]);
 
   // Play the time-up chime once when the countdown reaches the total.
   useEffect(() => {
@@ -186,12 +190,12 @@ export function BrewTimer({
     const done = elapsedMs >= totalSeconds * 1000;
     if (done && !completedRef.current) {
       completedRef.current = true;
-      setStageAnnouncement("Brew complete");
+      setStageAnnouncement(t("complete"));
       if (soundOn) playCompletionChime();
     } else if (!done && completedRef.current) {
       completedRef.current = false;
     }
-  }, [elapsedMs, totalSeconds, soundOn, playCompletionChime]);
+  }, [elapsedMs, totalSeconds, soundOn, playCompletionChime, t]);
 
   const start = useCallback(() => {
     // Resume / create context within the user gesture so iOS allows audio later.
@@ -276,12 +280,12 @@ export function BrewTimer({
           id={titleId}
           className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
         >
-          {methodName ? `${methodName} timer` : "Brew timer"}
+          {methodName ? t("methodTimer", { method: methodName }) : t("brewTimer")}
         </h4>
         <button
           type="button"
           onClick={toggleSound}
-          aria-label={soundOn ? "Mute stage alerts" : "Enable stage alert sound"}
+          aria-label={soundOn ? t("mute") : t("enableSound")}
           aria-pressed={soundOn}
           className="rounded-md p-1 text-muted-foreground hover:bg-parchment hover:text-foreground dark:hover:bg-roast-dark"
         >
@@ -329,7 +333,7 @@ export function BrewTimer({
               {formatClock(remainingSec)}
             </span>
             <span className="font-mono text-[10px] text-muted-foreground">
-              of {formatClock(totalSeconds)}
+              {t("of", { time: formatClock(totalSeconds) })}
             </span>
           </div>
         </div>
@@ -337,9 +341,11 @@ export function BrewTimer({
         <div className="flex flex-1 flex-col gap-1 text-sm">
           {inBloom ? (
             <div className="text-xs">
-              <span className="font-semibold text-roast-medium">Bloom</span>{" "}
+              <span className="font-semibold text-roast-medium">
+                {t("bloom")}
+              </span>{" "}
               <span className="text-muted-foreground">
-                until {formatBrewTime(bloomSeconds!)}
+                {t("bloomUntil", { time: formatBrewTime(bloomSeconds!) })}
               </span>
             </div>
           ) : currentStage ? (
@@ -351,20 +357,22 @@ export function BrewTimer({
               </span>
             </div>
           ) : (
-            <div className="text-xs text-muted-foreground">Ready</div>
+            <div className="text-xs text-muted-foreground">{t("ready")}</div>
           )}
 
           {nextStage ? (
             <div className="text-[11px] text-muted-foreground">
-              Next:{" "}
-              <span className="font-medium text-foreground">
-                {nextStage.label}
-              </span>{" "}
-              at {formatBrewTime(nextStage.atSeconds)}
+              {t.rich("next", {
+                label: nextStage.label,
+                time: formatBrewTime(nextStage.atSeconds),
+                name: (chunks) => (
+                  <span className="font-medium text-foreground">{chunks}</span>
+                ),
+              })}
             </div>
           ) : (
             <div className="text-[11px] text-muted-foreground">
-              {sortedStages.length > 0 ? "Last pour" : "No pour stages"}
+              {sortedStages.length > 0 ? t("lastPour") : t("noStages")}
             </div>
           )}
 
@@ -373,17 +381,17 @@ export function BrewTimer({
               type="button"
               onClick={running ? pause : start}
               className="inline-flex items-center gap-1.5 rounded-md bg-roast-medium px-3 py-1.5 text-xs text-cream hover:bg-roast-dark"
-              aria-label={running ? "Pause timer" : "Start timer"}
+              aria-label={running ? t("pauseAria") : t("startAria")}
             >
               {running ? (
                 <>
                   <Pause className="h-3.5 w-3.5" />
-                  Pause
+                  {t("pause")}
                 </>
               ) : (
                 <>
                   <Play className="h-3.5 w-3.5" />
-                  Start
+                  {t("start")}
                 </>
               )}
             </button>
@@ -392,14 +400,16 @@ export function BrewTimer({
               onClick={reset}
               disabled={elapsedMs === 0 && !running}
               className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1.5 text-xs text-muted-foreground hover:border-roast-medium hover:text-foreground disabled:opacity-50"
-              aria-label="Reset timer"
+              aria-label={t("resetAria")}
             >
               <RotateCcw className="h-3.5 w-3.5" />
-              Reset
+              {t("reset")}
             </button>
           </div>
           <p className="text-[10px] text-muted-foreground">
-            Press <kbd className="font-mono">Space</kbd> to start/pause.
+            {t.rich("spaceHint", {
+              kbd: (chunks) => <kbd className="font-mono">{chunks}</kbd>,
+            })}
           </p>
         </div>
       </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
 import { Trophy, X } from "lucide-react";
 import {
   Dialog,
@@ -10,6 +10,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import type { BrewingMethod, CoffeeBean, FlavorNotesData } from "@/types";
+import { Link } from "@/i18n/navigation";
 import {
   cn,
   countryFlagEmoji,
@@ -29,6 +30,7 @@ interface Props {
 }
 
 export function ComparisonView({ beans, onClose, methods, flavorNotes }: Props) {
+  const t = useTranslations("compareView");
   const series = useMemo(
     () =>
       beans.map((b, i) => ({
@@ -74,17 +76,16 @@ export function ComparisonView({ beans, onClose, methods, flavorNotes }: Props) 
           <div className="flex items-start justify-between border-b border-border p-4">
             <div>
               <DialogTitle className="font-display text-xl">
-                Compare beans
+                {t("title")}
               </DialogTitle>
               <DialogDescription>
-                Side-by-side flavor, origin, and brewing affinity for{" "}
-                {beans.length} bean{beans.length === 1 ? "" : "s"}.
+                {t("subtitle", { count: beans.length })}
               </DialogDescription>
             </div>
             <button
               type="button"
               onClick={onClose}
-              aria-label="Close comparison"
+              aria-label={t("close")}
               className="rounded-md p-1 text-muted-foreground hover:bg-parchment hover:text-foreground dark:hover:bg-roast-dark"
             >
               <X className="h-5 w-5" />
@@ -123,6 +124,11 @@ function ComparisonBody({
   selectedMethod,
   onSelectMethod,
 }: BodyProps) {
+  const t = useTranslations("compareView");
+  const tEnum = useTranslations("enums");
+  const tCommon = useTranslations("common");
+  const locale = useLocale();
+  const listSep = locale === "zh-TW" ? "、" : ", ";
   const methodById = useMemo(
     () => new Map((methods ?? []).map((m) => [m.id, m])),
     [methods],
@@ -180,7 +186,7 @@ function ComparisonBody({
 
       <section>
         <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Flavor profile overlay
+          {t("flavorOverlay")}
         </h3>
         <div className="rounded-lg border border-border bg-surface/40 p-4">
           <FlavorRadar series={series} size={300} showLegend />
@@ -189,14 +195,14 @@ function ComparisonBody({
 
       <section>
         <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Origin & processing
+          {t("originProcessing")}
         </h3>
         <div className="overflow-x-auto rounded-lg border border-border">
           <table className="w-full text-sm">
             <thead className="bg-parchment/50 dark:bg-roast-dark/40">
               <tr className="text-left">
                 <th className="px-3 py-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                  Attribute
+                  {t("attribute")}
                 </th>
                 {beans.map((b) => (
                   <th
@@ -209,7 +215,7 @@ function ComparisonBody({
               </tr>
             </thead>
             <tbody>
-              <Row label="Country">
+              <Row label={t("country")}>
                 {beans.map((b) => (
                   <Cell key={b.id}>
                     <span aria-hidden className="flag mr-1">
@@ -219,42 +225,42 @@ function ComparisonBody({
                   </Cell>
                 ))}
               </Row>
-              <Row label="Altitude">
+              <Row label={t("altitude")}>
                 {beans.map((b) => (
                   <Cell key={b.id} className="font-mono text-xs">
-                    {formatAltitude(b.altitudeMasl)}
+                    {formatAltitude(b.altitudeMasl, tCommon("masl"))}
                   </Cell>
                 ))}
               </Row>
-              <Row label="Processing">
+              <Row label={t("processing")}>
                 {beans.map((b) => (
-                  <Cell key={b.id} className="capitalize">
-                    {b.processing}
-                  </Cell>
+                  <Cell key={b.id}>{tEnum(`processing.${b.processing}`)}</Cell>
                 ))}
               </Row>
-              <Row label="Roast">
+              <Row label={t("roast")}>
                 {beans.map((b) => (
-                  <Cell key={b.id} className="capitalize">
-                    {b.roastRecommendation}
+                  <Cell key={b.id}>
+                    {tEnum(`roast.${b.roastRecommendation}`)}
                   </Cell>
                 ))}
               </Row>
-              <Row label="Varieties">
+              <Row label={t("varieties")}>
                 {beans.map((b) => (
                   <Cell key={b.id} className="text-xs">
-                    {b.varieties.join(", ")}
+                    {b.varieties.join(listSep)}
                   </Cell>
                 ))}
               </Row>
-              <Row label="Harvest">
+              <Row label={t("harvest")}>
                 {beans.map((b) => (
                   <Cell key={b.id} className="text-xs">
-                    {b.harvestMonths.map(monthName).join(", ")}
+                    {b.harvestMonths
+                      .map((m) => monthName(m, locale))
+                      .join(listSep)}
                   </Cell>
                 ))}
               </Row>
-              <Row label="Top flavor notes">
+              <Row label={t("topFlavorNotes")}>
                 {beans.map((b) => (
                   <Cell key={b.id}>
                     <div className="flex flex-wrap gap-1">
@@ -281,7 +287,7 @@ function ComparisonBody({
         <section>
           <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Brewing comparison
+              {t("brewingComparison")}
             </h3>
             <div className="flex flex-wrap gap-1">
               {methodIds.map((id) => {
@@ -312,7 +318,7 @@ function ComparisonBody({
               <thead className="bg-parchment/50 dark:bg-roast-dark/40">
                 <tr className="text-left">
                   <th className="px-3 py-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                    Parameter
+                    {t("parameter")}
                   </th>
                   {beans.map((b) => (
                     <th
@@ -324,10 +330,10 @@ function ComparisonBody({
                         {bestForSelected?.beanId === b.id && (
                           <span
                             className="inline-flex items-center gap-1 rounded-full bg-leaf-green/20 px-1.5 py-0.5 text-[10px] font-medium text-leaf-green"
-                            title="Best affinity for this method"
+                            title={t("bestTitle")}
                           >
                             <Trophy className="h-3 w-3" />
-                            best
+                            {t("best")}
                           </span>
                         )}
                       </div>
@@ -336,49 +342,51 @@ function ComparisonBody({
                 </tr>
               </thead>
               <tbody>
-                <Row label="Affinity">
+                <Row label={t("affinity")}>
                   {recsForSelected.map(({ bean, rec }) => (
                     <Cell key={bean.id} className="font-mono text-xs">
                       {rec ? `${rec.affinity}/10` : "—"}
                     </Cell>
                   ))}
                 </Row>
-                <Row label="Grind">
+                <Row label={t("grind")}>
                   {recsForSelected.map(({ bean, rec }) => (
                     <Cell key={bean.id} className="font-mono text-xs">
-                      {rec ? `${rec.grindSize} (${rec.grindMicrons}µm)` : "—"}
+                      {rec
+                        ? `${tEnum(`grind.${rec.grindSize}`)} (${rec.grindMicrons}µm)`
+                        : "—"}
                     </Cell>
                   ))}
                 </Row>
-                <Row label="Water temp">
+                <Row label={t("waterTemp")}>
                   {recsForSelected.map(({ bean, rec }) => (
                     <Cell key={bean.id} className="font-mono text-xs">
                       {rec ? `${rec.waterTempC}°C` : "—"}
                     </Cell>
                   ))}
                 </Row>
-                <Row label="Ratio">
+                <Row label={t("ratio")}>
                   {recsForSelected.map(({ bean, rec }) => (
                     <Cell key={bean.id} className="font-mono text-xs">
                       {rec?.ratio ?? "—"}
                     </Cell>
                   ))}
                 </Row>
-                <Row label="Brew time">
+                <Row label={t("brewTime")}>
                   {recsForSelected.map(({ bean, rec }) => (
                     <Cell key={bean.id} className="font-mono text-xs">
                       {rec ? formatBrewTime(rec.brewSeconds) : "—"}
                     </Cell>
                   ))}
                 </Row>
-                <Row label="Difficulty">
+                <Row label={t("difficulty")}>
                   {recsForSelected.map(({ bean, rec }) => (
                     <Cell key={bean.id} className="font-mono text-xs">
                       {rec ? `${rec.difficulty}/5` : "—"}
                     </Cell>
                   ))}
                 </Row>
-                <Row label="Tasting notes">
+                <Row label={t("tastingNotes")}>
                   {recsForSelected.map(({ bean, rec }) => (
                     <Cell key={bean.id} className="text-xs">
                       {rec?.tastingNotes ?? "—"}

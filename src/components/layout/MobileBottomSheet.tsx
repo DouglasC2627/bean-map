@@ -8,6 +8,7 @@ import {
   useMemo,
   useRef,
 } from "react";
+import { useTranslations } from "next-intl";
 import { animated, config, useSpring } from "@react-spring/web";
 import { useDrag } from "@use-gesture/react";
 import { cn } from "@/lib/utils";
@@ -46,11 +47,12 @@ export function MobileBottomSheet({
   onClose,
   snapPoints = DEFAULT_SNAPS,
   initialSnap = 1,
-  label = "Bottom sheet",
+  label,
   className,
   scrollRef,
   children,
 }: MobileBottomSheetProps) {
+  const t = useTranslations("common");
   const titleId = useId();
   const sheetRef = useRef<HTMLDivElement>(null);
   const reduceMotion = usePrefersReducedMotion();
@@ -220,13 +222,13 @@ export function MobileBottomSheet({
         <div
           {...bind()}
           className="flex shrink-0 cursor-grab touch-none items-center justify-center pt-4 pb-3 active:cursor-grabbing"
-          aria-label="Drag to resize"
+          aria-label={t("dragToResize")}
           role="separator"
         >
           <div className="h-1 w-10 rounded-full bg-tan/80" />
         </div>
         <span id={titleId} className="sr-only">
-          {label}
+          {label ?? t("bottomSheet")}
         </span>
         <div
           ref={scrollRef}

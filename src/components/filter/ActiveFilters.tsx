@@ -1,39 +1,12 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { X } from "lucide-react";
-import type {
-  CoffeeBean,
-  FlavorNotesData,
-  ProcessingMethod,
-  RoastLevel,
-} from "@/types";
+import type { CoffeeBean, FlavorNotesData } from "@/types";
 import { useBeanMap, type FlavorRanges } from "@/store";
 import { cn, countryFlagEmoji } from "@/lib/utils";
 import { chipPop } from "@/lib/motion";
-
-const PROCESSING_LABELS: Record<ProcessingMethod, string> = {
-  washed: "Washed",
-  natural: "Natural",
-  honey: "Honey",
-  anaerobic: "Anaerobic",
-  "wet-hulled": "Wet-Hulled",
-};
-
-const ROAST_LABELS: Record<RoastLevel, string> = {
-  light: "Light",
-  "medium-light": "Medium-Light",
-  medium: "Medium",
-  "medium-dark": "Medium-Dark",
-  dark: "Dark",
-};
-
-const FLAVOR_LABELS: Record<keyof FlavorRanges, string> = {
-  acidity: "Acidity",
-  body: "Body",
-  sweetness: "Sweetness",
-  bitterness: "Bitterness",
-};
 
 interface Props {
   beans: CoffeeBean[];
@@ -51,6 +24,10 @@ function findFlavorLabel(data: FlavorNotesData, id: string): string {
 }
 
 export function ActiveFilters({ beans, flavorNotes, className }: Props) {
+  const t = useTranslations("activeFilters");
+  const tEnum = useTranslations("enums");
+  const tAxes = useTranslations("axes");
+  const tCommon = useTranslations("common");
   const {
     filters,
     setRegions,
@@ -94,7 +71,7 @@ export function ActiveFilters({ beans, flavorNotes, className }: Props) {
   return (
     <div className={cn("flex flex-wrap items-center gap-1.5", className)}>
       <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-        Filters:
+        {t("label")}
       </span>
 
       <AnimatePresence initial={false}>
@@ -107,19 +84,20 @@ export function ActiveFilters({ beans, flavorNotes, className }: Props) {
 
         {filters.processingMethods.map((p) => (
           <Chip key={`proc-${p}`} onRemove={() => toggleProcessing(p)}>
-            {PROCESSING_LABELS[p]}
+            {tEnum(`processing.${p}`)}
           </Chip>
         ))}
 
         {filters.roastLevels.map((r) => (
           <Chip key={`roast-${r}`} onRemove={() => toggleRoast(r)}>
-            {ROAST_LABELS[r]} roast
+            {t("roastChip", { label: tEnum(`roast.${r}`) })}
           </Chip>
         ))}
 
         {altitudeChanged && (
           <Chip key="altitude" onRemove={() => setAltitudeRange([0, 2500])}>
-            {filters.altitudeRange[0]}–{filters.altitudeRange[1]} masl
+            {filters.altitudeRange[0]}–{filters.altitudeRange[1]}{" "}
+            {tCommon("masl")}
           </Chip>
         )}
 
@@ -130,7 +108,7 @@ export function ActiveFilters({ beans, flavorNotes, className }: Props) {
               key={`flavor-${axis}`}
               onRemove={() => setFlavorRange(axis, [1, 10])}
             >
-              {FLAVOR_LABELS[axis]} {a}–{b}
+              {tAxes(axis)} {a}–{b}
             </Chip>
           );
         })}
@@ -149,7 +127,7 @@ export function ActiveFilters({ beans, flavorNotes, className }: Props) {
           onClick={resetFilters}
           className="ml-1 text-xs text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
         >
-          Clear all
+          {tCommon("clearAll")}
         </button>
       )}
     </div>
@@ -163,6 +141,7 @@ function Chip({
   children: React.ReactNode;
   onRemove: () => void;
 }) {
+  const t = useTranslations("activeFilters");
   return (
     <motion.span
       layout
@@ -176,7 +155,7 @@ function Chip({
       <button
         type="button"
         onClick={onRemove}
-        aria-label="Remove filter"
+        aria-label={t("remove")}
         className="rounded-full p-0.5 text-muted-foreground hover:bg-roast-medium/20 hover:text-foreground"
       >
         <X className="h-3 w-3" />

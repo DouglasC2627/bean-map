@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
 import {
   AnimatePresence,
   motion,
@@ -10,6 +10,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { X } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 import type {
   CoffeeBean,
   BrewingMethod,
@@ -41,6 +42,7 @@ interface Props {
 }
 
 export function BeanPanel({ beans, methods, flavorNotes }: Props) {
+  const t = useTranslations("bean");
   const { selectedBeanId, clearSelection, selectBean, requestFlyTo } =
     useBeanMap();
   const bean = beans.find((b) => b.id === selectedBeanId);
@@ -107,7 +109,9 @@ export function BeanPanel({ beans, methods, flavorNotes }: Props) {
             <motion.aside
               key="bean-panel"
               ref={asideRef}
-              aria-label={bean ? `Profile of ${bean.name}` : "Bean profile"}
+              aria-label={
+                bean ? t("profileOf", { name: bean.name }) : t("beanProfile")
+              }
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
@@ -129,7 +133,7 @@ export function BeanPanel({ beans, methods, flavorNotes }: Props) {
         snapPoints={[0.3, 0.6, 0.92]}
         initialSnap={1}
         scrollRef={sheetScrollRef}
-        label={bean ? `Profile of ${bean.name}` : "Bean profile"}
+        label={bean ? t("profileOf", { name: bean.name }) : t("beanProfile")}
       >
         {renderContent(sheetScrollRef)}
       </MobileBottomSheet>
@@ -205,6 +209,11 @@ function BeanPanelContent({
   onOpenRec,
   onClose,
 }: ContentProps) {
+  const t = useTranslations("bean");
+  const tEnum = useTranslations("enums");
+  const tCommon = useTranslations("common");
+  const locale = useLocale();
+  const listSep = locale === "zh-TW" ? "、" : ", ";
   return (
     <motion.div
       // Re-key on bean so children re-stagger when switching between beans.
@@ -235,7 +244,7 @@ function BeanPanelContent({
         <button
           type="button"
           onClick={onClose}
-          aria-label="Close panel"
+          aria-label={t("closePanel")}
           className="absolute right-3 top-3 z-10 rounded-md bg-background/70 p-1 text-muted-foreground backdrop-blur-sm hover:bg-parchment hover:text-foreground dark:hover:bg-roast-dark"
         >
           <X className="h-5 w-5" />
@@ -249,7 +258,7 @@ function BeanPanelContent({
           </div>
           <h2 className="font-display text-2xl leading-tight">{bean.name}</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            {bean.region} · {formatAltitude(bean.altitudeMasl)}
+            {bean.region} · {formatAltitude(bean.altitudeMasl, tCommon("masl"))}
           </p>
         </div>
       </motion.div>
@@ -257,7 +266,7 @@ function BeanPanelContent({
       <motion.section variants={fadeUpItem} className="space-y-2 p-5">
         <div className="flex items-center justify-between">
           <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Flavor Profile
+            {t("flavorProfile")}
           </h3>
           <CompareToggle beanId={bean.id} />
         </div>
@@ -273,7 +282,7 @@ function BeanPanelContent({
         className="space-y-2 border-t border-border p-5"
       >
         <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Tasting Notes
+          {t("tastingNotes")}
         </h3>
         <div className="flex flex-wrap gap-1.5">
           {bean.flavorNotes.map((id) => (
@@ -293,32 +302,34 @@ function BeanPanelContent({
       >
         <div>
           <div className="text-xs uppercase tracking-wider text-muted-foreground">
-            Processing
+            {t("processing")}
           </div>
           <Link
             href={`/learn/processing/${bean.processing}`}
-            className="capitalize text-roast-medium hover:underline"
+            className="text-roast-medium hover:underline"
           >
-            {bean.processing.replace("-", " ")}
+            {tEnum(`processing.${bean.processing}`)}
           </Link>
         </div>
         <div>
           <div className="text-xs uppercase tracking-wider text-muted-foreground">
-            Roast
+            {t("roast")}
           </div>
-          <div className="capitalize">{bean.roastRecommendation}</div>
+          <div>{tEnum(`roast.${bean.roastRecommendation}`)}</div>
         </div>
         <div className="col-span-2">
           <div className="text-xs uppercase tracking-wider text-muted-foreground">
-            Varieties
+            {t("varieties")}
           </div>
-          <div>{bean.varieties.join(", ")}</div>
+          <div>{bean.varieties.join(listSep)}</div>
         </div>
         <div className="col-span-2">
           <div className="text-xs uppercase tracking-wider text-muted-foreground">
-            Harvest
+            {t("harvest")}
           </div>
-          <div>{bean.harvestMonths.map(monthName).join(", ")}</div>
+          <div>
+            {bean.harvestMonths.map((m) => monthName(m, locale)).join(listSep)}
+          </div>
         </div>
       </motion.section>
 
@@ -327,7 +338,7 @@ function BeanPanelContent({
         className="border-t border-border p-5"
       >
         <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Recommended brewing
+          {t("recommendedBrewing")}
         </h3>
         <div className="-mx-1 flex snap-x gap-2 overflow-x-auto px-1 pb-2">
           {sortedRecs.map((rec, i) => (
@@ -348,7 +359,7 @@ function BeanPanelContent({
           className="border-t border-border p-5"
         >
           <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Similar beans
+            {t("similarBeans")}
           </h3>
           <ul className="grid grid-cols-1 gap-2">
             {similar.map((r) => (
@@ -385,7 +396,7 @@ function BeanPanelContent({
         {bean.funFact && (
           <div className="mt-3 rounded-md border border-border bg-parchment/40 p-3 dark:bg-roast-dark/40">
             <div className="text-[10px] font-semibold uppercase tracking-wider text-roast-medium">
-              Did you know?
+              {t("didYouKnow")}
             </div>
             <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
               {bean.funFact}
@@ -396,7 +407,7 @@ function BeanPanelContent({
           href={`/bean/${bean.slug}`}
           className="mt-4 inline-block rounded-md bg-roast-medium px-3 py-1.5 text-sm text-cream hover:bg-roast-dark"
         >
-          View full profile →
+          {t("viewFullProfile")}
         </Link>
       </motion.section>
     </motion.div>

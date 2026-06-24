@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import type { BrewRecommendation } from "@/types";
 import { parseRatio } from "@/lib/utils";
 
@@ -24,6 +25,7 @@ function readSavedCupSize(): number {
 }
 
 export function BrewCalculator({ recommendation }: Props) {
+  const t = useTranslations("brew");
   const [cups, setCups] = useState(1);
   const [cupSize, setCupSize] = useState<number>(readSavedCupSize);
 
@@ -45,7 +47,7 @@ export function BrewCalculator({ recommendation }: Props) {
   return (
     <div className="space-y-3 rounded-lg border border-border bg-surface/60 p-4">
       <div className="flex items-baseline justify-between">
-        <h4 className="text-sm font-medium">Dose calculator</h4>
+        <h4 className="text-sm font-medium">{t("doseCalculator")}</h4>
         <span className="font-mono text-xs text-muted-foreground">
           {recommendation.ratio}
         </span>
@@ -53,11 +55,11 @@ export function BrewCalculator({ recommendation }: Props) {
 
       <div className="grid grid-cols-2 gap-3">
         <label className="flex flex-col gap-1 text-xs text-muted-foreground">
-          Cups
+          {t("cups")}
           <div className="flex items-center gap-1">
             <button
               type="button"
-              aria-label="Decrease cups"
+              aria-label={t("decreaseCups")}
               onClick={() => setCups(Math.max(1, cups - 1))}
               className="h-7 w-7 rounded-md border border-border hover:border-roast-medium"
             >
@@ -76,7 +78,7 @@ export function BrewCalculator({ recommendation }: Props) {
             />
             <button
               type="button"
-              aria-label="Increase cups"
+              aria-label={t("increaseCups")}
               onClick={() => setCups(Math.min(20, cups + 1))}
               className="h-7 w-7 rounded-md border border-border hover:border-roast-medium"
             >
@@ -86,7 +88,7 @@ export function BrewCalculator({ recommendation }: Props) {
         </label>
 
         <label className="flex flex-col gap-1 text-xs text-muted-foreground">
-          Cup size
+          {t("cupSize")}
           <select
             value={cupSize}
             onChange={(e) => onCupSizeChange(Number(e.target.value))}
@@ -104,13 +106,13 @@ export function BrewCalculator({ recommendation }: Props) {
       <div className="grid grid-cols-2 gap-3 border-t border-border pt-3 text-sm">
         <div>
           <div className="text-xs uppercase tracking-wider text-muted-foreground">
-            Coffee
+            {t("coffee")}
           </div>
           <div className="font-mono text-lg">{coffeeG}g</div>
         </div>
         <div>
           <div className="text-xs uppercase tracking-wider text-muted-foreground">
-            Water
+            {t("water")}
           </div>
           <div className="font-mono text-lg">{waterMl}ml</div>
         </div>

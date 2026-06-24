@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Check, GitCompareArrows, Plus } from "lucide-react";
 import { useBeanMap } from "@/store";
 import { cn } from "@/lib/utils";
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export function CompareToggle({ beanId, className, variant = "default" }: Props) {
+  const t = useTranslations("compareToggle");
   const ids = useBeanMap((s) => s.comparisonBeanIds);
   const addToComparison = useBeanMap((s) => s.addToComparison);
   const removeFromComparison = useBeanMap((s) => s.removeFromComparison);
@@ -38,10 +40,10 @@ export function CompareToggle({ beanId, className, variant = "default" }: Props)
         aria-pressed={inCompare}
         title={
           inCompare
-            ? "Remove from comparison"
+            ? t("remove")
             : atLimit
-              ? "Comparison full (max 3)"
-              : "Add to comparison"
+              ? t("full")
+              : t("add")
         }
         className={cn(
           "inline-flex items-center justify-center rounded-md p-1 text-muted-foreground transition",
@@ -79,17 +81,17 @@ export function CompareToggle({ beanId, className, variant = "default" }: Props)
       {inCompare ? (
         <>
           <Check className="h-3 w-3" />
-          In comparison
+          {t("inComparison")}
         </>
       ) : atLimit ? (
         <>
           <Plus className="h-3 w-3" />
-          Comparison full
+          {t("fullShort")}
         </>
       ) : (
         <>
           <Plus className="h-3 w-3" />
-          Compare
+          {t("compare")}
         </>
       )}
     </button>

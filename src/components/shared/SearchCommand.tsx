@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { usePathname, useRouter } from "@/i18n/navigation";
 import { create } from "zustand";
 import {
   CommandDialog,
@@ -68,6 +69,7 @@ function modeForPath(pathname: string): SearchMode {
 }
 
 export function SearchCommand({ beans, flavorNotes }: Props) {
+  const t = useTranslations("search");
   const { open, setOpen } = useSearchUi();
   const [query, setQuery] = useState("");
   const pathname = usePathname();
@@ -84,7 +86,10 @@ export function SearchCommand({ beans, flavorNotes }: Props) {
     [recentsKey],
   );
 
-  const fuse = useMemo(() => createBeanSearch(beans), [beans]);
+  const fuse = useMemo(
+    () => createBeanSearch(beans, flavorNotes),
+    [beans, flavorNotes],
+  );
 
   // Cmd/Ctrl + K toggles
   useEffect(() => {
@@ -144,21 +149,21 @@ export function SearchCommand({ beans, flavorNotes }: Props) {
       <CommandInput
         placeholder={
           mode === "locate"
-            ? "Find a bean on this page…"
-            : "Search beans by name, country, region, or flavor…"
+            ? t("placeholderLocate")
+            : t("placeholderGlobal")
         }
         value={query}
         onValueChange={setQuery}
       />
       <CommandList>
         {!query.trim() && recents.length > 0 && (
-          <CommandGroup heading="Recent">
+          <CommandGroup heading={t("recentHeading")}>
             <div className="flex justify-end px-2 pb-1">
               <button
                 onClick={onClearAll}
                 className="text-xs text-muted-foreground hover:text-foreground transition-colors"
               >
-                Clear all
+                {t("clearAll")}
               </button>
             </div>
             {recents.map((bean) => (
@@ -171,6 +176,7 @@ export function SearchCommand({ beans, flavorNotes }: Props) {
                 <BeanRow bean={bean} flavorNotes={flavorNotes} />
                 <button
                   onClick={(e) => onRemoveRecent(e, bean.id)}
+                  aria-label={t("removeRecent")}
                   className="ml-auto text-xs text-muted-foreground hover:text-foreground transition-colors"
                 >
                   ✕
@@ -181,13 +187,11 @@ export function SearchCommand({ beans, flavorNotes }: Props) {
         )}
 
         {query.trim() && results.length === 0 && (
-          <CommandEmpty>
-            No matches. Try a country, region, or flavor note.
-          </CommandEmpty>
+          <CommandEmpty>{t("noMatches")}</CommandEmpty>
         )}
 
         {results.length > 0 && (
-          <CommandGroup heading="Beans">
+          <CommandGroup heading={t("beansHeading")}>
             {results.map((bean) => (
               <CommandItem
                 key={bean.id}

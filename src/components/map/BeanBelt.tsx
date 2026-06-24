@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Layer, Source } from "react-map-gl/mapbox";
 
 // The Bean Belt is the equatorial band between the Tropic of Cancer and the
@@ -64,6 +65,7 @@ const BELT: GeoJSON.FeatureCollection = {
 const LEAF_GREEN = "#4a7c59";
 
 export function BeanBelt() {
+  const t = useTranslations("map");
   return (
     <Source id="bean-belt" type="geojson" data={BELT}>
       <Layer
@@ -88,7 +90,7 @@ export function BeanBelt() {
         type="symbol"
         filter={["==", ["get", "kind"], "line"]}
         layout={{
-          "text-field": ["get", "name"],
+          "text-field": t("beanBelt"),
           "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
           "text-size": 12,
           "text-letter-spacing": 0.15,

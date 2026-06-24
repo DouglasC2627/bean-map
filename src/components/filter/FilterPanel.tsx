@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useRouter, usePathname } from "@/i18n/navigation";
 import { Crosshair, Flower2, SlidersHorizontal, X } from "lucide-react";
 import type {
   CoffeeBean,
@@ -14,48 +15,31 @@ import { Slider } from "@/components/ui/slider";
 import { cn, countryFlagEmoji } from "@/lib/utils";
 import { FlavorSliders } from "./FlavorSliders";
 
-const CONTINENTS: Array<{ key: string; label: string; countries: string[] }> = [
-  {
-    key: "africa",
-    label: "Africa",
-    countries: ["ET", "KE", "RW", "TZ", "BI", "UG"],
-  },
+const CONTINENTS: Array<{ key: string; countries: string[] }> = [
+  { key: "africa", countries: ["ET", "KE", "RW", "TZ", "BI", "UG"] },
   {
     key: "central-america",
-    label: "Central America",
     countries: ["GT", "CR", "PA", "HN", "NI", "SV", "MX"],
   },
-  {
-    key: "south-america",
-    label: "South America",
-    countries: ["CO", "BR", "PE", "BO"],
-  },
-  {
-    key: "asia-pacific",
-    label: "Asia-Pacific",
-    countries: ["ID", "YE", "IN", "PG"],
-  },
-  {
-    key: "islands",
-    label: "Islands",
-    countries: ["JM", "US"],
-  },
+  { key: "south-america", countries: ["CO", "BR", "PE", "BO"] },
+  { key: "asia-pacific", countries: ["ID", "YE", "IN", "PG"] },
+  { key: "islands", countries: ["JM", "US"] },
 ];
 
-const PROCESSINGS: Array<{ id: ProcessingMethod; label: string }> = [
-  { id: "washed", label: "Washed" },
-  { id: "natural", label: "Natural" },
-  { id: "honey", label: "Honey" },
-  { id: "anaerobic", label: "Anaerobic" },
-  { id: "wet-hulled", label: "Wet-Hulled" },
+const PROCESSINGS: ProcessingMethod[] = [
+  "washed",
+  "natural",
+  "honey",
+  "anaerobic",
+  "wet-hulled",
 ];
 
-const ROASTS: Array<{ id: RoastLevel; label: string }> = [
-  { id: "light", label: "Light" },
-  { id: "medium-light", label: "Medium-Light" },
-  { id: "medium", label: "Medium" },
-  { id: "medium-dark", label: "Medium-Dark" },
-  { id: "dark", label: "Dark" },
+const ROASTS: RoastLevel[] = [
+  "light",
+  "medium-light",
+  "medium",
+  "medium-dark",
+  "dark",
 ];
 
 interface Props {
@@ -64,6 +48,8 @@ interface Props {
 }
 
 export function FilterPanel({ beans, flavorNotes }: Props) {
+  const t = useTranslations("filters");
+  const tEnum = useTranslations("enums");
   const router = useRouter();
   const pathname = usePathname();
   const onMapPage = pathname === "/";
@@ -139,12 +125,12 @@ export function FilterPanel({ beans, flavorNotes }: Props) {
       <button
         type="button"
         onClick={() => setFilterPanelOpen(!isFilterPanelOpen)}
-        aria-label="Toggle filters"
+        aria-label={t("toggle")}
         aria-expanded={isFilterPanelOpen}
         className="fixed left-3 top-18 z-30 flex items-center gap-2 rounded-md border border-border bg-background/90 px-3 py-2 text-sm shadow-md backdrop-blur hover:border-roast-medium"
       >
         <SlidersHorizontal className="h-4 w-4" />
-        <span>Filters</span>
+        <span>{t("title")}</span>
         {activeCount > 0 && (
           <span className="rounded-full bg-roast-medium px-1.5 py-0.5 text-[10px] text-cream">
             {activeCount}
@@ -155,7 +141,7 @@ export function FilterPanel({ beans, flavorNotes }: Props) {
       {/* Mobile backdrop */}
       <button
         type="button"
-        aria-label="Close filters"
+        aria-label={t("close")}
         onClick={() => setFilterPanelOpen(false)}
         className={cn(
           "fixed inset-0 z-20 bg-espresso/40 transition-opacity sm:hidden",
@@ -166,7 +152,7 @@ export function FilterPanel({ beans, flavorNotes }: Props) {
       />
 
       <aside
-        aria-label="Filters"
+        aria-label={t("title")}
         aria-hidden={!isFilterPanelOpen}
         className={cn(
           "fixed z-30 flex flex-col overflow-x-hidden overflow-y-auto bg-background/95 shadow-xl backdrop-blur-sm transition-transform duration-300",
@@ -180,19 +166,19 @@ export function FilterPanel({ beans, flavorNotes }: Props) {
         )}
       >
         <header className="flex items-center justify-between border-b border-border p-4">
-          <h2 className="font-display text-lg">Filters</h2>
+          <h2 className="font-display text-lg">{t("title")}</h2>
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={resetFilters}
               className="text-xs text-muted-foreground hover:text-foreground"
             >
-              Reset
+              {t("reset")}
             </button>
             <button
               type="button"
               onClick={() => setFilterPanelOpen(false)}
-              aria-label="Close filters"
+              aria-label={t("close")}
               className="rounded-md p-1 text-muted-foreground hover:bg-parchment hover:text-foreground dark:hover:bg-roast-dark"
             >
               <X className="h-4 w-4" />
@@ -202,8 +188,11 @@ export function FilterPanel({ beans, flavorNotes }: Props) {
 
         <div className="flex items-center justify-between gap-2 px-4 pt-3 pb-2">
           <div className="text-xs text-muted-foreground">
-            <span className="font-mono">{matching}</span> of {beans.length} beans
-            match
+            {t.rich("matchCount", {
+              matching,
+              total: beans.length,
+              mono: (chunks) => <span className="font-mono">{chunks}</span>,
+            })}
           </div>
           <button
             type="button"
@@ -212,17 +201,17 @@ export function FilterPanel({ beans, flavorNotes }: Props) {
             className="inline-flex items-center gap-1 rounded-md border border-border bg-roast-medium px-2 py-1 text-xs text-cream transition hover:bg-roast-dark disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground"
           >
             <Crosshair className="h-3 w-3" />
-            {onMapPage ? "Show on map" : "View on map"}
+            {onMapPage ? t("showOnMap") : t("viewOnMap")}
           </button>
         </div>
 
         {/* Region */}
-        <Section title="Region">
+        <Section title={t("region")}>
           <div className="space-y-3">
             {availableByContinent.map((c) => (
               <div key={c.key}>
                 <div className="mb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                  {c.label}
+                  {t(`regions.${c.key}`)}
                 </div>
                 <div className="flex flex-col gap-1.5">
                   {c.countries.map((cc) => (
@@ -247,35 +236,35 @@ export function FilterPanel({ beans, flavorNotes }: Props) {
         </Section>
 
         {/* Processing */}
-        <Section title="Processing Method">
+        <Section title={t("processingMethod")}>
           <div className="flex flex-col gap-1.5">
-            {PROCESSINGS.map((p) => (
+            {PROCESSINGS.map((id) => (
               <label
-                key={p.id}
+                key={id}
                 className="flex cursor-pointer items-center gap-2 text-sm"
               >
                 <input
                   type="checkbox"
-                  checked={filters.processingMethods.includes(p.id)}
-                  onChange={() => toggleProcessing(p.id)}
+                  checked={filters.processingMethods.includes(id)}
+                  onChange={() => toggleProcessing(id)}
                   className="h-4 w-4 accent-roast-medium"
                 />
-                <span>{p.label}</span>
+                <span>{tEnum(`processing.${id}`)}</span>
               </label>
             ))}
           </div>
         </Section>
 
         {/* Roast */}
-        <Section title="Roast Level">
+        <Section title={t("roastLevel")}>
           <div className="flex flex-wrap gap-1.5">
-            {ROASTS.map((r) => {
-              const active = filters.roastLevels.includes(r.id);
+            {ROASTS.map((id) => {
+              const active = filters.roastLevels.includes(id);
               return (
                 <button
-                  key={r.id}
+                  key={id}
                   type="button"
-                  onClick={() => toggleRoast(r.id)}
+                  onClick={() => toggleRoast(id)}
                   className={cn(
                     "rounded-full border px-2.5 py-0.5 text-xs transition",
                     active
@@ -284,7 +273,7 @@ export function FilterPanel({ beans, flavorNotes }: Props) {
                   )}
                   aria-pressed={active}
                 >
-                  {r.label}
+                  {tEnum(`roast.${id}`)}
                 </button>
               );
             })}
@@ -292,7 +281,7 @@ export function FilterPanel({ beans, flavorNotes }: Props) {
         </Section>
 
         {/* Altitude */}
-        <Section title="Altitude (masl)">
+        <Section title={t("altitude")}>
           <div className="px-1 pt-2 pb-1">
             <Slider
               min={0}
@@ -313,7 +302,7 @@ export function FilterPanel({ beans, flavorNotes }: Props) {
         </Section>
 
         {/* Flavor Notes — opens the interactive wheel as a popover */}
-        <Section title="Flavor Notes">
+        <Section title={t("flavorNotes")}>
           <button
             type="button"
             onClick={() => setFlavorWheelOpen(!isFlavorWheelOpen)}
@@ -325,16 +314,16 @@ export function FilterPanel({ beans, flavorNotes }: Props) {
           >
             <span className="flex items-center gap-2">
               <Flower2 className="h-4 w-4" />
-              Flavor wheel
+              {t("flavorWheel")}
             </span>
             {isFlavorWheelOpen ? (
-              <span className="text-xs text-muted-foreground">Hide</span>
+              <span className="text-xs text-muted-foreground">{t("hide")}</span>
             ) : filters.flavorNoteIds.length > 0 ? (
               <span className="rounded-full bg-roast-medium px-1.5 py-0.5 text-[10px] text-cream">
                 {filters.flavorNoteIds.length}
               </span>
             ) : (
-              <span className="text-xs text-muted-foreground">Open</span>
+              <span className="text-xs text-muted-foreground">{t("open")}</span>
             )}
           </button>
         </Section>
@@ -348,7 +337,7 @@ export function FilterPanel({ beans, flavorNotes }: Props) {
             aria-expanded={showFlavor}
           >
             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Flavor Profile
+              {t("flavorProfile")}
             </span>
             <span className="font-mono text-xs text-muted-foreground">
               {showFlavor ? "−" : "+"}

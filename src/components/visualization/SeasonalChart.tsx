@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment, useMemo } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import type { CoffeeBean } from "@/types";
 import { cn, monthName } from "@/lib/utils";
 
@@ -19,6 +20,8 @@ export function SeasonalChart({
   className,
   groupByRegion = true,
 }: Props) {
+  const t = useTranslations("seasonal");
+  const locale = useLocale();
   const currentMonth = new Date().getMonth() + 1;
 
   const groups = useMemo(() => {
@@ -26,7 +29,7 @@ export function SeasonalChart({
       return [
         {
           key: "all",
-          label: "All beans",
+          label: t("allBeans"),
           beans: [...beans].sort((a, b) => a.name.localeCompare(b.name)),
         },
       ];
@@ -44,7 +47,7 @@ export function SeasonalChart({
         label: country,
         beans: list.sort((a, b) => a.name.localeCompare(b.name)),
       }));
-  }, [beans, groupByRegion]);
+  }, [beans, groupByRegion, t]);
 
   if (beans.length === 0) {
     return (
@@ -54,7 +57,7 @@ export function SeasonalChart({
           className,
         )}
       >
-        No beans to display.
+        {t("empty")}
       </div>
     );
   }
@@ -65,7 +68,7 @@ export function SeasonalChart({
         <thead>
           <tr>
             <th className="sticky left-0 z-10 bg-background px-2 py-1 text-left text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-              Bean
+              {t("bean")}
             </th>
             {MONTHS.map((m) => (
               <th
@@ -77,7 +80,7 @@ export function SeasonalChart({
                     : "text-muted-foreground",
                 )}
               >
-                {monthName(m)}
+                {monthName(m, locale)}
               </th>
             ))}
           </tr>
@@ -131,8 +134,10 @@ export function SeasonalChart({
                           <span
                             aria-label={
                               active
-                                ? `${monthName(m)} harvest`
-                                : `${monthName(m)} not harvested`
+                                ? t("harvestAria", { month: monthName(m, locale) })
+                                : t("notHarvestedAria", {
+                                    month: monthName(m, locale),
+                                  })
                             }
                             className={cn(
                               "mx-auto block h-4 rounded-sm",
@@ -158,7 +163,7 @@ export function SeasonalChart({
         </tbody>
       </table>
       <p className="mt-2 text-[10px] text-muted-foreground">
-        Highlighted column: current month ({monthName(currentMonth)}).
+        {t("currentMonthNote", { month: monthName(currentMonth, locale) })}
       </p>
     </div>
   );

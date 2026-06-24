@@ -1,14 +1,17 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { Menu, Search, X } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
+import { LocaleSwitcher } from "@/components/layout/LocaleSwitcher";
 import { useSearchUi } from "@/components/shared/SearchCommand";
 import { cn } from "@/lib/utils";
 
 export function TopNav() {
+  const t = useTranslations("nav");
   const setOpen = useSearchUi((s) => s.setOpen);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -38,7 +41,7 @@ export function TopNav() {
         <Link href="/" className="flex items-center gap-2 justify-self-start">
           <Image
             src="/logo.png"
-            alt="BeanMap logo"
+            alt={t("logoAlt")}
             width={24}
             height={24}
             className="h-6 w-6"
@@ -51,10 +54,10 @@ export function TopNav() {
           type="button"
           onClick={() => setOpen(true)}
           className="hidden items-center gap-2 rounded-md border border-border bg-surface/60 px-3 py-1.5 text-sm text-muted-foreground justify-self-center hover:border-roast-medium md:inline-flex"
-          aria-label="Search beans"
+          aria-label={t("searchBeans")}
         >
           <Search className="h-4 w-4" />
-          <span>Search beans…</span>
+          <span>{t("searchPlaceholder")}</span>
           <kbd className="ml-2 rounded bg-parchment px-1.5 py-0.5 text-[10px] font-mono text-roast-dark dark:bg-roast-dark dark:text-parchment">
             ⌘K
           </kbd>
@@ -64,7 +67,7 @@ export function TopNav() {
           <button
             type="button"
             onClick={() => setOpen(true)}
-            aria-label="Search"
+            aria-label={t("search")}
             className="rounded-md p-1.5 text-muted-foreground hover:text-foreground md:hidden"
           >
             <Search className="h-4 w-4" />
@@ -73,39 +76,40 @@ export function TopNav() {
             href="/"
             className="hidden rounded-md px-2 py-1 text-sm hover:text-roast-medium sm:inline-block"
           >
-            Explore
+            {t("explore")}
           </Link>
           <Link
             href="/beans"
             className="hidden rounded-md px-2 py-1 text-sm hover:text-roast-medium sm:inline-block"
           >
-            Beans
+            {t("beans")}
           </Link>
           <Link
             href="/explore/insights"
             className="hidden rounded-md px-2 py-1 text-sm hover:text-roast-medium sm:inline-block"
           >
-            Insights
+            {t("insights")}
           </Link>
           <Link
             href="/explore/flavors"
             className="hidden rounded-md px-2 py-1 text-sm hover:text-roast-medium md:inline-block"
           >
-            Flavors
+            {t("flavors")}
           </Link>
           <Link
             href="/learn"
             className="hidden rounded-md px-2 py-1 text-sm hover:text-roast-medium md:inline-block"
           >
-            Learn
+            {t("learn")}
           </Link>
+          <LocaleSwitcher />
           <ThemeToggle />
 
           <div ref={menuRef} className="relative sm:hidden">
             <button
               type="button"
               onClick={() => setMenuOpen((v) => !v)}
-              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-label={menuOpen ? t("closeMenu") : t("openMenu")}
               aria-expanded={menuOpen}
               className="rounded-md p-1.5 text-muted-foreground hover:text-foreground"
             >
@@ -130,7 +134,7 @@ export function TopNav() {
                 className="block rounded-md px-3 py-2 text-sm hover:bg-parchment/60 dark:hover:bg-roast-dark/40"
                 role="menuitem"
               >
-                Explore
+                {t("explore")}
               </Link>
               <Link
                 href="/beans"
@@ -138,7 +142,7 @@ export function TopNav() {
                 className="block rounded-md px-3 py-2 text-sm hover:bg-parchment/60 dark:hover:bg-roast-dark/40"
                 role="menuitem"
               >
-                Beans
+                {t("beans")}
               </Link>
               <Link
                 href="/explore/insights"
@@ -146,7 +150,7 @@ export function TopNav() {
                 className="block rounded-md px-3 py-2 text-sm hover:bg-parchment/60 dark:hover:bg-roast-dark/40"
                 role="menuitem"
               >
-                Insights
+                {t("insights")}
               </Link>
               <Link
                 href="/explore/flavors"
@@ -154,7 +158,7 @@ export function TopNav() {
                 className="block rounded-md px-3 py-2 text-sm hover:bg-parchment/60 dark:hover:bg-roast-dark/40"
                 role="menuitem"
               >
-                Flavors
+                {t("flavors")}
               </Link>
               <Link
                 href="/learn"
@@ -162,7 +166,7 @@ export function TopNav() {
                 className="block rounded-md px-3 py-2 text-sm hover:bg-parchment/60 dark:hover:bg-roast-dark/40"
                 role="menuitem"
               >
-                Learn
+                {t("learn")}
               </Link>
             </div>
           </div>

@@ -13,6 +13,7 @@ import type {
 } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useTheme } from "next-themes";
+import { useTranslations } from "next-intl";
 import type { CoffeeBean, FlavorNotesData } from "@/types";
 import { useBeanMap, filterBeans } from "@/store";
 import { RegionHighlight } from "./RegionHighlight";
@@ -118,6 +119,7 @@ interface Props {
 }
 
 export function CoffeeMap({ beans, flavorNotes }: Props) {
+  const t = useTranslations("map");
   const mapRef = useRef<MapRef | null>(null);
   const { resolvedTheme } = useTheme();
   const [cursor, setCursor] = useState<string>("grab");
@@ -300,12 +302,11 @@ export function CoffeeMap({ beans, flavorNotes }: Props) {
     return (
       <div className="flex h-full min-h-[60vh] flex-1 items-center justify-center bg-parchment p-8 text-center dark:bg-roast-dark">
         <div className="max-w-md space-y-2">
-          <h2 className="font-display text-2xl">Mapbox token missing</h2>
+          <h2 className="font-display text-2xl">{t("tokenMissingTitle")}</h2>
           <p className="text-sm text-muted-foreground">
-            Add <code className="mono">NEXT_PUBLIC_MAPBOX_TOKEN</code> to{" "}
-            <code className="mono">.env.local</code> (see{" "}
-            <code className="mono">.env.example</code>) and restart the dev
-            server.
+            {t.rich("tokenMissingBody", {
+              code: (chunks) => <code className="mono">{chunks}</code>,
+            })}
           </p>
         </div>
       </div>

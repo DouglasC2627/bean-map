@@ -1,10 +1,11 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { LayoutGrid, Map as MapIcon, Table as TableIcon } from "lucide-react";
 import type { CoffeeBean, FlavorNotesData } from "@/types";
+import { Link } from "@/i18n/navigation";
 import { useBeanMap, filterBeans } from "@/store";
 import { useLocateBeanOnPage } from "@/lib/use-locate-bean";
 import {
@@ -32,6 +33,9 @@ interface Props {
 }
 
 export function BeansBrowser({ beans, flavorNotes }: Props) {
+  const t = useTranslations("beansBrowser");
+  const tEnum = useTranslations("enums");
+  const tCommon = useTranslations("common");
   const [view, setView] = useState<View>("grid");
   const [sortKey, setSortKey] = useState<SortKey>("name");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
@@ -99,7 +103,7 @@ export function BeansBrowser({ beans, flavorNotes }: Props) {
       />
       <div className="mb-4 flex items-center justify-between gap-3">
         <div className="text-sm text-muted-foreground">
-          {sorted.length} of {beans.length} beans
+          {t("countOf", { shown: sorted.length, total: beans.length })}
         </div>
         <div className="flex items-center gap-1">
           <button
@@ -114,7 +118,7 @@ export function BeansBrowser({ beans, flavorNotes }: Props) {
             )}
           >
             <LayoutGrid className="h-3.5 w-3.5" />
-            Grid
+            {t("grid")}
           </button>
           <button
             type="button"
@@ -128,14 +132,14 @@ export function BeansBrowser({ beans, flavorNotes }: Props) {
             )}
           >
             <TableIcon className="h-3.5 w-3.5" />
-            Table
+            {t("table")}
           </button>
         </div>
       </div>
 
       {sorted.length === 0 ? (
         <div className="rounded-lg border border-dashed border-border p-12 text-center text-sm text-muted-foreground">
-          No beans match the active filters.
+          {t("empty")}
         </div>
       ) : view === "grid" ? (
         <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -153,22 +157,22 @@ export function BeansBrowser({ beans, flavorNotes }: Props) {
           <table className="w-full text-sm">
             <thead className="bg-parchment/50 dark:bg-roast-dark/40">
               <tr className="text-left">
-                <th className="px-3 py-2">{headerSort("name", "Name")}</th>
+                <th className="px-3 py-2">{headerSort("name", t("col.name"))}</th>
                 <th className="px-3 py-2">
-                  {headerSort("country", "Country")}
+                  {headerSort("country", t("col.country"))}
                 </th>
-                <th className="px-3 py-2">Region</th>
+                <th className="px-3 py-2">{t("col.region")}</th>
                 <th className="px-3 py-2">
-                  {headerSort("altitude", "Altitude")}
+                  {headerSort("altitude", t("col.altitude"))}
                 </th>
-                <th className="px-3 py-2">Processing</th>
-                <th className="px-3 py-2">Roast</th>
+                <th className="px-3 py-2">{t("col.processing")}</th>
+                <th className="px-3 py-2">{t("col.roast")}</th>
                 <th className="px-3 py-2">
-                  {headerSort("acidity", "Acidity")}
+                  {headerSort("acidity", t("col.acidity"))}
                 </th>
-                <th className="px-3 py-2">{headerSort("body", "Body")}</th>
+                <th className="px-3 py-2">{headerSort("body", t("col.body"))}</th>
                 <th className="px-3 py-2">
-                  {headerSort("sweetness", "Sweetness")}
+                  {headerSort("sweetness", t("col.sweetness"))}
                 </th>
                 <th className="px-3 py-2"></th>
               </tr>
@@ -198,11 +202,13 @@ export function BeansBrowser({ beans, flavorNotes }: Props) {
                     {b.region}
                   </td>
                   <td className="px-3 py-2 font-mono text-xs">
-                    {formatAltitude(b.altitudeMasl)}
+                    {formatAltitude(b.altitudeMasl, tCommon("masl"))}
                   </td>
-                  <td className="px-3 py-2 capitalize">{b.processing}</td>
-                  <td className="px-3 py-2 capitalize">
-                    {b.roastRecommendation}
+                  <td className="px-3 py-2">
+                    {tEnum(`processing.${b.processing}`)}
+                  </td>
+                  <td className="px-3 py-2">
+                    {tEnum(`roast.${b.roastRecommendation}`)}
                   </td>
                   <td className="px-3 py-2 font-mono text-xs">
                     {b.flavorProfile.acidity}
@@ -219,7 +225,7 @@ export function BeansBrowser({ beans, flavorNotes }: Props) {
                       className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-roast-medium"
                     >
                       <MapIcon className="h-3 w-3" />
-                      Map
+                      {t("map")}
                     </Link>
                   </td>
                 </tr>
@@ -241,6 +247,9 @@ function BeanCard({
   flavorNotes: FlavorNotesData;
   index: number;
 }) {
+  const t = useTranslations("beansBrowser");
+  const tEnum = useTranslations("enums");
+  const tCommon = useTranslations("common");
   return (
     <motion.li
       data-bean-id={bean.id}
@@ -268,7 +277,8 @@ function BeanCard({
         {bean.name}
       </Link>
       <p className="mt-1 font-mono text-xs text-muted-foreground">
-        {formatAltitude(bean.altitudeMasl)} · {bean.processing}
+        {formatAltitude(bean.altitudeMasl, tCommon("masl"))} ·{" "}
+        {tEnum(`processing.${bean.processing}`)}
       </p>
       <div className="mt-3 flex flex-wrap gap-1">
         {bean.flavorNotes.slice(0, 4).map((id) => (
@@ -286,14 +296,14 @@ function BeanCard({
             href={`/bean/${bean.slug}`}
             className="text-xs text-roast-medium hover:underline"
           >
-            View profile
+            {t("viewProfile")}
           </Link>
           <Link
             href={`/?bean=${bean.slug}`}
             className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-roast-medium"
           >
             <MapIcon className="h-3 w-3" />
-            Show on map
+            {t("showOnMap")}
           </Link>
         </div>
         <CompareToggle beanId={bean.id} variant="compact" />

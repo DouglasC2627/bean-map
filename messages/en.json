@@ -1,0 +1,358 @@
+{
+  "metadata": {
+    "home": {
+      "title": "BeanMap — Coffee origins, flavors & brewing",
+      "description": "An interactive world map of coffee beans, their origins, flavor profiles, and recommended brewing methods."
+    },
+    "beans": {
+      "title": "All beans · BeanMap",
+      "description": "Browse every coffee bean profile in BeanMap."
+    },
+    "compare": {
+      "title": "Compare beans · BeanMap",
+      "description": "Side-by-side comparison of coffee bean profiles.",
+      "titleWith": "{names} · Compare on BeanMap",
+      "descriptionWith": "Compare flavor profiles, origin, and brewing affinity for {names}."
+    },
+    "flavors": {
+      "title": "Flavor Wheel · BeanMap",
+      "description": "Explore coffee flavor categories, subcategories, and notes. Filter beans on the map by tapping any segment of the wheel."
+    },
+    "insights": {
+      "title": "Insights · BeanMap",
+      "description": "Explore coffee origins by altitude, harvest season, and other dimensions."
+    },
+    "learn": {
+      "title": "Learn · BeanMap",
+      "description": "Background reading on coffee processing methods and brewing techniques."
+    }
+  },
+  "nav": {
+    "logoAlt": "BeanMap logo",
+    "explore": "Explore",
+    "beans": "Beans",
+    "insights": "Insights",
+    "flavors": "Flavors",
+    "learn": "Learn",
+    "searchBeans": "Search beans",
+    "searchPlaceholder": "Search beans…",
+    "search": "Search",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "switchLanguage": "Switch language"
+  },
+  "filters": {
+    "toggle": "Toggle filters",
+    "close": "Close filters",
+    "title": "Filters",
+    "reset": "Reset",
+    "matchCount": "<mono>{matching}</mono> of {total} beans match",
+    "showOnMap": "Show on map",
+    "viewOnMap": "View on map",
+    "region": "Region",
+    "regions": {
+      "africa": "Africa",
+      "central-america": "Central America",
+      "south-america": "South America",
+      "asia-pacific": "Asia-Pacific",
+      "islands": "Islands"
+    },
+    "processingMethod": "Processing Method",
+    "roastLevel": "Roast Level",
+    "altitude": "Altitude (masl)",
+    "flavorNotes": "Flavor Notes",
+    "flavorWheel": "Flavor wheel",
+    "hide": "Hide",
+    "open": "Open",
+    "flavorProfile": "Flavor Profile"
+  },
+  "activeFilters": {
+    "label": "Filters:",
+    "roastChip": "{label} roast",
+    "remove": "Remove filter"
+  },
+  "search": {
+    "placeholderLocate": "Find a bean on this page…",
+    "placeholderGlobal": "Search beans by name, country, region, or flavor…",
+    "recentHeading": "Recent",
+    "clearAll": "Clear all",
+    "noMatches": "No matches. Try a country, region, or flavor note.",
+    "beansHeading": "Beans",
+    "removeRecent": "Remove from recent"
+  },
+  "beans": {
+    "heading": "All beans",
+    "subtitle": "Browse, sort, and filter every bean profile."
+  },
+  "beansBrowser": {
+    "countOf": "{shown} of {total} beans",
+    "grid": "Grid",
+    "table": "Table",
+    "empty": "No beans match the active filters.",
+    "col": {
+      "name": "Name",
+      "country": "Country",
+      "region": "Region",
+      "altitude": "Altitude",
+      "processing": "Processing",
+      "roast": "Roast",
+      "acidity": "Acidity",
+      "body": "Body",
+      "sweetness": "Sweetness"
+    },
+    "map": "Map",
+    "viewProfile": "View profile",
+    "showOnMap": "Show on map"
+  },
+  "bean": {
+    "title": "{name} — BeanMap",
+    "notFoundTitle": "Bean not found — BeanMap",
+    "viewOnMap": "← View on map",
+    "didYouKnow": "Did you know?",
+    "flavorProfile": "Flavor profile",
+    "details": "Details",
+    "varieties": "Varieties",
+    "processing": "Processing",
+    "roast": "Roast",
+    "harvest": "Harvest",
+    "tastingNotes": "Tasting notes",
+    "brewingRecommendations": "Brewing recommendations",
+    "similarBeans": "Similar beans",
+    "affinity": "affinity {score}/10",
+    "grind": "Grind",
+    "temp": "Temp",
+    "ratio": "Ratio",
+    "brew": "Brew",
+    "profileOf": "Profile of {name}",
+    "beanProfile": "Bean profile",
+    "closePanel": "Close panel",
+    "recommendedBrewing": "Recommended brewing",
+    "viewFullProfile": "View full profile →"
+  },
+  "compare": {
+    "heading": "Compare beans",
+    "subtitle": "Pick up to 3 beans from the map or list and compare them side by side.",
+    "empty": "No beans selected. Open a bean and tap <compare>Compare</compare> to add it.",
+    "openMap": "Open the map",
+    "browseBeans": "Browse beans"
+  },
+  "compareTray": {
+    "tray": "Comparison tray",
+    "collapse": "Collapse comparison tray",
+    "expand": "Expand comparison tray",
+    "heading": "Comparison ({count}/3)",
+    "remove": "Remove {name} from comparison",
+    "shareTitle": "Open as a shareable page",
+    "shareLink": "Share link",
+    "compare": "Compare →"
+  },
+  "axes": {
+    "acidity": "Acidity",
+    "body": "Body",
+    "sweetness": "Sweetness",
+    "bitterness": "Bitterness",
+    "complexity": "Complexity",
+    "fruitiness": "Fruitiness"
+  },
+  "radar": {
+    "title": "Flavor radar chart for {names}",
+    "caption": "Flavor profile values, scale 1 to 10",
+    "bean": "Bean"
+  },
+  "compareView": {
+    "title": "Compare beans",
+    "subtitle": "Side-by-side flavor, origin, and brewing affinity for {count, plural, one {# bean} other {# beans}}.",
+    "close": "Close comparison",
+    "flavorOverlay": "Flavor profile overlay",
+    "originProcessing": "Origin & processing",
+    "attribute": "Attribute",
+    "country": "Country",
+    "altitude": "Altitude",
+    "processing": "Processing",
+    "roast": "Roast",
+    "varieties": "Varieties",
+    "harvest": "Harvest",
+    "topFlavorNotes": "Top flavor notes",
+    "brewingComparison": "Brewing comparison",
+    "parameter": "Parameter",
+    "bestTitle": "Best affinity for this method",
+    "best": "best",
+    "affinity": "Affinity",
+    "grind": "Grind",
+    "waterTemp": "Water temp",
+    "ratio": "Ratio",
+    "brewTime": "Brew time",
+    "difficulty": "Difficulty",
+    "tastingNotes": "Tasting notes"
+  },
+  "flavors": {
+    "heading": "Flavor Wheel",
+    "subtitle": "Hover for counts, click any segment to filter the map. Selecting a category includes every note inside it."
+  },
+  "insights": {
+    "heading": "Insights",
+    "subtitle": "Aggregate views across the bean catalog. Filters from the explore view apply here too."
+  },
+  "insightsClient": {
+    "showing": "Showing {shown} of {total} beans",
+    "altitudeRanges": "Altitude ranges",
+    "altitudeDesc": "Sorted by midpoint altitude (highest first). Click a bar to open a bean on the map.",
+    "harvestCalendar": "Harvest calendar",
+    "harvestDesc": "When each origin is in season. The current month is highlighted in cherry red."
+  },
+  "seasonal": {
+    "allBeans": "All beans",
+    "bean": "Bean",
+    "empty": "No beans to display.",
+    "harvestAria": "{month} harvest",
+    "notHarvestedAria": "{month} not harvested",
+    "currentMonthNote": "Highlighted column: current month ({month})."
+  },
+  "flavorsExplorer": {
+    "beansMatching": "Beans matching",
+    "ofTotal": "of {total}",
+    "selection": "Selection",
+    "category": "Category",
+    "subcategory": "Subcategory",
+    "note": "Note",
+    "clickToFilter": "Click a segment on the wheel to filter.",
+    "showOnMap": "Show on map",
+    "matchingBeans": "Matching beans ({count})",
+    "allBeans": "All beans ({count})",
+    "noMatch": "No beans match this combination. Try a different flavor or clear your selection.",
+    "aboutHeading": "About the Coffee Flavor Wheel",
+    "aboutP1": "The Coffee Flavor Wheel is a structured vocabulary that the specialty coffee community uses to talk about taste. It is read from the inside out: the inner ring shows broad <strong>categories</strong> (Fruity, Floral, Nutty/Cocoa, Sweet, and so on), the middle ring breaks each category into <strong>subcategories</strong> (Berry, Citrus, Brown Sugar…), and the outer ring lists specific <strong>notes</strong> a taster might actually call out — blackberry, bergamot, caramel.",
+    "aboutP2": "The original wheel was developed by the Specialty Coffee Association (SCA) and World Coffee Research as a research-backed consensus on how baristas, roasters, and Q-graders describe the sensory experience of brewed coffee. Coffees are tasted against this lexicon during cupping so that profiles can be compared consistently across origins and roasts.",
+    "aboutP3": "On this page, click anywhere on the wheel to filter the bean catalog. Tap an outer note to find a single flavor, tap a subcategory to broaden the search, or tap a category to see every bean whose profile touches that family."
+  },
+  "learn": {
+    "heading": "Learn",
+    "subtitle": "Background reading on how coffee is processed and how to brew it.",
+    "processingHeading": "Processing methods",
+    "brewingHeading": "Brewing guides",
+    "processingEmpty": "Articles on washed, natural, honey, anaerobic, and wet-hulled processing are coming soon.",
+    "brewingEmpty": "Guides for V60, Chemex, Kalita Wave, French Press, AeroPress, Espresso, Cold Brew, and Moka Pot are coming soon.",
+    "minRead": "{minutes} min read",
+    "backToLearn": "Back to Learn",
+    "processingLabel": "Processing method",
+    "brewingLabel": "Brewing guide",
+    "notFoundTitle": "Not found · BeanMap"
+  },
+  "brew": {
+    "best": "Best",
+    "grind": "Grind",
+    "temperature": "Temperature",
+    "ratio": "Ratio",
+    "time": "Time",
+    "difficulty": "difficulty",
+    "difficultyLabel": "Difficulty",
+    "affinityOf": "Affinity {score} of 10",
+    "doseCalculator": "Dose calculator",
+    "cups": "Cups",
+    "decreaseCups": "Decrease cups",
+    "increaseCups": "Increase cups",
+    "cupSize": "Cup size",
+    "coffee": "Coffee",
+    "water": "Water",
+    "recipeFallback": "Brewing recipe tuned for this bean.",
+    "brewTime": "Brew time",
+    "toggleTempUnit": "Toggle temperature unit",
+    "bloom": "Bloom for <mono>{seconds}s</mono> before the first pour.",
+    "pourSchedule": "Pour schedule",
+    "equipment": "Equipment",
+    "whyThisWorks": "Why this works",
+    "readGuide": "Read the full {name} guide",
+    "brewingFallbackName": "brewing"
+  },
+  "timer": {
+    "methodTimer": "{method} timer",
+    "brewTimer": "Brew timer",
+    "mute": "Mute stage alerts",
+    "enableSound": "Enable stage alert sound",
+    "of": "of {time}",
+    "announce": "{label} — pour {ml}ml",
+    "complete": "Brew complete",
+    "bloom": "Bloom",
+    "bloomUntil": "until {time}",
+    "ready": "Ready",
+    "next": "Next: <name>{label}</name> at {time}",
+    "lastPour": "Last pour",
+    "noStages": "No pour stages",
+    "pause": "Pause",
+    "start": "Start",
+    "pauseAria": "Pause timer",
+    "startAria": "Start timer",
+    "reset": "Reset",
+    "resetAria": "Reset timer",
+    "spaceHint": "Press <kbd>Space</kbd> to start/pause."
+  },
+  "enums": {
+    "processing": {
+      "washed": "Washed",
+      "natural": "Natural",
+      "honey": "Honey",
+      "anaerobic": "Anaerobic",
+      "wet-hulled": "Wet-Hulled"
+    },
+    "roast": {
+      "light": "Light",
+      "medium-light": "Medium-Light",
+      "medium": "Medium",
+      "medium-dark": "Medium-Dark",
+      "dark": "Dark"
+    },
+    "grind": {
+      "extra-fine": "Extra Fine",
+      "fine": "Fine",
+      "medium-fine": "Medium-Fine",
+      "medium": "Medium",
+      "medium-coarse": "Medium-Coarse",
+      "coarse": "Coarse",
+      "extra-coarse": "Extra Coarse"
+    }
+  },
+  "flavorWheel": {
+    "title": "Flavor wheel",
+    "close": "Close flavor wheel",
+    "hint": "Click any segment to filter the map.",
+    "aria": "Coffee flavor wheel",
+    "kindCategory": "Category",
+    "kindSubcategory": "Subcategory",
+    "kindNote": "Note",
+    "beanCount": "{count, plural, one {# bean} other {# beans}}",
+    "centerFlavor": "Flavor",
+    "centerWheel": "Wheel",
+    "centerHint": "Hover or tap a segment",
+    "segmentAria": "{name}, {count, plural, one {# bean} other {# beans}}",
+    "selectedSuffix": ", selected",
+    "tableCaption": "Coffee flavor wheel — categories, subcategories, and notes",
+    "colCategory": "Category",
+    "colSubcategory": "Subcategory",
+    "colNote": "Note",
+    "colBeans": "Beans"
+  },
+  "compareToggle": {
+    "remove": "Remove from comparison",
+    "full": "Comparison full (max 3)",
+    "add": "Add to comparison",
+    "inComparison": "In comparison",
+    "fullShort": "Comparison full",
+    "compare": "Compare"
+  },
+  "map": {
+    "beanBelt": "Bean Belt",
+    "tokenMissingTitle": "Mapbox token missing",
+    "tokenMissingBody": "Add <code>NEXT_PUBLIC_MAPBOX_TOKEN</code> to <code>.env.local</code> (see <code>.env.example</code>) and restart the dev server."
+  },
+  "common": {
+    "masl": "masl",
+    "minRead": "{minutes} min read",
+    "clear": "Clear",
+    "clearAll": "Clear all",
+    "close": "Close",
+    "loading": "Loading…",
+    "toggleTheme": "Toggle theme",
+    "dragToResize": "Drag to resize",
+    "bottomSheet": "Bottom sheet"
+  }
+}

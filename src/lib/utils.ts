@@ -21,7 +21,7 @@ export function countryFlagEmoji(iso2: string): string {
   );
 }
 
-const MONTH_NAMES = [
+const MONTH_NAMES_EN = [
   "Jan",
   "Feb",
   "Mar",
@@ -36,12 +36,22 @@ const MONTH_NAMES = [
   "Dec",
 ];
 
-export function monthName(m: number): string {
-  return MONTH_NAMES[(m - 1) % 12] ?? "";
+/**
+ * Localized short month label. Pass the active locale (e.g. from `useLocale()`
+ * in client components or the route param in server components). zh-TW uses the
+ * compact numeric form ("1月"); other locales fall back to English abbreviations.
+ */
+export function monthName(m: number, locale: string = "en"): string {
+  const idx = (((m - 1) % 12) + 12) % 12;
+  if (locale === "zh-TW") return `${idx + 1}月`;
+  return MONTH_NAMES_EN[idx] ?? "";
 }
 
-export function formatAltitude(range: [number, number]): string {
-  return `${range[0]}–${range[1]} masl`;
+export function formatAltitude(
+  range: [number, number],
+  unit: string = "masl",
+): string {
+  return `${range[0]}–${range[1]} ${unit}`;
 }
 
 // "1:16" -> 16, "1:14.5" -> 14.5
