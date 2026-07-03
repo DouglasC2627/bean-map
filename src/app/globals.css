@@ -134,10 +134,12 @@ pre,
   font-family: var(--font-mono), ui-monospace, monospace;
 }
 
-/* Render flag emoji via the self-hosted color font, scoped to the flag glyph
-   only so its palette never leaks onto adjacent text (see @font-face note). */
+/* Render flag emoji, preferring each platform's native color-emoji font so that
+   macOS/iOS use Apple Color Emoji (a bitmap/sbix font) instead of the COLR/CPAL
+   webfont below. */
 .flag {
-  font-family: "Twemoji Country Flags", var(--font-sans), system-ui, sans-serif;
+  font-family: "Apple Color Emoji", "Twemoji Country Flags", var(--font-sans),
+    system-ui, sans-serif;
 }
 
 @layer base {
