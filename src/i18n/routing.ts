@@ -2,7 +2,7 @@ import { defineRouting } from "next-intl/routing";
 
 export const routing = defineRouting({
   // Available locales. `en` is the source language; `zh-TW` is Traditional
-  // Chinese (Taiwan). Add new locales here and they flow through middleware,
+  // Chinese (Taiwan). Add new locales here and they flow through the proxy,
   // navigation helpers, and `generateStaticParams`.
   locales: ["en", "zh-TW"],
   defaultLocale: "en",
