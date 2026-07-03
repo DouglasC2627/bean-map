@@ -36,7 +36,7 @@ export function LocaleSwitcher() {
     <div
       role="group"
       aria-label={t("switchLanguage")}
-      className="flex items-center rounded-md border border-border bg-surface/60 p-0.5 text-xs"
+      className="flex items-center whitespace-nowrap rounded-md border border-border bg-surface/60 p-0.5 text-xs"
     >
       {routing.locales.map((loc) => {
         const active = loc === locale;
