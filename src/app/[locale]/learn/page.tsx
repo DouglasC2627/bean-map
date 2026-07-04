@@ -71,12 +71,12 @@ function Section({
           {empty}
         </p>
       ) : (
-        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <ul className="grid auto-rows-fr grid-cols-1 gap-3 sm:grid-cols-2">
           {articles.map((a) => (
             <li key={a.slug}>
               <Link
                 href={`/learn/${category}/${a.slug}`}
-                className="block rounded-lg border border-border bg-surface/60 p-4 transition hover:border-roast-medium"
+                className="flex h-full flex-col rounded-lg border border-border bg-surface/60 p-4 transition hover:border-roast-medium"
               >
                 <h3 className="font-display text-lg leading-tight">
                   {a.frontmatter.title}
@@ -85,7 +85,7 @@ function Section({
                   {a.frontmatter.summary ?? a.frontmatter.description}
                 </p>
                 {a.frontmatter.readingTimeMinutes && (
-                  <p className="mt-2 text-[10px] uppercase tracking-wider text-muted-foreground">
+                  <p className="mt-auto pt-2 text-[10px] uppercase tracking-wider text-muted-foreground">
                     {minReadLabel(a.frontmatter.readingTimeMinutes)}
                   </p>
                 )}
