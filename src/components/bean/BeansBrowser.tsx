@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { LayoutGrid, Map as MapIcon, Table as TableIcon } from "lucide-react";
 import type { CoffeeBean, FlavorNotesData } from "@/types";
@@ -33,6 +33,7 @@ interface Props {
 }
 
 export function BeansBrowser({ beans, flavorNotes }: Props) {
+  const locale = useLocale();
   const t = useTranslations("beansBrowser");
   const tEnum = useTranslations("enums");
   const tCommon = useTranslations("common");
@@ -53,10 +54,13 @@ export function BeansBrowser({ beans, flavorNotes }: Props) {
       let cmp = 0;
       switch (sortKey) {
         case "name":
-          cmp = a.name.localeCompare(b.name);
+          // Pass the active locale so the collation order is identical on the
+          // server and the client — a bare localeCompare() uses each runtime's
+          // default locale, which reorders CJK strings and breaks hydration.
+          cmp = a.name.localeCompare(b.name, locale);
           break;
         case "country":
-          cmp = a.country.localeCompare(b.country);
+          cmp = a.country.localeCompare(b.country, locale);
           break;
         case "altitude":
           cmp = a.altitudeMasl[0] - b.altitudeMasl[0];
@@ -74,7 +78,7 @@ export function BeansBrowser({ beans, flavorNotes }: Props) {
       return sortDir === "asc" ? cmp : -cmp;
     });
     return arr;
-  }, [filtered, sortKey, sortDir]);
+  }, [filtered, sortKey, sortDir, locale]);
 
   const headerSort = (key: SortKey, label: string) => (
     <button

@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { usePathname, useRouter } from "@/i18n/navigation";
+import { usePathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
@@ -11,25 +11,29 @@ const LABELS: Record<string, string> = {
 };
 
 /**
- * Compact language toggle. Switching only changes the URL's locale prefix while
+ * Compact language toggle. Switching changes the URL's locale prefix while
  * preserving the current path and — crucially — the nuqs query string (filters,
- * selection, viewport), which next-intl's router would otherwise drop. The
- * query is read from `window.location` at click time rather than via
- * `useSearchParams()`, which would force a client-side bailout (and a Suspense
- * boundary) on every statically rendered page.
+ * selection, viewport), which next-intl's client router would otherwise drop.
+ *
+ * We navigate with a full document load rather than the client router on
+ * purpose: locale is the root URL segment, so a soft switch remounts the
+ * `[locale]` layout and makes React client-mount next-themes' inline theme
+ * <script>, which logs a dev warning ("Encountered a script tag while rendering
+ * React component"). A full navigation server-renders the new locale, so the
+ * script is hydrated instead. `localePrefix` is "always", so every path is
+ * `/{locale}{pathname}`; `pathname` here already excludes the locale prefix.
  */
 export function LocaleSwitcher() {
   const t = useTranslations("nav");
   const locale = useLocale();
   const pathname = usePathname();
-  const router = useRouter();
 
   const switchTo = (next: string) => {
     if (next === locale) return;
     const search =
       typeof window !== "undefined" ? window.location.search : "";
-    const query = Object.fromEntries(new URLSearchParams(search));
-    router.replace({ pathname, query }, { locale: next });
+    const path = pathname === "/" ? "" : pathname;
+    window.location.assign(`/${next}${path}${search}`);
   };
 
   return (
