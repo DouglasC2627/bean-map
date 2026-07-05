@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Analytics } from "@vercel/analytics/next";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import {
@@ -111,6 +112,7 @@ export default async function LocaleLayout({
             </NextIntlClientProvider>
           </NuqsAdapter>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
