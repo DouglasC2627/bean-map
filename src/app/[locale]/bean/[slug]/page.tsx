@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { MapPin } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import {
@@ -59,20 +60,12 @@ export default async function BeanDetailPage({ params }: Params) {
 
   return (
     <article className="mx-auto w-full max-w-3xl px-5 py-10">
-      <div className="flex items-center gap-4">
-        <Link
-          href="/beans"
-          className="text-sm text-roast-medium hover:underline"
-        >
-          {t("backToBeans")}
-        </Link>
-        <Link
-          href={`/?bean=${bean.slug}`}
-          className="text-sm text-roast-medium hover:underline"
-        >
-          {t("viewOnMap")}
-        </Link>
-      </div>
+      <Link
+        href="/beans"
+        className="text-sm text-roast-medium hover:underline"
+      >
+        {t("backToBeans")}
+      </Link>
 
       <header className="mt-4 border-b border-border pb-6">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -93,6 +86,13 @@ export default async function BeanDetailPage({ params }: Params) {
             {tEnum(`processing.${bean.processing}`)}
           </Link>
         </p>
+        <Link
+          href={`/?bean=${bean.slug}`}
+          className="mt-4 inline-flex items-center gap-1.5 rounded-md bg-roast-medium px-3 py-1.5 text-sm text-cream transition hover:bg-roast-dark"
+        >
+          <MapPin aria-hidden className="h-4 w-4" />
+          {t("viewOnMap")}
+        </Link>
       </header>
 
       <section className="py-6">
