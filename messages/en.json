@@ -107,7 +107,8 @@
   "bean": {
     "title": "{name} — BeanMap",
     "notFoundTitle": "Bean not found — BeanMap",
-    "viewOnMap": "← View on map",
+    "viewOnMap": "View on map",
+    "backToBeans": "← All beans",
     "didYouKnow": "Did you know?",
     "flavorProfile": "Flavor profile",
     "details": "Details",

@@ -59,12 +59,20 @@ export default async function BeanDetailPage({ params }: Params) {
 
   return (
     <article className="mx-auto w-full max-w-3xl px-5 py-10">
-      <Link
-        href={`/?bean=${bean.slug}`}
-        className="text-sm text-roast-medium hover:underline"
-      >
-        {t("viewOnMap")}
-      </Link>
+      <div className="flex items-center gap-4">
+        <Link
+          href="/beans"
+          className="text-sm text-roast-medium hover:underline"
+        >
+          {t("backToBeans")}
+        </Link>
+        <Link
+          href={`/?bean=${bean.slug}`}
+          className="text-sm text-roast-medium hover:underline"
+        >
+          {t("viewOnMap")}
+        </Link>
+      </div>
 
       <header className="mt-4 border-b border-border pb-6">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">

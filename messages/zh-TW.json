@@ -107,7 +107,8 @@
   "bean": {
     "title": "{name} — BeanMap",
     "notFoundTitle": "找不到咖啡豆 — BeanMap",
-    "viewOnMap": "← 在地圖上檢視",
+    "viewOnMap": "在地圖上檢視",
+    "backToBeans": "← 咖啡豆目錄",
     "didYouKnow": "你知道嗎？",
     "flavorProfile": "風味輪廓",
     "details": "詳細資料",
