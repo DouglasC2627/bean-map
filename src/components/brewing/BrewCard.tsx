@@ -76,7 +76,7 @@ function AffinityDots({ score }: { score: number }) {
   return (
     <div
       aria-label={t("affinityOf", { score })}
-      className="flex shrink-0 items-center gap-[2px]"
+      className="flex shrink-0 items-center gap-0.5"
     >
       {Array.from({ length: 10 }, (_, i) => (
         <span
