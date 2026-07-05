@@ -340,7 +340,9 @@ function BeanPanelContent({
         <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           {t("recommendedBrewing")}
         </h3>
-        <div className="-mx-1 flex snap-x gap-2 overflow-x-auto px-1 pb-2">
+        {/* pt-2/-mt-2 keeps the BEST badge (absolute -top-2 on the card) inside
+            the scrollport — overflow-x-auto also clips vertically. */}
+        <div className="-mx-1 -mt-2 flex snap-x gap-2 overflow-x-auto px-1 pt-2 pb-2">
           {sortedRecs.map((rec, i) => (
             <BrewCard
               key={rec.methodId}
