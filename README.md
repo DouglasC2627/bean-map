@@ -2,7 +2,7 @@
 
 An interactive world map of specialty coffee — origins, flavor profiles, brewing recommendations, and an interactive flavor wheel tailored to each bean.
 
-**Status:** *Still Under Development* — Phases 1 & 2 complete; Phase 3 substantially complete. 55 bean profiles across 41 countries with full SCA flavor-note tagging, a Bean Belt overlay tracing the equatorial coffee-growing band on the globe, custom Mapbox styles, SSR bean pages with per-bean flavor-driven gradient art and "Did you know?" trivia, a responsive panel with a draggable mobile bottom sheet, dark/light mode, faceted filters, ⌘K search, brewing recommendation cards with dose calculator + interactive brew timer, a /beans browser with grid/table toggle, Euclidean similar-beans, side-by-side bean comparison, a D3 flavor wheel with category/subcategory/note filtering, a complete MDX-powered Learn section (13 articles with embedded SVG diagrams and timers), and shareable URLs.
+**Status:** *Still Under Development* — Phases 1 & 2 complete; Phase 3 substantially complete; **now fully bilingual (English + Traditional Chinese, Taiwan)**. 55 bean profiles across 41 countries with full SCA flavor-note tagging, a Bean Belt overlay tracing the equatorial coffee-growing band on the globe, custom Mapbox styles, SSR bean pages with per-bean flavor-driven gradient art and "Did you know?" trivia, a responsive panel with a draggable mobile bottom sheet, dark/light mode, faceted filters, ⌘K search, brewing recommendation cards with dose calculator + interactive brew timer, a /beans browser with grid/table toggle, Euclidean similar-beans, side-by-side bean comparison, a D3 flavor wheel with category/subcategory/note filtering, a complete MDX-powered Learn section (13 articles with embedded SVG diagrams and timers), shareable URLs, and **`/zh-TW/` locale routing with an in-nav language switcher** — every UI string, all catalog content (beans, brewing methods, the SCA flavor hierarchy, country names), and all 13 Learn articles are translated.
 
 ## Tech stack
 
@@ -10,6 +10,7 @@ An interactive world map of specialty coffee — origins, flavor profiles, brewi
 - **Map:** [react-map-gl](https://visgl.github.io/react-map-gl/) + [Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/) (globe projection, clustering, custom [Mapbox Studio](https://studio.mapbox.com/) styles)
 - **Styling:** [Tailwind CSS v4](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/) (on top of [Base UI](https://base-ui.com/)) + custom coffee color palette
 - **State:** [Zustand](https://github.com/pmndrs/zustand)
+- **i18n:** [`next-intl`](https://next-intl.dev/) — locale-prefixed routing (`/en/…`, `/zh-TW/…`) via a Next.js 16 proxy, message catalogs, and server + client translations. English (`en`) is the source language; Traditional Chinese / Taiwan (`zh-TW`) is a full translation
 - **URL state:** [`nuqs`](https://nuqs.47ng.com/) — type-safe URL search params, shallow routing
 - **Search:** [Fuse.js](https://www.fusejs.io/) (weighted, fuzzy)
 - **Data viz:** [d3-hierarchy](https://github.com/d3/d3-hierarchy) + [d3-shape](https://github.com/d3/d3-shape) (sunburst flavor wheel); pure SVG everywhere else
@@ -33,6 +34,15 @@ An interactive world map of specialty coffee — origins, flavor profiles, brewi
 - **Search** — ⌘K opens a fuzzy search across name, country, region, and flavor notes. Recent searches persist in `localStorage`.
 - **SCA flavor-notes hierarchy** — 9 categories / 29 subcategories / 84 specific notes in [src/data/flavor-notes.json](src/data/flavor-notes.json), cross-validated against every bean at build time.
 - **Shareable URLs** — `nuqs` syncs selected bean, map viewport, all filters (region, processing, roast, altitude, flavor notes) into the URL with shallow routing.
+- **Bilingual (English + 繁體中文)** — every route is served under a locale prefix (`/en/…`, `/zh-TW/…`) and a language switcher in the nav flips locale while preserving the current path *and* all `nuqs` query state (filters, selection, viewport). UI strings come from `next-intl` message catalogs; catalog content (bean names, descriptions, fun facts, tasting notes, brewing methods, the SCA flavor hierarchy, country names) is localized via id-keyed overlays merged onto the English source; all 13 Learn articles have Traditional Chinese counterparts. `⌘K` search indexes localized names *and* flavor labels, so you can search in Chinese. See [Internationalization](#internationalization-i18n).
+
+## Internationalization (i18n)
+
+- **Routing** — `next-intl` with `localePrefix: "always"`. The whole route tree lives under `src/app/[locale]/…`; the locale layout sets `<html lang>`, loads the right message catalog, and adds a Traditional-Chinese font (Noto Sans/Serif TC) that only downloads for `zh-TW`. A Next.js 16 proxy ([src/proxy.ts](src/proxy.ts)) negotiates the locale and redirects `/` → `/en`.
+- **UI strings** — namespaced message catalogs in [messages/en.json](messages/en.json) + [messages/zh-TW.json](messages/zh-TW.json), consumed with `getTranslations` (server) / `useTranslations` (client).
+- **Catalog content** — English JSON in `src/data/` stays the source of truth; each locale adds a terse, **id-keyed overlay** that translates only display strings. See [src/data/i18n/zh-TW/](src/data/i18n/zh-TW/) (`beans.json`, `brewing-methods.json`, `flavor-notes.json`) and the shared country map [src/data/i18n/countries.json](src/data/i18n/countries.json). The loaders in [src/lib/data.ts](src/lib/data.ts) Zod-validate the English base, then deep-merge the overlay for the requested locale.
+- **Articles** — MDX lives under `src/content/<locale>/<category>/<slug>.mdx`. A missing `zh-TW` article falls back to English, so the Learn section never 404s mid-translation.
+- **Validation** — `npm run validate:data` fails the build if any bean/method/flavor id or country lacks a `zh-TW` overlay entry, or if the `en` and `zh-TW` message catalogs drift out of key parity.
 
 ## Local development
 
@@ -72,7 +82,7 @@ All three are inlined into the client bundle at build time — changing them req
 | `npm run build` | Run Zod validation, then production build |
 | `npm run start` | Start production server |
 | `npm run lint` | Run ESLint |
-| `npm run validate:data` | Validate [src/data/](src/data/) against Zod schemas + cross-check flavor-note IDs, method IDs, and related-bean IDs |
+| `npm run validate:data` | Validate [src/data/](src/data/) against Zod schemas + cross-check flavor-note IDs, method IDs, and related-bean IDs; also assert every `zh-TW` content overlay + country name is present and that the `en`/`zh-TW` message catalogs match key-for-key |
 | `npm run expand:brewing` | Regenerate missing brewing recommendations via affinity weights |
 | `npm run new:bean` | Interactive scaffolder that prompts for every field and appends a new bean profile to `beans.json` |
 
@@ -81,20 +91,28 @@ All three are inlined into the client bundle at build time — changing them req
 ```
 bean-map/
 ├── src/
-│   ├── app/        # Next.js App Router
-│   │   ├── bean/[slug]/       # SSR bean detail page (generateStaticParams)
-│   │   ├── beans/             # /beans grid + table browser
-│   │   ├── compare/           # /compare?beans=slug1,slug2,slug3
-│   │   ├── explore/
-│   │   │   ├── flavors/            # D3 flavor wheel + matched beans list
-│   │   │   └── insights/           # Altitude chart + harvest calendar
-│   │   ├── learn/
-│   │   │   ├── page.tsx            # Hub listing processing + brewing articles
-│   │   │   ├── processing/[slug]/  # MDX article renderer
-│   │   │   └── brewing/[slug]/     # MDX article renderer
-│   │   ├── layout.tsx         # Root layout — fonts, ThemeProvider, NuqsAdapter, TopNav
-│   │   ├── page.tsx           # Home (map view)
-│   │   └── globals.css        # Tailwind v4 theme + coffee palette
+│   ├── app/        # Next.js App Router — all routes live under [locale]
+│   │   ├── [locale]/
+│   │   │   ├── bean/[slug]/       # SSR bean detail page (generateStaticParams)
+│   │   │   ├── beans/             # /beans grid + table browser
+│   │   │   ├── compare/           # /compare?beans=slug1,slug2,slug3
+│   │   │   ├── explore/
+│   │   │   │   ├── flavors/            # D3 flavor wheel + matched beans list
+│   │   │   │   └── insights/           # Altitude chart + harvest calendar
+│   │   │   ├── learn/
+│   │   │   │   ├── page.tsx            # Hub listing processing + brewing articles
+│   │   │   │   ├── processing/[slug]/  # MDX article renderer
+│   │   │   │   └── brewing/[slug]/     # MDX article renderer
+│   │   │   ├── layout.tsx         # Locale (root) layout — <html lang>, fonts (+ Noto Sans/Serif TC), ThemeProvider, NuqsAdapter, NextIntlClientProvider, TopNav
+│   │   │   └── page.tsx           # Home (map view)
+│   │   ├── globals.css        # Tailwind v4 theme + coffee palette
+│   │   └── favicon.ico, icon.png, apple-icon.png   # Global metadata files (not locale-prefixed)
+│   │
+│   ├── i18n/       # next-intl config
+│   │   ├── routing.ts         # Locales (en, zh-TW), defaultLocale, localePrefix: "always"
+│   │   ├── request.ts         # getRequestConfig — loads messages/<locale>.json
+│   │   └── navigation.ts      # Locale-aware Link / useRouter / usePathname
+│   ├── proxy.ts    # next-intl locale negotiation (Next.js 16 proxy, formerly middleware)
 │   │
 │   ├── components/
 │   │   ├── map/               # CoffeeMap, MapView, BeanBelt, RegionHighlight, FlavorWheelOverlay
@@ -103,22 +121,22 @@ bean-map/
 │   │   ├── brewing/           # BrewCard, BrewDetailModal, BrewCalculator, BrewTimer
 │   │   ├── compare/           # ComparisonTray, ComparisonView, CompareToggle
 │   │   ├── visualization/     # FlavorRadar, FlavorWheel(+Lazy), ProcessDiagram, AltitudeChart, SeasonalChart
-│   │   ├── layout/            # TopNav, MobileBottomSheet
+│   │   ├── layout/            # TopNav, LocaleSwitcher, MobileBottomSheet
 │   │   ├── shared/            # ThemeProvider, ThemeToggle, SearchCommand, UrlStateSync
 │   │   └── ui/                # shadcn/ui primitives (Button, Dialog, Sheet, Slider, …)
 │   │
-│   ├── content/    # MDX articles for the Learn section
-│   │   ├── processing/        # washed, natural, honey, anaerobic, wet-hulled
-│   │   └── brewing/           # v60, chemex, kalita-wave, french-press, aeropress, espresso, cold-brew, moka-pot
+│   ├── content/    # MDX articles for the Learn section, per locale (English is source; zh-TW falls back to en)
+│   │   ├── en/{processing,brewing}/
+│   │   └── zh-TW/{processing,brewing}/
 │   │
 │   ├── lib/
-│   │   ├── data.ts               # Cached bean / method / flavor-notes loaders
+│   │   ├── data.ts               # Locale-aware bean / method / flavor-notes loaders (base + id-keyed overlay merge, per-locale cache)
 │   │   ├── schemas.ts            # Zod schemas mirroring src/types
-│   │   ├── search.ts             # Fuse.js index + recent-searches helpers
+│   │   ├── search.ts             # Fuse.js index (localized names + flavor labels) + recent-searches helpers
 │   │   ├── similar.ts            # Euclidean distance over flavor profile
 │   │   ├── flavor-gradient.ts    # Deterministic CSS gradient from a bean's flavor profile
 │   │   ├── flavor-icons.ts       # Category → illustration/emoji map for the flavor wheel
-│   │   ├── mdx.ts                # Article loaders + shared MDXRemote render options (gray-matter, remark-gfm)
+│   │   ├── mdx.ts                # Locale-aware article loaders (per-locale dirs, English fallback) + shared MDXRemote render options (gray-matter, remark-gfm)
 │   │   ├── mdx-components.tsx    # MDX components map (BrewTimer, ProcessDiagram, Callout, tables, prose styles)
 │   │   ├── url-state.ts          # nuqs parsers for filters / viewport / selection
 │   │   ├── motion.ts             # Shared Framer Motion variants
@@ -128,7 +146,12 @@ bean-map/
 │   │
 │   ├── store/      # Zustand store + filter selectors (includes flavor-note hierarchy match)
 │   ├── types/      # TypeScript interfaces
-│   └── data/       # beans.json, brewing-methods.json, flavor-notes.json, regions.geojson
+│   └── data/       # beans.json, brewing-methods.json, flavor-notes.json (English source of truth)
+│       └── i18n/                   # Translation overlays
+│           ├── countries.json          # ISO-2 → { en, zh-TW } country names
+│           └── zh-TW/{beans,brewing-methods,flavor-notes}.json  # id-keyed zh-TW overlays
+│
+├── messages/       # next-intl UI string catalogs — en.json, zh-TW.json (kept in key parity)
 │
 ├── public/
 │   └── data/       # regions.geojson (fetched at runtime by the map)
@@ -165,13 +188,18 @@ To add a bean manually:
 2. Fill in origin fields: `country`, `countryCode` (ISO-2), `region`, `coordinates: [lng, lat]`, `altitudeMasl: [min, max]`.
 3. Fill in the 6-axis `flavorProfile` (1–10 each), `flavorNotes` (must be IDs from [src/data/flavor-notes.json](src/data/flavor-notes.json)), `varieties`, `processing`, `roastRecommendation`, `harvestMonths`.
 4. Add at least one entry to `brewingRecommendations`. Run `npm run expand:brewing` to algorithmically fill the remaining methods.
-5. Run `npm run validate:data` — Zod will catch any missing or malformed fields and the cross-check will flag unknown flavor-note IDs, method IDs, or related-bean IDs.
+5. Add a Traditional-Chinese overlay for the new bean, keyed by its `id`, in [src/data/i18n/zh-TW/beans.json](src/data/i18n/zh-TW/beans.json) (`name`, `region`, `varieties`, `description`, `funFact`, and `tastingNotes` keyed by `methodId`), and make sure its `countryCode` exists in [src/data/i18n/countries.json](src/data/i18n/countries.json).
+6. Run `npm run validate:data` — Zod will catch any missing or malformed fields, the cross-check will flag unknown flavor-note IDs, method IDs, or related-bean IDs, and the i18n check will flag any missing `zh-TW` overlay entry or country name.
 
 Region polygons live in [public/data/regions.geojson](public/data/regions.geojson) and are fetched client-side for hover highlights.
 
+### UI strings
+
+App-shell copy (nav, filters, buttons, aria labels, metadata, enum labels) lives in the [messages/](messages/) catalogs, one file per locale. Add the key to **both** `en.json` and `zh-TW.json` — `npm run validate:data` fails the build if the two catalogs fall out of key parity.
+
 ### Learn articles
 
-Articles are MDX files in [src/content/](src/content/) under `processing/` or `brewing/`. Each file needs a frontmatter block:
+Articles are MDX files under [src/content/](src/content/), organized as `<locale>/<category>/<slug>.mdx` (e.g. `en/processing/washed.mdx`, `zh-TW/brewing/v60.mdx`). English is the source language; a missing `zh-TW` file transparently falls back to its English counterpart. Each file needs a frontmatter block:
 
 ```mdx
 ---
@@ -194,7 +222,7 @@ Body text inside an aside.
 </Callout>
 ```
 
-Slugs are inferred from the filename. The hub and routes (`/learn`, `/learn/processing/[slug]`, `/learn/brewing/[slug]`) pick up new files automatically — no registry update needed. The articles render through a shared `mdxRenderOptions` (see [src/lib/mdx.ts](src/lib/mdx.ts)) that enables `remark-gfm` and JSX-expression props — keep authored content trusted, since it is rendered with `blockJS` disabled.
+Slugs are inferred from the filename and enumerated from the English tree (so both locales render every article even before a translation exists). The hub and routes (`/{locale}/learn`, `/{locale}/learn/processing/[slug]`, `/{locale}/learn/brewing/[slug]`) pick up new files automatically — no registry update needed. Keep component props (`totalSeconds`, `stages`, `highlight`, …) identical between an article and its translation; only translate the prose, headings, tables, and the components' `label`/`note`/`caption` text. The articles render through a shared `mdxRenderOptions` (see [src/lib/mdx.ts](src/lib/mdx.ts)) that enables `remark-gfm` and JSX-expression props — keep authored content trusted, since it is rendered with `blockJS` disabled.
 
 ## Deployment
 
