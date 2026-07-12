@@ -4,22 +4,17 @@ import { useId } from "react";
 import { useTranslations } from "next-intl";
 import type { FlavorProfile } from "@/types";
 import { cn } from "@/lib/utils";
-
-const AXES: Array<{ key: keyof FlavorProfile }> = [
-  { key: "acidity" },
-  { key: "fruitiness" },
-  { key: "complexity" },
-  { key: "bitterness" },
-  { key: "body" },
-  { key: "sweetness" },
-];
-
-const SIZE = 240;
-const CENTER = SIZE / 2;
-const PADDING = 32;
-const RADIUS = CENTER - PADDING;
-const RINGS = [2, 4, 6, 8, 10];
-const MAX = 10;
+import {
+  AXES,
+  CENTER,
+  DEFAULT_COLORS,
+  MAX,
+  pointFor,
+  polygonPoints,
+  RADIUS,
+  RINGS,
+  SIZE,
+} from "@/lib/radar-geometry";
 
 export interface RadarSeries {
   id: string;
@@ -34,21 +29,6 @@ interface Props {
   showLabels?: boolean;
   showLegend?: boolean;
   className?: string;
-}
-
-const DEFAULT_COLORS = ["#6F4E37", "#C1440E", "#5B8FA8"];
-
-function pointFor(axisIndex: number, value: number, radius = RADIUS) {
-  const angle = (Math.PI * 2 * axisIndex) / AXES.length - Math.PI / 2;
-  const r = (Math.max(0, Math.min(MAX, value)) / MAX) * radius;
-  return [CENTER + Math.cos(angle) * r, CENTER + Math.sin(angle) * r] as const;
-}
-
-function polygonPoints(profile: FlavorProfile): string {
-  return AXES.map((axis, i) => {
-    const [x, y] = pointFor(i, profile[axis.key]);
-    return `${x.toFixed(2)},${y.toFixed(2)}`;
-  }).join(" ");
 }
 
 export function FlavorRadar({

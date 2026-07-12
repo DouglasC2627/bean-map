@@ -1,4 +1,112 @@
 {
+  "share": {
+    "share": "分享",
+    "copied": "連結已複製到剪貼簿",
+    "copyFailed": "無法複製連結",
+    "beanText": "在 BeanMap 上看看來自{region}的{name}！",
+    "compareText": "在 BeanMap 上比較 {names}！"
+  },
+  "favorites": {
+    "add": "將{name}加入收藏",
+    "remove": "將{name}從收藏移除",
+    "added": "已將{name}加入收藏",
+    "removed": "已將{name}從收藏移除",
+    "save": "收藏",
+    "saved": "已收藏",
+    "syncError": "無法同步收藏，請再試一次",
+    "signInToSave": "登入即可收藏"
+  },
+  "favoritesPage": {
+    "title": "你的收藏",
+    "subtitle": "你收藏起來稍後細品的咖啡豆。",
+    "loading": "正在載入你的收藏…",
+    "empty": "你還沒有收藏任何咖啡豆。",
+    "emptyCta": "探索咖啡豆",
+    "count": "{count, plural, other {# 款收藏的咖啡豆}}",
+    "sortBy": "排序方式",
+    "sort": {
+      "dateAdded": "收藏時間",
+      "name": "名稱",
+      "region": "產區"
+    },
+    "export": "匯出"
+  },
+  "discover": {
+    "title": "探索精選",
+    "subtitle": "為你的下一杯帶來新靈感。",
+    "inSeason": "當季盛產",
+    "inSeasonSubtitle": "目前正值採收高峰的咖啡豆。",
+    "inSeasonEmpty": "本月沒有正值採收高峰的咖啡豆，敬請期待。",
+    "editorsPicks": "編輯精選",
+    "editorsPicksSubtitle": "值得一試的輪替精選。",
+    "popular": "本週熱門",
+    "popularSubtitle": "其他探索者的最愛。",
+    "newAdditions": "最新收錄",
+    "newAdditionsSubtitle": "BeanMap 最新加入的咖啡豆。"
+  },
+  "recipeCard": {
+    "title": "分享沖煮配方",
+    "subtitle": "複製連結或下載配方卡來分享這份沖煮方案。",
+    "badge": "沖煮配方",
+    "grind": "研磨度",
+    "temp": "水溫",
+    "ratio": "粉水比",
+    "time": "沖煮時間",
+    "copyLink": "複製連結",
+    "downloadPng": "下載 PNG",
+    "downloading": "準備中…",
+    "downloadFailed": "無法產生圖片",
+    "metaTitle": "{name} 的 {method} 沖煮配方 · BeanMap",
+    "metaDescription": "為 {name} 調校的 {method} 沖煮參數：研磨度、水溫、粉水比與時間。",
+    "backToBean": "← {name}",
+    "pageTitle": "{name} 的 {method} 沖煮配方",
+    "viewBean": "查看咖啡豆",
+    "viewOnMap": "在地圖上查看"
+  },
+  "auth": {
+    "signIn": "登入",
+    "signInTitle": "登入 BeanMap",
+    "signInSubtitle": "跨裝置同步收藏，並保存私人的沖煮筆記。",
+    "continueGoogle": "使用 Google 繼續",
+    "continueGithub": "使用 GitHub 繼續",
+    "account": "帳號選單",
+    "myFavorites": "我的收藏",
+    "myNotes": "我的沖煮筆記",
+    "signOut": "登出"
+  },
+  "brewNotes": {
+    "title": "你的沖煮筆記",
+    "private": "私人內容，只有你看得到。",
+    "method": "沖煮方式",
+    "noMethod": "不指定方式",
+    "brewedOn": "沖煮日期",
+    "rating": "評分",
+    "stars": "{n} 顆星",
+    "notePlaceholder": "喝起來如何？下次想調整什麼？",
+    "add": "新增筆記",
+    "update": "儲存變更",
+    "cancel": "取消",
+    "saving": "儲存中…",
+    "saved": "筆記已儲存",
+    "updated": "筆記已更新",
+    "saveFailed": "無法儲存筆記",
+    "deleted": "筆記已刪除",
+    "deleteFailed": "無法刪除筆記",
+    "edit": "編輯筆記",
+    "delete": "刪除筆記",
+    "empty": "這款咖啡豆還沒有任何筆記。",
+    "signInPrompt": "登入即可為這款咖啡豆保存私人的品飲筆記。",
+    "signInCta": "登入"
+  },
+  "notes": {
+    "title": "沖煮日誌",
+    "subtitle": "你記錄過的每一則品飲筆記。",
+    "loading": "正在載入你的筆記…",
+    "signInPrompt": "登入以查看你的沖煮日誌。",
+    "signInCta": "登入",
+    "empty": "你還沒有記錄任何沖煮筆記。",
+    "emptyCta": "瀏覽咖啡豆"
+  },
   "metadata": {
     "home": {
       "title": "BeanMap — 咖啡產地、風味與沖煮",
@@ -25,12 +133,21 @@
     "learn": {
       "title": "學堂 · BeanMap",
       "description": "關於咖啡處理法與沖煮技巧的背景知識。"
+    },
+    "favorites": {
+      "title": "收藏 · BeanMap",
+      "description": "你在 BeanMap 上收藏的咖啡豆。"
+    },
+    "notes": {
+      "title": "沖煮日誌 · BeanMap",
+      "description": "你的個人咖啡沖煮筆記。"
     }
   },
   "nav": {
     "logoAlt": "BeanMap 標誌",
     "explore": "地圖",
     "beans": "咖啡豆目錄",
+    "favorites": "收藏",
     "insights": "風土透視",
     "flavors": "風味",
     "learn": "學堂",
@@ -82,7 +199,8 @@
   },
   "beans": {
     "heading": "咖啡豆目錄",
-    "subtitle": "瀏覽、排序並篩選每一款咖啡豆檔案。"
+    "subtitle": "瀏覽、排序並篩選每一款咖啡豆檔案。",
+    "browseAll": "瀏覽全部"
   },
   "beansBrowser": {
     "countOf": "共 {total} 款中的 {shown} 款",
@@ -241,6 +359,7 @@
   },
   "brew": {
     "best": "最佳",
+    "shareRecipe": "分享配方",
     "grind": "研磨",
     "temperature": "水溫",
     "ratio": "粉水比",

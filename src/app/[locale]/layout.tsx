@@ -15,10 +15,15 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "../globals.css";
 import { ThemeProvider } from "@/components/shared/ThemeProvider";
 import { MotionProvider } from "@/components/shared/MotionProvider";
+import { SessionProviderWrapper } from "@/components/shared/SessionProviderWrapper";
+import { FavoritesSync } from "@/components/shared/FavoritesSync";
+import { SignInDialog } from "@/components/shared/SignInDialog";
+import { Toaster } from "@/components/shared/Toaster";
 import { TopNav } from "@/components/layout/TopNav";
 import { SearchCommand } from "@/components/shared/SearchCommand";
 import { getBeans, getFlavorNotes } from "@/lib/data";
 import { routing } from "@/i18n/routing";
+import { siteUrl } from "@/lib/site";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -66,6 +71,7 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "metadata.home" });
   return {
+    metadataBase: new URL(siteUrl),
     title: t("title"),
     description: t("description"),
   };
@@ -105,11 +111,16 @@ export default async function LocaleLayout({
         >
           <NuqsAdapter>
             <NextIntlClientProvider>
-              <MotionProvider>
-                <TopNav />
-                <main className="flex-1 flex flex-col">{children}</main>
-                <SearchCommand beans={beans} flavorNotes={flavorNotes} />
-              </MotionProvider>
+              <SessionProviderWrapper>
+                <MotionProvider>
+                  <TopNav />
+                  <main className="flex-1 flex flex-col">{children}</main>
+                  <SearchCommand beans={beans} flavorNotes={flavorNotes} />
+                  <Toaster />
+                  <FavoritesSync />
+                  <SignInDialog />
+                </MotionProvider>
+              </SessionProviderWrapper>
             </NextIntlClientProvider>
           </NuqsAdapter>
         </ThemeProvider>

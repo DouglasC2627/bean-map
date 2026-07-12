@@ -1,4 +1,112 @@
 {
+  "share": {
+    "share": "Share",
+    "copied": "Link copied to clipboard",
+    "copyFailed": "Couldn't copy the link",
+    "beanText": "Check out {name} from {region} on BeanMap!",
+    "compareText": "Compare {names} on BeanMap!"
+  },
+  "favorites": {
+    "add": "Add {name} to favorites",
+    "remove": "Remove {name} from favorites",
+    "added": "Added {name} to favorites",
+    "removed": "Removed {name} from favorites",
+    "save": "Save",
+    "saved": "Saved",
+    "syncError": "Couldn't sync favorites — please try again",
+    "signInToSave": "Sign in to save favorites"
+  },
+  "favoritesPage": {
+    "title": "Your favorites",
+    "subtitle": "Beans you've saved for later.",
+    "loading": "Loading your favorites…",
+    "empty": "You haven't saved any beans yet.",
+    "emptyCta": "Explore beans",
+    "count": "{count, plural, one {# saved bean} other {# saved beans}}",
+    "sortBy": "Sort by",
+    "sort": {
+      "dateAdded": "Date added",
+      "name": "Name",
+      "region": "Region"
+    },
+    "export": "Export"
+  },
+  "discover": {
+    "title": "Discover",
+    "subtitle": "Fresh ideas for your next cup.",
+    "inSeason": "In season now",
+    "inSeasonSubtitle": "Beans currently in peak harvest.",
+    "inSeasonEmpty": "Nothing is in peak harvest this month — check back soon.",
+    "editorsPicks": "Editor's picks",
+    "editorsPicksSubtitle": "A rotating selection worth seeking out.",
+    "popular": "Popular this week",
+    "popularSubtitle": "What other explorers are loving.",
+    "newAdditions": "New additions",
+    "newAdditionsSubtitle": "The latest beans added to BeanMap."
+  },
+  "recipeCard": {
+    "title": "Share recipe",
+    "subtitle": "Copy a link or download a card to share this brew.",
+    "badge": "Recipe",
+    "grind": "Grind",
+    "temp": "Temp",
+    "ratio": "Ratio",
+    "time": "Time",
+    "copyLink": "Copy link",
+    "downloadPng": "Download PNG",
+    "downloading": "Preparing…",
+    "downloadFailed": "Couldn't create the image",
+    "metaTitle": "{method} recipe for {name} · BeanMap",
+    "metaDescription": "Dialed-in {method} parameters for {name}: grind, temperature, ratio, and time.",
+    "backToBean": "← {name}",
+    "pageTitle": "{method} recipe for {name}",
+    "viewBean": "View bean",
+    "viewOnMap": "View on map"
+  },
+  "auth": {
+    "signIn": "Sign in",
+    "signInTitle": "Sign in to BeanMap",
+    "signInSubtitle": "Save favorites across devices and keep private brew notes.",
+    "continueGoogle": "Continue with Google",
+    "continueGithub": "Continue with GitHub",
+    "account": "Account menu",
+    "myFavorites": "My favorites",
+    "myNotes": "My brew notes",
+    "signOut": "Sign out"
+  },
+  "brewNotes": {
+    "title": "Your brew notes",
+    "private": "Private — only you can see these.",
+    "method": "Method",
+    "noMethod": "No method",
+    "brewedOn": "Brewed on",
+    "rating": "Rating",
+    "stars": "{n} of 5 stars",
+    "notePlaceholder": "How did it taste? What would you change next time?",
+    "add": "Add note",
+    "update": "Save changes",
+    "cancel": "Cancel",
+    "saving": "Saving…",
+    "saved": "Note saved",
+    "updated": "Note updated",
+    "saveFailed": "Couldn't save the note",
+    "deleted": "Note deleted",
+    "deleteFailed": "Couldn't delete the note",
+    "edit": "Edit note",
+    "delete": "Delete note",
+    "empty": "No notes for this bean yet.",
+    "signInPrompt": "Sign in to keep private tasting notes for this bean.",
+    "signInCta": "Sign in"
+  },
+  "notes": {
+    "title": "Brewing journal",
+    "subtitle": "Every tasting note you've logged.",
+    "loading": "Loading your notes…",
+    "signInPrompt": "Sign in to view your brewing journal.",
+    "signInCta": "Sign in",
+    "empty": "You haven't logged any brew notes yet.",
+    "emptyCta": "Browse beans"
+  },
   "metadata": {
     "home": {
       "title": "BeanMap — Coffee origins, flavors & brewing",
@@ -25,12 +133,21 @@
     "learn": {
       "title": "Learn · BeanMap",
       "description": "Background reading on coffee processing methods and brewing techniques."
+    },
+    "favorites": {
+      "title": "Favorites · BeanMap",
+      "description": "The coffee beans you've saved on BeanMap."
+    },
+    "notes": {
+      "title": "Brewing journal · BeanMap",
+      "description": "Your personal coffee brewing notes."
     }
   },
   "nav": {
     "logoAlt": "BeanMap logo",
     "explore": "Explore",
     "beans": "Beans",
+    "favorites": "Favorites",
     "insights": "Insights",
     "flavors": "Flavors",
     "learn": "Learn",
@@ -82,7 +199,8 @@
   },
   "beans": {
     "heading": "All beans",
-    "subtitle": "Browse, sort, and filter every bean profile."
+    "subtitle": "Browse, sort, and filter every bean profile.",
+    "browseAll": "Browse all"
   },
   "beansBrowser": {
     "countOf": "{shown} of {total} beans",
@@ -241,6 +359,7 @@
   },
   "brew": {
     "best": "Best",
+    "shareRecipe": "Share recipe",
     "grind": "Grind",
     "temperature": "Temperature",
     "ratio": "Ratio",

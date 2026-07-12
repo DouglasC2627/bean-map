@@ -6,8 +6,12 @@ import {
   getFlavorNotes,
 } from "@/lib/data";
 import { BeansBrowser } from "@/components/bean/BeansBrowser";
+import { BeanCollections } from "@/components/bean/BeanCollections";
 import { FilterPanel } from "@/components/filter/FilterPanel";
 import { ComparisonTray } from "@/components/compare/ComparisonTray";
+
+// Refresh at most daily so the "In season now" collection tracks the calendar.
+export const revalidate = 86400;
 
 export async function generateMetadata({
   params,
@@ -37,6 +41,10 @@ export default async function BeansPage({
         <h1 className="font-display text-3xl">{t("heading")}</h1>
         <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
       </header>
+      <BeanCollections beans={beans} flavorNotes={flavorNotes} locale={locale} />
+      <h2 className="mb-3 font-display text-xl leading-tight">
+        {t("browseAll")}
+      </h2>
       <BeansBrowser beans={beans} flavorNotes={flavorNotes} />
       <ComparisonTray
         beans={beans}

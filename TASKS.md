@@ -424,98 +424,98 @@ An interactive world map showcasing coffee beans from around the world, their or
 **Goal**: Sharing capabilities, persistent favorites, optional authentication, and community features.
 
 ### 4.1 Share Functionality
-- [ ] Build `src/components/shared/ShareButton.tsx`
-- [ ] Mobile: Web Share API (`navigator.share()`) with title, text, URL
-- [ ] Desktop fallback: Copy-to-clipboard with "Copied!" toast notification
-- [ ] Add ShareButton to: BeanPanel, bean detail page, ComparisonView, BrewDetailModal
-- [ ] Share text format: "Check out [Bean Name] from [Region] on BeanMap! [URL]"
+- [x] Build `src/components/shared/ShareButton.tsx`
+- [x] Mobile: Web Share API (`navigator.share()`) with title, text, URL
+- [x] Desktop fallback: Copy-to-clipboard with "Copied!" toast notification
+- [x] Add ShareButton to: BeanPanel, bean detail page, ComparisonView, BrewDetailModal
+- [x] Share text format: "Check out [Bean Name] from [Region] on BeanMap! [URL]"
 
 ### 4.2 OG Image Generation
-- [ ] Create `src/app/api/og/route.tsx` using `@vercel/og` (Satori)
-- [ ] Dynamic OG images for bean pages: bean name, origin, radar chart preview, key flavor notes, warm coffee-themed background
-- [ ] Dynamic OG images for comparison pages: 2-3 bean names, "Compare on BeanMap"
-- [ ] Update all `metadata` exports to use dynamic OG image URLs
-- [ ] Test with social media debuggers (Twitter Card Validator, Facebook Sharing Debugger)
+- [x] Create `src/app/api/og/route.tsx` using `@vercel/og` (Satori)
+- [x] Dynamic OG images for bean pages: bean name, origin, radar chart preview, key flavor notes, warm coffee-themed background
+- [x] Dynamic OG images for comparison pages: 2-3 bean names, "Compare on BeanMap"
+- [x] Update all `metadata` exports to use dynamic OG image URLs
+- [x] Test with social media debuggers (Twitter Card Validator, Facebook Sharing Debugger)
 
 ### 4.3 Shareable Brew Recipe Cards
-- [ ] Build `src/components/brewing/ShareRecipeCard.tsx`
-- [ ] "Share Recipe" button in BrewDetailModal
-- [ ] Generate a visually appealing card showing: bean name, brewing method, key parameters (grind, temp, ratio, time)
-- [ ] Option 1: Generate as OG-powered link (dynamic OG image at `/api/og/recipe?bean=X&method=Y`)
-- [ ] Option 2: Generate as downloadable PNG using `html-to-image` library
-- [ ] Card design: clean layout with coffee color palette, BeanMap branding
+- [x] Build `src/components/brewing/ShareRecipeCard.tsx`
+- [x] "Share Recipe" button in BrewDetailModal
+- [x] Generate a visually appealing card showing: bean name, brewing method, key parameters (grind, temp, ratio, time)
+- [x] Option 1: Generate as OG-powered link (dynamic OG image at `/api/og/recipe?bean=X&method=Y`)
+- [x] Option 2: Generate as downloadable PNG using `html-to-image` library
+- [x] Card design: clean layout with coffee color palette, BeanMap branding
 
 ### 4.4 Local Favorites
-- [ ] Build `src/components/shared/FavoriteButton.tsx` (heart icon toggle)
-- [ ] Zustand `persist` middleware to save favorited bean IDs in localStorage
-- [ ] Add FavoriteButton to: BeanPanel, BeanCard, bean detail page
-- [ ] Create `src/app/favorites/page.tsx`:
+- [x] Build `src/components/shared/FavoriteButton.tsx` (heart icon toggle)
+- [x] Zustand `persist` middleware to save favorited bean IDs in localStorage
+- [x] Add FavoriteButton to: BeanPanel, BeanCard, bean detail page
+- [x] Create `src/app/favorites/page.tsx`:
   - Grid of favorited bean cards
   - Sort by: date added, name, region
   - Empty state with CTA to explore
   - Export favorites list (optional: JSON download)
 
 ### 4.5 Database Setup
-- [ ] Provision Neon Postgres database (free tier)
-- [ ] Install Drizzle ORM + `drizzle-kit`
-- [ ] Define schemas in `/drizzle/schema.ts`:
+- [x] Provision Neon Postgres database (free tier)
+- [x] Install Drizzle ORM + `drizzle-kit`
+- [x] Define schemas in `/drizzle/schema.ts`:
   - `users` table: id, email, name, image, provider, createdAt
   - `favorites` table: id, userId, beanSlug, createdAt
   - `brewNotes` table: id, userId, beanSlug, methodId, note, rating, createdAt, updatedAt
-- [ ] Generate and run initial migration
-- [ ] Create `/lib/db.ts` with Drizzle client configuration
-- [ ] Add database URL to `.env.local`
+- [x] Generate and run initial migration
+- [x] Create `/lib/db.ts` with Drizzle client configuration
+- [x] Add database URL to `.env.local`
 
 ### 4.6 Authentication
-- [ ] Install NextAuth.js v5 (`next-auth@beta`)
-- [ ] Configure providers: Google OAuth, GitHub OAuth
-- [ ] Set up JWT session strategy (no database sessions needed)
-- [ ] Create auth API route at `src/app/api/auth/[...nextauth]/route.ts`
-- [ ] Build sign-in/sign-out UI components
-- [ ] Add user avatar/sign-in button to TopNav
-- [ ] Create user record in Postgres on first login
-- [ ] Protect authenticated routes with middleware
+- [x] Install NextAuth.js v5 (`next-auth@beta`)
+- [x] Configure providers: Google OAuth, GitHub OAuth
+- [x] Set up JWT session strategy (no database sessions needed)
+- [x] Create auth API route at `src/app/api/auth/[...nextauth]/route.ts`
+- [x] Build sign-in/sign-out UI components
+- [x] Add user avatar/sign-in button to TopNav
+- [x] Create user record in Postgres on first login
+- [x] Protect authenticated routes with middleware
 
 ### 4.7 Synced Favorites
-- [ ] Create API routes:
+- [x] Create API routes:
   - `GET /api/favorites` - list user's favorites
   - `POST /api/favorites` - add a favorite
   - `DELETE /api/favorites/[beanSlug]` - remove a favorite
-- [ ] On login: merge localStorage favorites with server favorites (union, no duplicates)
-- [ ] After merge: clear localStorage favorites, use server as source of truth
-- [ ] FavoriteButton: check auth state, use local or server accordingly
-- [ ] Optimistic updates with rollback on error
+- [x] On login: merge localStorage favorites with server favorites (union, no duplicates)
+- [x] After merge: clear localStorage favorites, use server as source of truth
+- [x] FavoriteButton: check auth state, use local or server accordingly
+- [x] Optimistic updates with rollback on error
 
 ### 4.8 Personal Brew Notes
-- [ ] Build `src/components/brewing/BrewNoteForm.tsx`
-- [ ] Authenticated users can add notes to a bean:
+- [x] Build `src/components/brewing/BrewNoteForm.tsx`
+- [x] Authenticated users can add notes to a bean:
   - Brewing method used
   - Free-text tasting notes
   - Rating (1-5 stars)
   - Date brewed
-- [ ] Create API routes for CRUD operations on brew notes
-- [ ] Display as a timeline on the bean profile (private, only visible to the author)
-- [ ] Build `src/app/notes/page.tsx` - personal brewing journal listing all notes
+- [x] Create API routes for CRUD operations on brew notes
+- [x] Display as a timeline on the bean profile (private, only visible to the author)
+- [x] Build `src/app/notes/page.tsx` - personal brewing journal listing all notes
 
 ### 4.9 Discover Feed
-- [ ] Create `src/app/discover/page.tsx`
-- [ ] Sections:
+- [x] Create `src/app/discover/page.tsx`
+- [x] Sections:
   - **In Season Now**: Beans currently in harvest (based on current month)
   - **Popular This Week**: Most favorited beans (requires tracking, or curate manually)
   - **Editor's Picks**: Curated rotating selection (stored in JSON or CMS)
   - **New Additions**: Recently added beans
-- [ ] Responsive grid layout with section headers
-- [ ] Link to bean profiles and map view
+- [x] Responsive grid layout with section headers
+- [x] Link to bean profiles and map view
 
 ### Phase 4 Verification
-- [ ] Share button works on mobile (Web Share API) and desktop (clipboard)
-- [ ] OG images generate correctly for bean pages and comparisons
-- [ ] Brew recipe card generates and downloads as PNG
-- [ ] Favorites persist in localStorage for unauthenticated users
+- [x] Share button works on mobile (Web Share API) and desktop (clipboard)
+- [x] OG images generate correctly for bean pages and comparisons
+- [x] Brew recipe card generates and downloads as PNG
+- [x] Favorites persist in localStorage for unauthenticated users
 - [ ] Auth flow works: sign in with Google/GitHub, user created in DB
 - [ ] Favorites sync: local favorites merge on first login, subsequent favorites save to DB
 - [ ] Brew notes: create, read, update, delete all work correctly
-- [ ] Discover page shows correct seasonal beans based on current month
+- [x] Discover page shows correct seasonal beans based on current month
 
 ---
 

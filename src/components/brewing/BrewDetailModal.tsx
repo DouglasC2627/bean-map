@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { ArrowRight, Star } from "lucide-react";
+import { ArrowRight, Share2, Star } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -24,6 +24,7 @@ import {
 } from "@/lib/utils";
 import { BrewCalculator } from "./BrewCalculator";
 import { BrewTimer } from "./BrewTimer";
+import { ShareRecipeDialog } from "./ShareRecipeCard";
 
 // Maps a brewing method id to its `/learn/brewing/[slug]` guide.
 // Only methods with a published guide appear here.
@@ -56,9 +57,11 @@ export function BrewDetailModal({
   const t = useTranslations("brew");
   const tEnum = useTranslations("enums");
   const [tempUnit, setTempUnit] = useState<"C" | "F">("C");
+  const [showShare, setShowShare] = useState(false);
 
   const grindIndex = GRIND_SCALE.findIndex((g) => g.id === rec.grindSize);
   const guideSlug = BREW_GUIDE_SLUG[rec.methodId];
+  const methodName = method?.name ?? rec.methodId;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -212,17 +215,39 @@ export function BrewDetailModal({
           <p className="text-sm">{rec.tastingNotes}</p>
         </section>
 
-        {guideSlug && (
-          <Link
-            href={`/learn/brewing/${guideSlug}`}
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-roast-medium hover:underline"
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          {guideSlug ? (
+            <Link
+              href={`/learn/brewing/${guideSlug}`}
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-roast-medium hover:underline"
+            >
+              {t("readGuide", {
+                name: method?.name ?? t("brewingFallbackName"),
+              })}
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          ) : (
+            <span />
+          )}
+          <button
+            type="button"
+            onClick={() => setShowShare(true)}
+            className="inline-flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1.5 text-sm text-muted-foreground transition hover:border-roast-medium hover:text-foreground"
           >
-            {t("readGuide", { name: method?.name ?? t("brewingFallbackName") })}
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
-        )}
+            <Share2 className="h-3.5 w-3.5" />
+            {t("shareRecipe")}
+          </button>
+        </div>
 
         <BrewCalculator recommendation={rec} />
+
+        <ShareRecipeDialog
+          open={showShare}
+          onOpenChange={setShowShare}
+          bean={bean}
+          recommendation={rec}
+          methodName={methodName}
+        />
       </DialogContent>
     </Dialog>
   );

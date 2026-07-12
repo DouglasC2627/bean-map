@@ -33,6 +33,8 @@ import { BrewCard } from "@/components/brewing/BrewCard";
 import { BrewDetailModal } from "@/components/brewing/BrewDetailModal";
 import { FlavorRadar } from "@/components/visualization/FlavorRadar";
 import { CompareToggle } from "@/components/compare/CompareToggle";
+import { FavoriteButton } from "@/components/shared/FavoriteButton";
+import { ShareButton } from "@/components/shared/ShareButton";
 import { MobileBottomSheet } from "@/components/layout/MobileBottomSheet";
 
 interface Props {
@@ -212,6 +214,7 @@ function BeanPanelContent({
   const t = useTranslations("bean");
   const tEnum = useTranslations("enums");
   const tCommon = useTranslations("common");
+  const tShare = useTranslations("share");
   const locale = useLocale();
   const listSep = locale === "zh-TW" ? "、" : ", ";
   return (
@@ -268,7 +271,23 @@ function BeanPanelContent({
           <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             {t("flavorProfile")}
           </h3>
-          <CompareToggle beanId={bean.id} />
+          <div className="flex items-center gap-1">
+            <FavoriteButton
+              slug={bean.slug}
+              name={bean.name}
+              variant="compact"
+            />
+            <ShareButton
+              path={`/bean/${bean.slug}`}
+              title={bean.name}
+              text={tShare("beanText", {
+                name: bean.name,
+                region: bean.region,
+              })}
+              variant="compact"
+            />
+            <CompareToggle beanId={bean.id} />
+          </div>
         </div>
         <FlavorRadar
           series={[

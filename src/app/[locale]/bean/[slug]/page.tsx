@@ -17,6 +17,9 @@ import {
 } from "@/lib/utils";
 import { findSimilarBeans } from "@/lib/similar";
 import { FlavorRadar } from "@/components/visualization/FlavorRadar";
+import { FavoriteButton } from "@/components/shared/FavoriteButton";
+import { ShareButton } from "@/components/shared/ShareButton";
+import { BrewNotesSection } from "@/components/bean/BrewNotesSection";
 
 interface Params {
   params: Promise<{ locale: string; slug: string }>;
@@ -31,13 +34,22 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: "bean" });
   const bean = getBeanBySlug(slug, locale);
   if (!bean) return { title: t("notFoundTitle") };
+  const ogTitle = `${bean.name} · ${bean.country}`;
+  const ogImage = `/api/og?bean=${bean.slug}&locale=${locale}`;
   return {
     title: t("title", { name: bean.name }),
     description: bean.description,
     openGraph: {
-      title: `${bean.name} · ${bean.country}`,
+      title: ogTitle,
       description: bean.description,
       type: "article",
+      images: [ogImage],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: ogTitle,
+      description: bean.description,
+      images: [ogImage],
     },
   };
 }
@@ -48,6 +60,7 @@ export default async function BeanDetailPage({ params }: Params) {
   const t = await getTranslations({ locale, namespace: "bean" });
   const tEnum = await getTranslations({ locale, namespace: "enums" });
   const tCommon = await getTranslations({ locale, namespace: "common" });
+  const tShare = await getTranslations({ locale, namespace: "share" });
 
   const bean = getBeanBySlug(slug, locale);
   if (!bean) notFound();
@@ -86,13 +99,21 @@ export default async function BeanDetailPage({ params }: Params) {
             {tEnum(`processing.${bean.processing}`)}
           </Link>
         </p>
-        <Link
-          href={`/?bean=${bean.slug}`}
-          className="mt-4 inline-flex items-center gap-1.5 rounded-md bg-roast-medium px-3 py-1.5 text-sm text-cream transition hover:bg-roast-dark"
-        >
-          <MapPin aria-hidden className="h-4 w-4" />
-          {t("viewOnMap")}
-        </Link>
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <Link
+            href={`/?bean=${bean.slug}`}
+            className="inline-flex items-center gap-1.5 rounded-md bg-roast-medium px-3 py-1.5 text-sm text-cream transition hover:bg-roast-dark"
+          >
+            <MapPin aria-hidden className="h-4 w-4" />
+            {t("viewOnMap")}
+          </Link>
+          <FavoriteButton slug={bean.slug} name={bean.name} />
+          <ShareButton
+            path={`/bean/${bean.slug}`}
+            title={bean.name}
+            text={tShare("beanText", { name: bean.name, region: bean.region })}
+          />
+        </div>
       </header>
 
       <section className="py-6">
@@ -237,6 +258,11 @@ export default async function BeanDetailPage({ params }: Params) {
           </ul>
         </section>
       )}
+
+      <BrewNotesSection
+        beanSlug={bean.slug}
+        methods={methods.map((m) => ({ id: m.id, name: m.name }))}
+      />
     </article>
   );
 }

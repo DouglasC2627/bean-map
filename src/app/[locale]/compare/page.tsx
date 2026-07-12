@@ -30,9 +30,23 @@ export async function generateMetadata({
     return { title: t("title"), description: t("description") };
   }
   const names = matched.map((b) => b.name).join(" vs ");
+  const ogImage = `/api/og?beans=${matched
+    .map((b) => b.slug)
+    .join(",")}&locale=${locale}`;
   return {
     title: t("titleWith", { names }),
     description: t("descriptionWith", { names }),
+    openGraph: {
+      title: t("titleWith", { names }),
+      description: t("descriptionWith", { names }),
+      images: [ogImage],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t("titleWith", { names }),
+      description: t("descriptionWith", { names }),
+      images: [ogImage],
+    },
   };
 }
 

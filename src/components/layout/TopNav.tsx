@@ -3,10 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { Menu, Search, X } from "lucide-react";
+import { Heart, Menu, Search, X } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { LocaleSwitcher } from "@/components/layout/LocaleSwitcher";
+import { UserMenu } from "@/components/layout/UserMenu";
 import { useSearchUi } from "@/components/shared/SearchCommand";
 import { cn } from "@/lib/utils";
 
@@ -88,24 +89,33 @@ export function TopNav() {
           </Link>
           <Link
             href="/explore/insights"
-            className="hidden rounded-md px-2 py-1 text-sm hover:text-roast-medium sm:inline-block"
+            className="hidden rounded-md px-2 py-1 text-sm hover:text-roast-medium md:inline-block"
           >
             {t("insights")}
           </Link>
           <Link
             href="/explore/flavors"
-            className="hidden rounded-md px-2 py-1 text-sm hover:text-roast-medium md:inline-block"
+            className="hidden rounded-md px-2 py-1 text-sm hover:text-roast-medium lg:inline-block"
           >
             {t("flavors")}
           </Link>
           <Link
             href="/learn"
-            className="hidden rounded-md px-2 py-1 text-sm hover:text-roast-medium md:inline-block"
+            className="hidden rounded-md px-2 py-1 text-sm hover:text-roast-medium lg:inline-block"
           >
             {t("learn")}
           </Link>
+          <Link
+            href="/favorites"
+            aria-label={t("favorites")}
+            title={t("favorites")}
+            className="hidden rounded-md p-1.5 text-muted-foreground hover:text-cherry-red sm:inline-flex"
+          >
+            <Heart className="h-4 w-4" />
+          </Link>
           <LocaleSwitcher />
           <ThemeToggle />
+          <UserMenu />
 
           <div ref={menuRef} className="relative sm:hidden">
             <button
@@ -145,6 +155,14 @@ export function TopNav() {
                 role="menuitem"
               >
                 {t("beans")}
+              </Link>
+              <Link
+                href="/favorites"
+                onClick={closeMenu}
+                className="block rounded-md px-3 py-2 text-sm hover:bg-parchment/60 dark:hover:bg-roast-dark/40"
+                role="menuitem"
+              >
+                {t("favorites")}
               </Link>
               <Link
                 href="/explore/insights"

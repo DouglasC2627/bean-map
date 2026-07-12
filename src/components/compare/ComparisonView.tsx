@@ -20,6 +20,7 @@ import {
   monthName,
 } from "@/lib/utils";
 import { FlavorRadar, RADAR_COLORS } from "@/components/visualization/FlavorRadar";
+import { ShareButton } from "@/components/shared/ShareButton";
 
 interface Props {
   beans: CoffeeBean[];
@@ -31,6 +32,7 @@ interface Props {
 
 export function ComparisonView({ beans, onClose, methods, flavorNotes }: Props) {
   const t = useTranslations("compareView");
+  const tShare = useTranslations("share");
   const series = useMemo(
     () =>
       beans.map((b, i) => ({
@@ -82,14 +84,24 @@ export function ComparisonView({ beans, onClose, methods, flavorNotes }: Props) 
                 {t("subtitle", { count: beans.length })}
               </DialogDescription>
             </div>
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label={t("close")}
-              className="rounded-md p-1 text-muted-foreground hover:bg-parchment hover:text-foreground dark:hover:bg-roast-dark"
-            >
-              <X className="h-5 w-5" />
-            </button>
+            <div className="flex items-center gap-1">
+              <ShareButton
+                path={`/compare?beans=${beans.map((b) => b.slug).join(",")}`}
+                title={t("title")}
+                text={tShare("compareText", {
+                  names: beans.map((b) => b.name).join(", "),
+                })}
+                variant="compact"
+              />
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label={t("close")}
+                className="rounded-md p-1 text-muted-foreground hover:bg-parchment hover:text-foreground dark:hover:bg-roast-dark"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
           </div>
           <div className="p-4">{body}</div>
         </DialogContent>
