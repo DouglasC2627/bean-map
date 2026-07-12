@@ -19,6 +19,8 @@
   "favoritesPage": {
     "title": "Your favorites",
     "subtitle": "Beans you've saved for later.",
+    "signInPrompt": "Sign in to save and revisit your favorite beans.",
+    "signInCta": "Sign in",
     "loading": "Loading your favorites…",
     "empty": "You haven't saved any beans yet.",
     "emptyCta": "Explore beans",
@@ -147,7 +149,6 @@
     "logoAlt": "BeanMap logo",
     "explore": "Explore",
     "beans": "Beans",
-    "favorites": "Favorites",
     "insights": "Insights",
     "flavors": "Flavors",
     "learn": "Learn",

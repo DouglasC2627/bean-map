@@ -19,6 +19,8 @@
   "favoritesPage": {
     "title": "你的收藏",
     "subtitle": "你收藏起來稍後細品的咖啡豆。",
+    "signInPrompt": "登入即可收藏並隨時回顧你喜愛的咖啡豆。",
+    "signInCta": "登入",
     "loading": "正在載入你的收藏…",
     "empty": "你還沒有收藏任何咖啡豆。",
     "emptyCta": "探索咖啡豆",
@@ -147,7 +149,6 @@
     "logoAlt": "BeanMap 標誌",
     "explore": "地圖",
     "beans": "咖啡豆目錄",
-    "favorites": "收藏",
     "insights": "風土透視",
     "flavors": "風味",
     "learn": "學堂",
