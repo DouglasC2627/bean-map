@@ -512,9 +512,9 @@ An interactive world map showcasing coffee beans from around the world, their or
 - [x] OG images generate correctly for bean pages and comparisons
 - [x] Brew recipe card generates and downloads as PNG
 - [x] Favorites persist in localStorage for unauthenticated users
-- [ ] Auth flow works: sign in with Google/GitHub, user created in DB
-- [ ] Favorites sync: local favorites merge on first login, subsequent favorites save to DB
-- [ ] Brew notes: create, read, update, delete all work correctly
+- [x] Auth flow works: sign in with Google/GitHub, user created in DB
+- [x] Favorites sync: local favorites merge on first login, subsequent favorites save to DB
+- [x] Brew notes: create, read, update, delete all work correctly
 - [x] Discover page shows correct seasonal beans based on current month
 
 ---
