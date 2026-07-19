@@ -1,9 +1,10 @@
 "use client";
 
-import { useLocale, useTranslations } from "next-intl";
+import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Share2 } from "lucide-react";
-import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { ShareDialog } from "./ShareDialog";
 
 interface Props {
   /**
@@ -11,7 +12,7 @@ interface Props {
    * The current locale prefix and origin are added at click time.
    */
   path: string;
-  /** Share sheet title (Web Share API). */
+  /** Content title (brand is prepended in the share menu). */
   title: string;
   /** Share sheet body text. */
   text: string;
@@ -20,8 +21,8 @@ interface Props {
 }
 
 /**
- * Share control. Uses the native Web Share API where available (mobile),
- * otherwise falls back to copying the link to the clipboard with a toast.
+ * Opens a small share menu: copy the link, or — on devices that support it —
+ * the native share sheet.
  */
 export function ShareButton({
   path,
@@ -31,60 +32,43 @@ export function ShareButton({
   className,
 }: Props) {
   const t = useTranslations("share");
-  const locale = useLocale();
-
-  const onClick = async () => {
-    const origin =
-      typeof window !== "undefined" ? window.location.origin : "";
-    const url = `${origin}/${locale}${path}`;
-
-    if (typeof navigator !== "undefined" && navigator.share) {
-      try {
-        await navigator.share({ title, text, url });
-        return;
-      } catch (err) {
-        // User dismissed the share sheet — do nothing.
-        if (err instanceof DOMException && err.name === "AbortError") return;
-        // Any other failure falls through to the clipboard path.
-      }
-    }
-
-    try {
-      await navigator.clipboard.writeText(url);
-      toast.success(t("copied"));
-    } catch {
-      toast.error(t("copyFailed"));
-    }
-  };
-
-  if (variant === "compact") {
-    return (
-      <button
-        type="button"
-        onClick={onClick}
-        aria-label={t("share")}
-        title={t("share")}
-        className={cn(
-          "inline-flex items-center justify-center rounded-md p-1 text-muted-foreground transition hover:text-roast-medium",
-          className,
-        )}
-      >
-        <Share2 className="h-4 w-4" />
-      </button>
-    );
-  }
+  const [open, setOpen] = useState(false);
 
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-xs text-muted-foreground transition hover:border-roast-medium hover:text-foreground",
-        className,
+    <>
+      {variant === "compact" ? (
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          aria-label={t("share")}
+          title={t("share")}
+          className={cn(
+            "inline-flex items-center justify-center rounded-md p-1 text-muted-foreground transition hover:text-roast-medium",
+            className,
+          )}
+        >
+          <Share2 className="h-4 w-4" />
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className={cn(
+            "inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-xs text-muted-foreground transition hover:border-roast-medium hover:text-foreground",
+            className,
+          )}
+        >
+          <Share2 className="h-3 w-3" />
+          {t("share")}
+        </button>
       )}
-    >
-      <Share2 className="h-3 w-3" />
-      {t("share")}
-    </button>
+      <ShareDialog
+        open={open}
+        onOpenChange={setOpen}
+        path={path}
+        title={title}
+        text={text}
+      />
+    </>
   );
 }

@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: "bean" });
   const bean = getBeanBySlug(slug, locale);
   if (!bean) return { title: t("notFoundTitle") };
-  const ogTitle = `${bean.name} · ${bean.country}`;
+  const ogTitle = `BeanMap · ${bean.name} · ${bean.country}`;
   const ogImage = `/api/og?bean=${bean.slug}&locale=${locale}`;
   return {
     title: t("title", { name: bean.name }),

@@ -4,7 +4,9 @@
     "copied": "連結已複製到剪貼簿",
     "copyFailed": "無法複製連結",
     "beanText": "在 BeanMap 上看看來自{region}的{name}！",
-    "compareText": "在 BeanMap 上比較 {names}！"
+    "compareText": "在 BeanMap 上比較 {names}！",
+    "copyLink": "複製連結",
+    "shareVia": "分享…"
   },
   "favorites": {
     "add": "將{name}加入收藏",
@@ -58,7 +60,7 @@
     "downloadPng": "下載 PNG",
     "downloading": "準備中…",
     "downloadFailed": "無法產生圖片",
-    "metaTitle": "{name} 的 {method} 沖煮配方 · BeanMap",
+    "metaTitle": "BeanMap · {name} 的 {method} 沖煮配方",
     "metaDescription": "為 {name} 調校的 {method} 沖煮參數：研磨度、水溫、粉水比與時間。",
     "backToBean": "← {name}",
     "pageTitle": "{name} 的 {method} 沖煮配方",
@@ -121,7 +123,7 @@
     "compare": {
       "title": "比較咖啡豆 · BeanMap",
       "description": "並列比較咖啡豆檔案。",
-      "titleWith": "{names} · 在 BeanMap 比較",
+      "titleWith": "BeanMap · 比較 {names}",
       "descriptionWith": "比較 {names} 的風味輪廓、產地與沖煮契合度。"
     },
     "flavors": {

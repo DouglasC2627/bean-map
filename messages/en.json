@@ -4,7 +4,9 @@
     "copied": "Link copied to clipboard",
     "copyFailed": "Couldn't copy the link",
     "beanText": "Check out {name} from {region} on BeanMap!",
-    "compareText": "Compare {names} on BeanMap!"
+    "compareText": "Compare {names} on BeanMap!",
+    "copyLink": "Copy link",
+    "shareVia": "Share…"
   },
   "favorites": {
     "add": "Add {name} to favorites",
@@ -58,7 +60,7 @@
     "downloadPng": "Download PNG",
     "downloading": "Preparing…",
     "downloadFailed": "Couldn't create the image",
-    "metaTitle": "{method} recipe for {name} · BeanMap",
+    "metaTitle": "BeanMap · {method} recipe for {name}",
     "metaDescription": "Dialed-in {method} parameters for {name}: grind, temperature, ratio, and time.",
     "backToBean": "← {name}",
     "pageTitle": "{method} recipe for {name}",
@@ -121,7 +123,7 @@
     "compare": {
       "title": "Compare beans · BeanMap",
       "description": "Side-by-side comparison of coffee bean profiles.",
-      "titleWith": "{names} · Compare on BeanMap",
+      "titleWith": "BeanMap · Compare {names}",
       "descriptionWith": "Compare flavor profiles, origin, and brewing affinity for {names}."
     },
     "flavors": {
