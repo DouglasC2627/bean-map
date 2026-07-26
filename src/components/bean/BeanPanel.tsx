@@ -29,13 +29,23 @@ import { findSimilarBeans } from "@/lib/similar";
 import { flavorGradient } from "@/lib/flavor-gradient";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { fadeUpItem, springSoft, staggerContainer } from "@/lib/motion";
+import dynamic from "next/dynamic";
 import { BrewCard } from "@/components/brewing/BrewCard";
-import { BrewDetailModal } from "@/components/brewing/BrewDetailModal";
 import { FlavorRadar } from "@/components/visualization/FlavorRadar";
 import { CompareToggle } from "@/components/compare/CompareToggle";
 import { FavoriteButton } from "@/components/shared/FavoriteButton";
 import { ShareButton } from "@/components/shared/ShareButton";
 import { MobileBottomSheet } from "@/components/layout/MobileBottomSheet";
+
+// The brew recipe modal (calculator, timer, recipe card / html-to-image) is
+// pulled in only when a brew card is opened.
+const BrewDetailModal = dynamic(
+  () =>
+    import("@/components/brewing/BrewDetailModal").then(
+      (m) => m.BrewDetailModal,
+    ),
+  { ssr: false },
+);
 
 interface Props {
   beans: CoffeeBean[];

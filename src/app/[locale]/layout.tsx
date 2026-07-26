@@ -103,6 +103,14 @@ export default async function LocaleLayout({
       className={`${inter.variable} ${dmSerif.variable} ${jetbrains.variable} ${notoSansTC.variable} ${notoSerifTC.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        {/* Warm the Mapbox connection so map style/tiles/glyphs start sooner
+            (helps LCP on the map view). React 19 hoists these to <head>. */}
+        <link
+          rel="preconnect"
+          href="https://api.mapbox.com"
+          crossOrigin="anonymous"
+        />
+        <link rel="dns-prefetch" href="https://api.mapbox.com" />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

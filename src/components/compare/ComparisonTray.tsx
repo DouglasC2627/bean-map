@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -15,7 +16,12 @@ import { Link } from "@/i18n/navigation";
 import { useBeanMap } from "@/store";
 import { countryFlagEmoji } from "@/lib/utils";
 import { springSoft } from "@/lib/motion";
-import { ComparisonView } from "./ComparisonView";
+
+// The full comparison view (radar overlay + tables) loads only when opened.
+const ComparisonView = dynamic(
+  () => import("./ComparisonView").then((m) => m.ComparisonView),
+  { ssr: false },
+);
 
 interface Props {
   beans: CoffeeBean[];
