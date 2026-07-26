@@ -464,6 +464,8 @@
   },
   "map": {
     "beanBelt": "咖啡帶",
+    "loadingTitle": "描繪世界咖啡地圖",
+    "loadingSubtitle": "正在載入互動地圖…",
     "tokenMissingTitle": "缺少 Mapbox token",
     "tokenMissingBody": "請將 <code>NEXT_PUBLIC_MAPBOX_TOKEN</code> 加入 <code>.env.local</code>（參見 <code>.env.example</code>）並重新啟動開發伺服器。"
   },

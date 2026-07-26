@@ -464,6 +464,8 @@
   },
   "map": {
     "beanBelt": "Bean Belt",
+    "loadingTitle": "Mapping the world's coffee",
+    "loadingSubtitle": "Loading the interactive map…",
     "tokenMissingTitle": "Mapbox token missing",
     "tokenMissingBody": "Add <code>NEXT_PUBLIC_MAPBOX_TOKEN</code> to <code>.env.local</code> (see <code>.env.example</code>) and restart the dev server."
   },
