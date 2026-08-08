@@ -18,6 +18,7 @@ import type {
   FlavorNotesData,
 } from "@/types";
 import { useBeanMap } from "@/store";
+import { useShallow } from "zustand/react/shallow";
 import {
   cn,
   countryFlagEmoji,
@@ -56,7 +57,14 @@ interface Props {
 export function BeanPanel({ beans, methods, flavorNotes }: Props) {
   const t = useTranslations("bean");
   const { selectedBeanId, clearSelection, selectBean, requestFlyTo } =
-    useBeanMap();
+    useBeanMap(
+      useShallow((s) => ({
+        selectedBeanId: s.selectedBeanId,
+        clearSelection: s.clearSelection,
+        selectBean: s.selectBean,
+        requestFlyTo: s.requestFlyTo,
+      })),
+    );
   const bean = beans.find((b) => b.id === selectedBeanId);
   const methodById = useMemo(
     () => new Map(methods.map((m) => [m.id, m])),

@@ -11,6 +11,7 @@ import type {
   RoastLevel,
 } from "@/types";
 import { useBeanMap, filterBeans } from "@/store";
+import { useShallow } from "zustand/react/shallow";
 import { Slider } from "@/components/ui/slider";
 import { cn, countryFlagEmoji } from "@/lib/utils";
 import { FlavorSliders } from "./FlavorSliders";
@@ -66,7 +67,21 @@ export function FilterPanel({ beans, flavorNotes }: Props) {
     setFilterPanelOpen,
     isFlavorWheelOpen,
     setFlavorWheelOpen,
-  } = useBeanMap();
+  } = useBeanMap(
+    useShallow((s) => ({
+      filters: s.filters,
+      setRegions: s.setRegions,
+      toggleProcessing: s.toggleProcessing,
+      toggleRoast: s.toggleRoast,
+      setAltitudeRange: s.setAltitudeRange,
+      resetFilters: s.resetFilters,
+      requestFitBounds: s.requestFitBounds,
+      isFilterPanelOpen: s.isFilterPanelOpen,
+      setFilterPanelOpen: s.setFilterPanelOpen,
+      isFlavorWheelOpen: s.isFlavorWheelOpen,
+      setFlavorWheelOpen: s.setFlavorWheelOpen,
+    })),
+  );
 
   const [showFlavor, setShowFlavor] = useState(false);
 

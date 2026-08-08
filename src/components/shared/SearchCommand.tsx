@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import type { CoffeeBean, FlavorNotesData } from "@/types";
+import type { SearchableBean } from "@/lib/search";
 import { useSearchUi } from "./search-ui";
 
 // Re-exported so existing importers (TopNav) keep working unchanged.
@@ -16,11 +16,10 @@ const SearchCommandDialog = dynamic(
 );
 
 interface Props {
-  beans: CoffeeBean[];
-  flavorNotes: FlavorNotesData;
+  beans: SearchableBean[];
 }
 
-export function SearchCommand({ beans, flavorNotes }: Props) {
+export function SearchCommand({ beans }: Props) {
   const open = useSearchUi((s) => s.open);
   const [mounted, setMounted] = useState(false);
 
@@ -42,5 +41,5 @@ export function SearchCommand({ beans, flavorNotes }: Props) {
   }, [open]);
 
   if (!mounted) return null;
-  return <SearchCommandDialog beans={beans} flavorNotes={flavorNotes} />;
+  return <SearchCommandDialog beans={beans} />;
 }

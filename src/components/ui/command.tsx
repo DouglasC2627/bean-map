@@ -39,6 +39,7 @@ function CommandDialog({
   children,
   className,
   showCloseButton = false,
+  shouldFilter,
   ...props
 }: Omit<React.ComponentProps<typeof Dialog>, "children"> & {
   title?: string
@@ -46,6 +47,12 @@ function CommandDialog({
   className?: string
   showCloseButton?: boolean
   children: React.ReactNode
+  /**
+   * Forwarded to the inner <Command>. Set false when the caller already ranks
+   * its own results (e.g. via Fuse.js) so cmdk doesn't filter them a second
+   * time against each item's `value`.
+   */
+  shouldFilter?: React.ComponentProps<typeof Command>["shouldFilter"]
 }) {
   return (
     <Dialog {...props}>
@@ -60,7 +67,7 @@ function CommandDialog({
         )}
         showCloseButton={showCloseButton}
       >
-        <Command>{children}</Command>
+        <Command shouldFilter={shouldFilter}>{children}</Command>
       </DialogContent>
     </Dialog>
   )

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getBeans, getFlavorNotes } from "@/lib/data";
 import { InsightsClient } from "./InsightsClient";
@@ -11,7 +12,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "metadata.insights" });
-  return { title: t("title"), description: t("description") };
+  return pageMetadata({
+    locale,
+    path: "/explore/insights",
+    title: t("title"),
+    description: t("description"),
+  });
 }
 
 export default async function InsightsPage({

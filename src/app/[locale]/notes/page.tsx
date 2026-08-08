@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getBeans, getBrewingMethods } from "@/lib/data";
 import { NotesJournal } from "@/components/brewing/NotesJournal";
@@ -10,8 +11,16 @@ interface Params {
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "metadata.notes" });
-  // Private page — keep it out of search results.
-  return { title: t("title"), description: t("description"), robots: { index: false } };
+  return {
+    ...pageMetadata({
+      locale,
+      path: "/notes",
+      title: t("title"),
+      description: t("description"),
+    }),
+    // Private page — keep it out of search results.
+    robots: { index: false, follow: true },
+  };
 }
 
 export default async function NotesPage({ params }: Params) {

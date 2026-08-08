@@ -179,6 +179,22 @@ pre,
   }
 }
 
+/* Route transition, applied by app/[locale]/template.tsx. Kept in CSS so the
+   universal route wrapper doesn't pull the Framer animation engine into every
+   page's shared bundle. Matches the previous Framer easing/duration. */
+.page-fade {
+  animation: page-fade-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* Pulse applied to a bean's row/card when the search command locates it. */
 .bean-locate-highlight {
   border-radius: 0.5rem;

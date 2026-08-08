@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import { MapPin } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -20,6 +21,8 @@ import { FlavorRadar } from "@/components/visualization/FlavorRadar";
 import { FavoriteButton } from "@/components/shared/FavoriteButton";
 import { ShareButton } from "@/components/shared/ShareButton";
 import { BrewNotesSection } from "@/components/bean/BrewNotesSection";
+import { JsonLd } from "@/components/shared/JsonLd";
+import { beanSchema, breadcrumbSchema } from "@/lib/structured-data";
 
 interface Params {
   params: Promise<{ locale: string; slug: string }>;
@@ -36,21 +39,25 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   if (!bean) return { title: t("notFoundTitle") };
   const ogTitle = `BeanMap · ${bean.name} · ${bean.country}`;
   const ogImage = `/api/og?bean=${bean.slug}&locale=${locale}`;
-  return {
+  const base = pageMetadata({
+    locale,
+    path: `/bean/${bean.slug}`,
     title: t("title", { name: bean.name }),
     description: bean.description,
-    openGraph: {
-      title: ogTitle,
-      description: bean.description,
-      type: "article",
-      images: [ogImage],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: ogTitle,
-      description: bean.description,
-      images: [ogImage],
-    },
+    images: [ogImage],
+  });
+  return {
+    ...base,
+    keywords: [
+      bean.name,
+      bean.country,
+      bean.region,
+      ...bean.varieties,
+      "coffee",
+      "single origin",
+    ],
+    openGraph: { ...base.openGraph, type: "article", title: ogTitle },
+    twitter: { ...base.twitter, title: ogTitle },
   };
 }
 
@@ -61,6 +68,7 @@ export default async function BeanDetailPage({ params }: Params) {
   const tEnum = await getTranslations({ locale, namespace: "enums" });
   const tCommon = await getTranslations({ locale, namespace: "common" });
   const tShare = await getTranslations({ locale, namespace: "share" });
+  const tNav = await getTranslations({ locale, namespace: "nav" });
 
   const bean = getBeanBySlug(slug, locale);
   if (!bean) notFound();
@@ -73,6 +81,22 @@ export default async function BeanDetailPage({ params }: Params) {
 
   return (
     <article className="mx-auto w-full max-w-3xl px-5 py-10">
+      <JsonLd
+        data={beanSchema(bean, locale, {
+          processing: tEnum(`processing.${bean.processing}`),
+          roast: tEnum(`roast.${bean.roastRecommendation}`),
+          flavorNotes: bean.flavorNotes.map((id) =>
+            flavorNoteLabel(flavorNotes, id),
+          ),
+        })}
+      />
+      <JsonLd
+        data={breadcrumbSchema(locale, [
+          { name: tNav("explore"), path: "/" },
+          { name: tNav("beans"), path: "/beans" },
+          { name: bean.name, path: `/bean/${bean.slug}` },
+        ])}
+      />
       <Link
         href="/beans"
         className="text-sm text-roast-medium hover:underline"

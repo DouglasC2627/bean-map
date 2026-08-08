@@ -3,31 +3,60 @@ import type { CoffeeBean, FlavorNotesData } from "@/types";
 import { flavorNoteLabel } from "@/lib/utils";
 
 /**
- * A bean augmented with its resolved (and possibly localized) flavor-note
- * labels, so search matches both the stable English note ids ("jasmine") and
- * the display labels in the active locale ("茉莉").
+ * The projection of a bean that search actually needs — the fields Fuse
+ * indexes plus the few the result row renders.
+ *
+ * `<SearchCommand>` lives in the root layout, so whatever it receives is
+ * serialized into the RSC payload of *every* page. Passing full `CoffeeBean`
+ * objects meant each page shipped all brewing recommendations, pour stages,
+ * flavor profiles and descriptions it would never read. Note labels are
+ * resolved here on the server so the whole `FlavorNotesData` tree doesn't have
+ * to travel either.
  */
-export interface SearchableBean extends CoffeeBean {
-  flavorNoteLabels: string[];
+export interface SearchableBean {
+  id: string;
+  slug: string;
+  name: string;
+  country: string;
+  countryCode: string;
+  region: string;
+  coordinates: [number, number];
+  /** Stable English note ids, so "jasmine" matches in any locale. */
+  noteIds: string[];
+  /** Display labels in the active locale, e.g. "茉莉". */
+  noteLabels: string[];
 }
 
-export function createBeanSearch(
+/** Build the slim, server-side search index handed to the search dialog. */
+export function toSearchableBeans(
   beans: CoffeeBean[],
   flavorNotes?: FlavorNotesData,
-): Fuse<SearchableBean> {
-  const list: SearchableBean[] = beans.map((b) => ({
-    ...b,
-    flavorNoteLabels: flavorNotes
+): SearchableBean[] {
+  return beans.map((b) => ({
+    id: b.id,
+    slug: b.slug,
+    name: b.name,
+    country: b.country,
+    countryCode: b.countryCode,
+    region: b.region,
+    coordinates: b.coordinates,
+    noteIds: b.flavorNotes,
+    noteLabels: flavorNotes
       ? b.flavorNotes.map((id) => flavorNoteLabel(flavorNotes, id))
       : b.flavorNotes,
   }));
-  return new Fuse(list, {
+}
+
+export function createBeanSearch(
+  beans: SearchableBean[],
+): Fuse<SearchableBean> {
+  return new Fuse(beans, {
     keys: [
       { name: "name", weight: 0.4 },
       { name: "country", weight: 0.2 },
       { name: "region", weight: 0.15 },
-      { name: "flavorNotes", weight: 0.1 },
-      { name: "flavorNoteLabels", weight: 0.15 },
+      { name: "noteIds", weight: 0.1 },
+      { name: "noteLabels", weight: 0.15 },
     ],
     threshold: 0.3,
     ignoreLocation: true,

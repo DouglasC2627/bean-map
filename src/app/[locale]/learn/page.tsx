@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getAllArticles, type ArticleSummary, type LearnCategory } from "@/lib/mdx";
@@ -10,7 +11,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "metadata.learn" });
-  return { title: t("title"), description: t("description") };
+  return pageMetadata({
+    locale,
+    path: "/learn",
+    title: t("title"),
+    description: t("description"),
+  });
 }
 
 export default async function LearnPage({

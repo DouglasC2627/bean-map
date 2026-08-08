@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { X } from "lucide-react";
 import type { CoffeeBean, FlavorNotesData } from "@/types";
 import { useBeanMap } from "@/store";
+import { useShallow } from "zustand/react/shallow";
 import { FlavorWheelLazy } from "@/components/visualization/FlavorWheelLazy";
 
 interface Props {
@@ -21,7 +22,15 @@ export function FlavorWheelOverlay({ beans, flavorNotes }: Props) {
     filters,
     setFlavorNotes,
     clearFlavorNotes,
-  } = useBeanMap();
+  } = useBeanMap(
+    useShallow((s) => ({
+      isFlavorWheelOpen: s.isFlavorWheelOpen,
+      setFlavorWheelOpen: s.setFlavorWheelOpen,
+      filters: s.filters,
+      setFlavorNotes: s.setFlavorNotes,
+      clearFlavorNotes: s.clearFlavorNotes,
+    })),
+  );
 
   const selectedIds = useMemo(
     () => new Set(filters.flavorNoteIds),

@@ -6,6 +6,7 @@ import { Crosshair } from "lucide-react";
 import type { CoffeeBean, FlavorNotesData } from "@/types";
 import { Link, useRouter } from "@/i18n/navigation";
 import { useBeanMap, filterBeans } from "@/store";
+import { useShallow } from "zustand/react/shallow";
 import { FlavorWheelLazy } from "@/components/visualization/FlavorWheelLazy";
 import { flavorNoteLabel, countryFlagEmoji } from "@/lib/utils";
 
@@ -86,7 +87,14 @@ export function FlavorsExplorer({ beans, flavorNotes }: Props) {
     setFlavorNotes,
     clearFlavorNotes,
     requestFitBounds,
-  } = useBeanMap();
+  } = useBeanMap(
+    useShallow((s) => ({
+      filters: s.filters,
+      setFlavorNotes: s.setFlavorNotes,
+      clearFlavorNotes: s.clearFlavorNotes,
+      requestFitBounds: s.requestFitBounds,
+    })),
+  );
   const selectedIds = useMemo(
     () => new Set(filters.flavorNoteIds),
     [filters.flavorNoteIds],

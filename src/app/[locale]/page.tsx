@@ -1,6 +1,8 @@
 import { setRequestLocale } from "next-intl/server";
 import { MapView } from "@/components/map/MapView";
 import { getBeans, getBrewingMethods, getFlavorNotes } from "@/lib/data";
+import { JsonLd } from "@/components/shared/JsonLd";
+import { websiteSchema } from "@/lib/structured-data";
 
 export default async function Home({
   params,
@@ -12,5 +14,10 @@ export default async function Home({
   const beans = getBeans(locale);
   const methods = getBrewingMethods(locale);
   const flavorNotes = getFlavorNotes(locale);
-  return <MapView beans={beans} methods={methods} flavorNotes={flavorNotes} />;
+  return (
+    <>
+      <JsonLd data={websiteSchema(locale)} />
+      <MapView beans={beans} methods={methods} flavorNotes={flavorNotes} />
+    </>
+  );
 }

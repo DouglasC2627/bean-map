@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from '@vercel/speed-insights/next';
@@ -22,8 +22,10 @@ import { Toaster } from "@/components/shared/Toaster";
 import { TopNav } from "@/components/layout/TopNav";
 import { SearchCommand } from "@/components/shared/SearchCommand";
 import { getBeans, getFlavorNotes } from "@/lib/data";
+import { toSearchableBeans } from "@/lib/search";
 import { routing } from "@/i18n/routing";
 import { siteUrl } from "@/lib/site";
+import { pageMetadata } from "@/lib/seo";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -63,6 +65,15 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
+// Tints the browser/OS chrome to match the active theme (and the manifest's
+// theme_color) instead of leaving it default white in installed/standalone mode.
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#faf6f1" },
+    { media: "(prefers-color-scheme: dark)", color: "#1a0f09" },
+  ],
+};
+
 export async function generateMetadata({
   params,
 }: {
@@ -71,9 +82,16 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "metadata.home" });
   return {
+    ...pageMetadata({
+      locale,
+      path: "/",
+      title: t("title"),
+      description: t("description"),
+    }),
     metadataBase: new URL(siteUrl),
-    title: t("title"),
-    description: t("description"),
+    applicationName: "BeanMap",
+    // No `title.template` here: every `metadata.*` message already carries the
+    // "· BeanMap" brand suffix, so a template would double it.
   };
 }
 
@@ -91,10 +109,12 @@ export default async function LocaleLayout({
   // and the data loaders during static generation of all locale pages.
   setRequestLocale(locale);
 
-  // Localized once on the server; SearchCommand indexes these Chinese strings
-  // automatically (it receives beans/flavorNotes as props).
-  const beans = getBeans(locale);
-  const flavorNotes = getFlavorNotes(locale);
+  // Localized once on the server and projected down to just the fields search
+  // indexes and renders. This prop is serialized into the RSC payload of every
+  // page, so the projection (rather than full `CoffeeBean` records) is what
+  // keeps the shared payload small. Chinese labels are resolved here, so the
+  // dialog needs no `FlavorNotesData`.
+  const searchBeans = toSearchableBeans(getBeans(locale), getFlavorNotes(locale));
 
   return (
     <html
@@ -123,7 +143,7 @@ export default async function LocaleLayout({
                 <MotionProvider>
                   <TopNav />
                   <main className="flex-1 flex flex-col">{children}</main>
-                  <SearchCommand beans={beans} flavorNotes={flavorNotes} />
+                  <SearchCommand beans={searchBeans} />
                   <Toaster />
                   <FavoritesSync />
                   <SignInDialog />

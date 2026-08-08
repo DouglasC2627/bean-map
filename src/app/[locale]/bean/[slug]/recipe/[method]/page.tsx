@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { localizedPath, pageMetadata } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
@@ -20,11 +21,22 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const title = t("metaTitle", { method: methodName, name: bean.name });
   const description = t("metaDescription", { method: methodName, name: bean.name });
   const ogImage = `/api/og/recipe?bean=${bean.slug}&method=${method}&locale=${locale}`;
-  return {
+  const base = pageMetadata({
+    locale,
+    path: `/bean/${bean.slug}/recipe/${method}`,
     title,
     description,
-    openGraph: { title, description, type: "article", images: [ogImage] },
-    twitter: { card: "summary_large_image", title, description, images: [ogImage] },
+    images: [ogImage],
+  });
+  return {
+    ...base,
+    openGraph: { ...base.openGraph, type: "article" },
+    // These exist to be shared (that's what the OG card is for), not to rank:
+    // every bean × every method is ~440 near-identical pages per locale whose
+    // content is already on the parent bean page. `follow` passes authority
+    // back to that page, which is the canonical destination.
+    alternates: { canonical: localizedPath(locale, `/bean/${bean.slug}`) },
+    robots: { index: false, follow: true },
   };
 }
 

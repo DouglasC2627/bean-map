@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getBeans, getFlavorNotes } from "@/lib/data";
 import { FavoritesBrowser } from "@/components/bean/FavoritesBrowser";
@@ -10,7 +11,17 @@ interface Params {
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "metadata.favorites" });
-  return { title: t("title"), description: t("description") };
+  return {
+    ...pageMetadata({
+      locale,
+      path: "/favorites",
+      title: t("title"),
+      description: t("description"),
+    }),
+    // Contents are per-visitor (localStorage / the signed-in user's account),
+    // so there is nothing stable for a crawler to index.
+    robots: { index: false, follow: true },
+  };
 }
 
 export default async function FavoritesPage({ params }: Params) {

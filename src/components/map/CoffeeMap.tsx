@@ -1,6 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { useShallow } from "zustand/react/shallow";
 import Map, {
   Layer,
   Source,
@@ -126,19 +134,42 @@ export function CoffeeMap({ beans, flavorNotes }: Props) {
   const [mapLoaded, setMapLoaded] = useState(false);
 
   const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+  // Selector (not a bare `useBeanMap()`) so panning the map doesn't re-render
+  // this tree: `onMove` writes `viewport` on every animation frame and
+  // `onMouseMove` writes `hoveredRegionId` on every pointer move. Neither is
+  // read during render — the map owns its own camera after `initialViewState`
+  // — so subscribing to the whole store meant a full React re-render of the
+  // map, its sources and its layers ~60x/second while dragging.
   const {
-    viewport,
     setViewport,
     selectBean,
     filters,
     setHoveredRegion,
     fitBoundsRequestId,
     flyToRequest,
-  } = useBeanMap();
+  } = useBeanMap(
+    useShallow((s) => ({
+      setViewport: s.setViewport,
+      selectBean: s.selectBean,
+      filters: s.filters,
+      setHoveredRegion: s.setHoveredRegion,
+      fitBoundsRequestId: s.fitBoundsRequestId,
+      flyToRequest: s.flyToRequest,
+    })),
+  );
+
+  // Read once for the initial camera; deliberately not subscribed (see above).
+  const initialViewport = useRef(useBeanMap.getState().viewport).current;
+
+  // Dragging a flavor/altitude slider writes filter state on every pointer
+  // move. Deferring it lets React keep the slider (and the map's own gesture
+  // handling) responsive and re-project the GeoJSON at the trailing edge
+  // instead of once per intermediate value.
+  const deferredFilters = useDeferredValue(filters);
 
   const matchingBeans = useMemo(
-    () => filterBeans(beans, filters, flavorNotes),
-    [beans, filters, flavorNotes],
+    () => filterBeans(beans, deferredFilters, flavorNotes),
+    [beans, deferredFilters, flavorNotes],
   );
   const matchingIds = useMemo(
     () => new Set(matchingBeans.map((b) => b.id)),
@@ -320,7 +351,7 @@ export function CoffeeMap({ beans, flavorNotes }: Props) {
         mapboxAccessToken={token}
         mapStyle={resolvedTheme === "dark" ? DARK_STYLE : LIGHT_STYLE}
         projection={{ name: "globe" }}
-        initialViewState={viewport}
+        initialViewState={initialViewport}
         onMove={(e) => setViewport(e.viewState)}
         onClick={onClick}
         onMouseMove={(e) => {

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import {
@@ -27,26 +28,32 @@ export async function generateMetadata({
     .filter((b): b is NonNullable<typeof b> => Boolean(b));
 
   if (matched.length === 0) {
-    return { title: t("title"), description: t("description") };
+    return pageMetadata({
+      locale,
+      path: "/compare",
+      title: t("title"),
+      description: t("description"),
+    });
   }
   const names = matched.map((b) => b.name).join(" vs ");
   const ogImage = `/api/og?beans=${matched
     .map((b) => b.slug)
     .join(",")}&locale=${locale}`;
   return {
-    title: t("titleWith", { names }),
-    description: t("descriptionWith", { names }),
-    openGraph: {
+    ...pageMetadata({
+      locale,
+      path: "/compare",
       title: t("titleWith", { names }),
       description: t("descriptionWith", { names }),
       images: [ogImage],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: t("titleWith", { names }),
-      description: t("descriptionWith", { names }),
-      images: [ogImage],
-    },
+    }),
+    // Any 2-3 of the bean set can be compared, so the `?beans=` space is
+    // combinatorial (tens of thousands of near-identical URLs). Those are
+    // great to share — hence the full OG card above — but indexing them
+    // would burn crawl budget on thin, duplicative pages. `follow` keeps the
+    // links to the individual bean pages flowing. The bare /compare page
+    // (matched.length === 0) stays indexable.
+    robots: { index: false, follow: true },
   };
 }
 

@@ -17,15 +17,14 @@ import {
   pushRecentSearch,
   removeRecentSearch,
   clearAllRecentSearches,
+  type SearchableBean,
 } from "@/lib/search";
 import { useBeanMap } from "@/store";
-import { countryFlagEmoji, flavorNoteLabel } from "@/lib/utils";
-import type { CoffeeBean, FlavorNotesData } from "@/types";
+import { countryFlagEmoji } from "@/lib/utils";
 import { useSearchUi } from "./search-ui";
 
 interface Props {
-  beans: CoffeeBean[];
-  flavorNotes: FlavorNotesData;
+  beans: SearchableBean[];
 }
 
 const RECENTS_LISTENERS = new Set<() => void>();
@@ -58,7 +57,7 @@ function modeForPath(pathname: string): SearchMode {
   return "navigate";
 }
 
-export function SearchCommandDialog({ beans, flavorNotes }: Props) {
+export function SearchCommandDialog({ beans }: Props) {
   const t = useTranslations("search");
   const { open, setOpen } = useSearchUi();
   const [query, setQuery] = useState("");
@@ -76,10 +75,7 @@ export function SearchCommandDialog({ beans, flavorNotes }: Props) {
     [recentsKey],
   );
 
-  const fuse = useMemo(
-    () => createBeanSearch(beans, flavorNotes),
-    [beans, flavorNotes],
-  );
+  const fuse = useMemo(() => createBeanSearch(beans), [beans]);
 
   const results = useMemo(() => {
     if (!query.trim()) return [];
@@ -90,11 +86,11 @@ export function SearchCommandDialog({ beans, flavorNotes }: Props) {
     () =>
       recentIds
         .map((id) => beans.find((b) => b.id === id))
-        .filter((b): b is CoffeeBean => Boolean(b)),
+        .filter((b): b is SearchableBean => Boolean(b)),
     [recentIds, beans],
   );
 
-  const onSelect = (bean: CoffeeBean) => {
+  const onSelect = (bean: SearchableBean) => {
     pushRecentSearch(bean.id);
     notifyRecentsChanged();
     setOpen(false);
@@ -123,7 +119,12 @@ export function SearchCommandDialog({ beans, flavorNotes }: Props) {
   };
 
   return (
-    <CommandDialog open={open} onOpenChange={setOpen}>
+    // `shouldFilter={false}`: Fuse.js is the ranking engine here. cmdk's own
+    // fuzzy filter would run *again* over each item's `value` — which holds
+    // only name/country/region — and silently discard Fuse's flavor-note
+    // matches, so searching "blackcurrant" found nothing even though the index
+    // matched three beans. One search algorithm, not two.
+    <CommandDialog open={open} onOpenChange={setOpen} shouldFilter={false}>
       <CommandInput
         placeholder={
           mode === "locate"
@@ -151,7 +152,7 @@ export function SearchCommandDialog({ beans, flavorNotes }: Props) {
                 onSelect={() => onSelect(bean)}
                 className="my-1"
               >
-                <BeanRow bean={bean} flavorNotes={flavorNotes} />
+                <BeanRow bean={bean} />
                 <button
                   onClick={(e) => onRemoveRecent(e, bean.id)}
                   aria-label={t("removeRecent")}
@@ -177,7 +178,7 @@ export function SearchCommandDialog({ beans, flavorNotes }: Props) {
                 onSelect={() => onSelect(bean)}
                 className="my-1"
               >
-                <BeanRow bean={bean} flavorNotes={flavorNotes} />
+                <BeanRow bean={bean} />
               </CommandItem>
             ))}
           </CommandGroup>
@@ -187,13 +188,7 @@ export function SearchCommandDialog({ beans, flavorNotes }: Props) {
   );
 }
 
-function BeanRow({
-  bean,
-  flavorNotes,
-}: {
-  bean: CoffeeBean;
-  flavorNotes: FlavorNotesData;
-}) {
+function BeanRow({ bean }: { bean: SearchableBean }) {
   return (
     <div className="flex w-full items-center gap-2">
       <span aria-hidden className="flag text-base leading-none">
@@ -202,11 +197,7 @@ function BeanRow({
       <div className="min-w-0 flex-1">
         <div className="truncate text-sm font-medium">{bean.name}</div>
         <div className="truncate text-xs text-muted-foreground">
-          {bean.region} ·{" "}
-          {bean.flavorNotes
-            .slice(0, 2)
-            .map((id) => flavorNoteLabel(flavorNotes, id))
-            .join(" · ")}
+          {bean.region} · {bean.noteLabels.slice(0, 2).join(" · ")}
         </div>
       </div>
     </div>

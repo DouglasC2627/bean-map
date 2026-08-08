@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { X } from "lucide-react";
 import type { CoffeeBean, FlavorNotesData } from "@/types";
 import { useBeanMap, type FlavorRanges } from "@/store";
+import { useShallow } from "zustand/react/shallow";
 import { cn, countryFlagEmoji } from "@/lib/utils";
 import { chipPop } from "@/lib/motion";
 
@@ -37,7 +38,18 @@ export function ActiveFilters({ beans, flavorNotes, className }: Props) {
     setFlavorRange,
     toggleFlavorNote,
     resetFilters,
-  } = useBeanMap();
+  } = useBeanMap(
+    useShallow((s) => ({
+      filters: s.filters,
+      setRegions: s.setRegions,
+      toggleProcessing: s.toggleProcessing,
+      toggleRoast: s.toggleRoast,
+      setAltitudeRange: s.setAltitudeRange,
+      setFlavorRange: s.setFlavorRange,
+      toggleFlavorNote: s.toggleFlavorNote,
+      resetFilters: s.resetFilters,
+    })),
+  );
 
   const countryNames = new Map<string, string>();
   beans.forEach((b) => {

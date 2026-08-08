@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useBeanMap } from "@/store";
+import { useShallow } from "zustand/react/shallow";
 import type { FlavorRanges } from "@/store";
 import { Slider } from "@/components/ui/slider";
 
@@ -14,7 +15,12 @@ const AXES: Array<keyof FlavorRanges> = [
 
 export function FlavorSliders() {
   const tAxes = useTranslations("axes");
-  const { filters, setFlavorRange } = useBeanMap();
+  const { filters, setFlavorRange } = useBeanMap(
+    useShallow((s) => ({
+      filters: s.filters,
+      setFlavorRange: s.setFlavorRange,
+    })),
+  );
 
   return (
     <div className="space-y-4">

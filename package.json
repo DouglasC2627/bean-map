@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "npm run validate:data && next build",
+    "analyze": "next build --experimental-analyze",
     "start": "next start",
     "lint": "eslint",
     "validate:data": "tsx scripts/validate-data.ts",

@@ -197,6 +197,12 @@ An interactive world map showcasing coffee beans from around the world, their or
   - Threshold: 0.3 for fuzzy matching
 - [x] Keyboard shortcut: Cmd+K (Mac) / Ctrl+K (Windows) opens dialog
 - [x] Results show: bean name, country flag, region, top 2 flavor notes
+- [x] **Fixed during Phase 5:** searching by flavor note returned nothing.
+      Fuse matched correctly, but cmdk then re-filtered the results against each
+      item's `value` (name + country + region only) and discarded them — two
+      search algorithms stacked on top of each other. The `<CommandDialog>` now
+      passes `shouldFilter={false}` so Fuse alone ranks. Verified: "blackcurrant"
+      returns 3 beans (was 0).
 - [x] Selecting a result: close dialog, fly to bean on map, open bean panel
 - [x] "No results" state with suggestion to adjust search
 - [x] Recent searches stored in localStorage (last 5)
@@ -531,40 +537,100 @@ An interactive world map showcasing coffee beans from around the world, their or
 - [ ] Profile React rendering with React DevTools Profiler
 
 ### 5.2 Bundle Optimization
-- [ ] Install `@next/bundle-analyzer`, analyze output
-- [ ] Dynamic imports for heavy components:
-  - `CoffeeMap` (Mapbox GL JS ~200KB gzipped)
-  - `FlavorWheel` (D3 subset)
-  - `ComparisonView`
-  - `BrewTimer`
-- [ ] Tree-shake D3: import only `d3-hierarchy`, `d3-shape`, `d3-scale`, `d3-selection`
-- [ ] Verify no full lodash/moment imports (use date-fns, native methods)
-- [ ] Target: initial JS bundle < 200KB gzipped
+- [x] Analyze output — via `npm run analyze` (`next build --experimental-analyze`).
+      NOT `@next/bundle-analyzer`: that plugin configures webpack, which this
+      project no longer uses (Next 16 builds with Turbopack), so it would be a
+      silent no-op. Next's built-in Turbopack analyzer replaces it.
+- [x] Dynamic imports for heavy components:
+  - [x] `CoffeeMap` (Mapbox GL JS — measured 466KB gzipped, kept out of initial load)
+  - [x] `FlavorWheel` (D3 subset, via `FlavorWheelLazy`)
+  - [x] `ComparisonView` (lazy via `ComparisonTray`)
+  - [x] `BrewTimer` (lazy via `BeanPanel`)
+  - [x] `SearchCommandDialog` (cmdk, mounted only after first open)
+- [x] Removed Framer Motion from the universal route wrapper — `template.tsx`
+      used `motion.div` for the page fade, which pulled the whole animation
+      engine (~43KB gz) into the shared bundle of *every* page, including fully
+      static Learn articles. Now a CSS keyframe animation (`.page-fade`).
+      Framer now loads only on pages that actually animate (map, beans list).
+- [x] Slimmed the root-layout search payload: `<SearchCommand>` received full
+      `CoffeeBean[]` + `FlavorNotesData`, which serialized into the RSC payload
+      of every page. Now a `SearchableBean` projection built server-side.
+      Learn-page HTML 216KB -> 77KB raw (29KB -> 17KB gz).
+- [x] Tree-shake D3: only `d3-hierarchy` and `d3-shape` are imported
+- [x] Verified no lodash/moment imports
+- [ ] Target: initial JS bundle < 200KB gzipped — **not yet met.**
+      Measured (gzipped, initial JS per page):
+      | page | before | after | modern browsers* |
+      |---|---|---|---|
+      | `/en` (map) | 402KB | 360KB | 321KB |
+      | `/en/beans` | 370KB | 327KB | 289KB |
+      | `/en/bean/[slug]` | 310KB | 267KB | 229KB |
+      | `/en/learn` | 305KB | 262KB | 224KB |
+      \* excludes the 38.5KB legacy polyfill chunk, which is served `noModule`
+      and never fetched by browsers that support ES modules.
+      Remaining floor is framework: react-dom (69KB) + Next runtime (47KB) +
+      base-ui/sonner/nuqs/next-intl/next-auth (~65KB combined).
+      Next levers: drop `SessionProvider` from the root layout (only
+      auth-dependent UI needs it), and lazy-load `sonner`.
 
 ### 5.3 Image Optimization
-- [ ] Convert all bean hero images to WebP format, generate AVIF variants
-- [ ] Use Next.js `<Image>` component everywhere with:
-  - `placeholder="blur"` with generated blur data URLs
-  - Responsive `sizes` attribute
-  - Lazy loading for below-fold images
-- [ ] Compress all images: target < 100KB per hero image
-- [ ] Total image budget for initial viewport: < 500KB
+**Largely N/A as built** — the site ships essentially no raster imagery. Bean
+"hero images" are per-bean CSS gradients generated from the flavor profile
+(`src/lib/flavor-gradient.ts`, decided in 3.7), flavor icons are SVG, and the
+visualizations are inline SVG. Audited rather than implemented:
+- [x] No bean hero images exist to convert — nothing to do
+- [x] `next/image` used for the only raster asset in the UI (the 96x96, 12KB
+      TopNav logo). The one raw `<img>` is the OAuth avatar in `UserMenu`,
+      which is correct: it's a remote provider URL rendered in a fixed-size
+      box, so it causes no layout shift.
+- [x] Total image weight in the initial viewport is ~12KB, far under the 500KB budget
+- [ ] `src/app/icon.png` is 258KB for a 512x512 icon — recompress (not on the
+      critical path, but it's the single largest static asset)
 
 ### 5.4 Map Performance
-- [ ] Measure GeoJSON file sizes, simplify further if > 1MB total
-- [ ] Consider Mapbox vector tilesets for region boundaries if client-side GeoJSON is too heavy
-- [ ] Implement `useDeferredValue` for filter state to prevent map jank during rapid filter changes
-- [ ] Debounce viewport sync to URL (300ms) to avoid excessive history entries
+- [x] Measure GeoJSON file sizes — `public/data/regions.geojson` is 363KB,
+      well under the 1MB budget. No further simplification needed.
+- [x] Vector tilesets not needed at this size (see above); revisit only if the
+      region set grows past ~1MB.
+- [x] Implement `useDeferredValue` for filter state to prevent map jank during rapid filter changes
+- [x] Debounce viewport sync to URL (300ms) to avoid excessive history entries
+- [x] **Fixed whole-store subscriptions.** `CoffeeMap` and six other components
+      called `useBeanMap()` with no selector, subscribing to every store change.
+      Since `onMove` writes `viewport` on each animation frame and `onMouseMove`
+      writes `hoveredRegionId` on each pointer move, dragging the map forced a
+      full React re-render of the map, its sources and layers — and of the whole
+      filter UI — ~60x/second. All seven now use `useShallow` selectors, and the
+      map reads its initial camera once via `getState()` instead of subscribing.
 - [ ] Test on low-end devices (throttled CPU/network in DevTools)
 
 ### 5.5 SEO
-- [ ] Generate dynamic `sitemap.xml` at build time (all bean pages, learn pages, static pages)
-- [ ] Create `robots.txt` (allow all, point to sitemap)
-- [ ] Add JSON-LD structured data to bean pages (Product or Dataset schema)
-- [ ] Unique meta title and description for every page
-- [ ] Canonical URLs on all pages
-- [ ] Submit to Google Search Console, verify indexing
-- [ ] Test with Google Rich Results Test
+- [x] Generate dynamic `sitemap.xml` at build time (`src/app/sitemap.ts`) —
+      148 URLs: 6 static + 55 beans + 13 learn articles, x2 locales. Every entry
+      carries the full `hreflang` alternate set plus `x-default`.
+- [x] Create `robots.txt` (`src/app/robots.ts`) — allows all, disallows `/api/`,
+      points to the sitemap. Deliberately does **not** `Disallow` the thin/private
+      routes: a disallowed URL is never fetched, so the crawler would never see
+      their `noindex` or canonical tags. Those use per-page `noindex, follow`.
+- [x] Add JSON-LD structured data (`src/lib/structured-data.ts` + `<JsonLd>`):
+  - [x] Bean pages: `Article` about a `Thing` (origin attributes as
+        `additionalProperty`, plus `GeoCoordinates`) + `BreadcrumbList`.
+        Modelled as `Article`, **not** `Product`: BeanMap sells nothing, and a
+        `Product` with no `offers`/`review`/`aggregateRating` earns no rich
+        result and reports missing required fields in the Rich Results Test.
+  - [x] Home: `Organization` + `WebSite` graph
+  - [x] `/beans`: `CollectionPage` + `ItemList` + `BreadcrumbList`
+  - [x] Learn articles: `Article` + `BreadcrumbList`
+- [x] Unique meta title and description for every page
+- [x] Canonical URLs on all pages, plus `hreflang` alternates for `en` / `zh-TW`
+      / `x-default` (`src/lib/seo.ts` — every route is locale-prefixed, so the
+      translations must be declared as alternates rather than duplicates)
+- [x] Indexation policy for thin / combinatorial routes (`noindex, follow`):
+      `/favorites` and `/notes` (per-visitor content), `/compare?beans=…`
+      (any 2-3 of 55 beans = tens of thousands of near-identical URLs), and the
+      per-method recipe pages (~440 per locale, canonical -> parent bean page).
+      All still render full OG cards, since they exist to be shared.
+- [ ] Submit to Google Search Console, verify indexing *(needs production deploy)*
+- [ ] Test with Google Rich Results Test *(needs a public URL)*
 
 ### 5.6 Accessibility Audit
 - [ ] Full keyboard navigation audit: every interactive element reachable and operable via keyboard
@@ -594,8 +660,12 @@ An interactive world map showcasing coffee beans from around the world, their or
 - [ ] Dashboard for monitoring engagement and popular beans
 
 ### 5.9 PWA Basics
-- [ ] Create `manifest.json` with app name, icons, theme color, display: standalone
-- [ ] Add to root layout `<head>`
+- [x] Create manifest with app name, icons, theme color, display: standalone
+      (`src/app/manifest.ts` -> `/manifest.webmanifest`). `start_url` is
+      `/en` rather than `/`, so an installed app doesn't round-trip the
+      i18n proxy on every launch.
+- [x] Add to root layout `<head>` — Next links the manifest automatically;
+      added a matching `viewport.themeColor` (light/dark) alongside it
 - [ ] Configure service worker with `@ducanh2912/next-pwa` or `next-pwa`
 - [ ] Cache strategies:
   - Bean data JSON: cache-first (update in background)
