@@ -2,7 +2,7 @@
 
 An interactive world map of specialty coffee — origins, flavor profiles, brewing recommendations, and an interactive flavor wheel tailored to each bean.
 
-**Status:** *Still Under Development* — Phases 1 & 2 complete; Phase 3 substantially complete; **Phase 4 (Social & Community) complete**; fully bilingual (English + Traditional Chinese, Taiwan). 55 bean profiles across 41 countries with full SCA flavor-note tagging, a Bean Belt overlay tracing the equatorial coffee-growing band on the globe, custom Mapbox styles, SSR bean pages with per-bean flavor-driven gradient art and "Did you know?" trivia, a responsive panel with a draggable mobile bottom sheet, dark/light mode, faceted filters, ⌘K search, brewing recommendation cards with dose calculator + interactive brew timer, a /beans browser with grid/table toggle, Euclidean similar-beans, side-by-side bean comparison, a D3 flavor wheel with category/subcategory/note filtering, a complete MDX-powered Learn section (13 articles with embedded SVG diagrams and timers), shareable URLs, and **`/zh-TW/` locale routing with an in-nav language switcher** — every UI string, all catalog content (beans, brewing methods, the SCA flavor hierarchy, country names), and all 13 Learn articles are translated.
+**Status:** *Still Under Development* — Phases 1 & 2 complete; Phase 3 substantially complete; Phase 4 (Social & Community) complete; **Phase 5 (Polish & Launch) in progress — performance and SEO landed** (see [Performance & SEO](#performance--seo)); fully bilingual (English + Traditional Chinese, Taiwan). 55 bean profiles across 41 countries with full SCA flavor-note tagging, a Bean Belt overlay tracing the equatorial coffee-growing band on the globe, custom Mapbox styles, SSR bean pages with per-bean flavor-driven gradient art and "Did you know?" trivia, a responsive panel with a draggable mobile bottom sheet, dark/light mode, faceted filters, ⌘K search, brewing recommendation cards with dose calculator + interactive brew timer, a /beans browser with grid/table toggle, Euclidean similar-beans, side-by-side bean comparison, a D3 flavor wheel with category/subcategory/note filtering, a complete MDX-powered Learn section (13 articles with embedded SVG diagrams and timers), shareable URLs, and **`/zh-TW/` locale routing with an in-nav language switcher** — every UI string, all catalog content (beans, brewing methods, the SCA flavor hierarchy, country names), and all 13 Learn articles are translated.
 
 ## Tech stack
 
@@ -22,6 +22,8 @@ An interactive world map of specialty coffee — origins, flavor profiles, brewi
 - **Database:** [Neon](https://neon.tech/) serverless Postgres + [Drizzle ORM](https://orm.drizzle.team/) & `drizzle-kit`, for account favorites and brew notes *(optional)*
 - **Social previews:** [`next/og`](https://nextjs.org/docs/app/api-reference/functions/image-response) (Satori) for dynamic OG images with a live flavor radar; [`html-to-image`](https://github.com/bubkoo/html-to-image) for downloadable recipe cards
 - **Notifications:** [`sonner`](https://sonner.emilkowal.ski/) toasts, styled in the coffee palette
+- **SEO:** Next.js Metadata API — generated `sitemap.xml` / `robots.txt`, canonical + `hreflang` alternates per locale, and [schema.org](https://schema.org/) JSON-LD (`Article`, `BreadcrumbList`, `CollectionPage`, `Organization`/`WebSite`)
+- **Analytics:** [Vercel Analytics](https://vercel.com/docs/analytics) + [Speed Insights](https://vercel.com/docs/speed-insights) (Core Web Vitals)
 - **Deploy:** [Vercel](https://vercel.com/)
 
 ## Feature highlights
@@ -35,7 +37,7 @@ An interactive world map of specialty coffee — origins, flavor profiles, brewi
 - **Insights** — `/explore/insights` shows aggregate visualizations across the (filtered) catalog: an altitude bar chart with green→brown gradient sorted by midpoint elevation, and a Gantt-style harvest calendar that highlights the current month.
 - **Learn section** — 13 MDX-rendered articles at `/learn`: 5 processing methods (washed, natural, honey, anaerobic, wet-hulled) and 8 brewing guides (V60, Chemex, Kalita Wave, French Press, AeroPress, Espresso, Cold Brew, Moka Pot). Each processing article embeds a theme-aware `<ProcessDiagram />` SVG of the workflow; brewing guides embed a live `<BrewTimer />`. GitHub-flavored markdown tables are supported via `remark-gfm`.
 - **Mobile** — Bean panel becomes a draggable bottom sheet with three snap points (peek, half, full), flick-to-close, and a dimmed backdrop. Filters open as a bottom sheet too.
-- **Search** — ⌘K opens a fuzzy search across name, country, region, and flavor notes. Recent searches persist in `localStorage`.
+- **Search** — ⌘K opens a fuzzy search across name, country, region, and flavor notes (search "blackcurrant" and you get the Kenyans). Results are ranked by Fuse.js alone; the dialog and its `cmdk` dependency are only fetched the first time you open it. Recent searches persist in `localStorage`.
 - **SCA flavor-notes hierarchy** — 9 categories / 29 subcategories / 84 specific notes in [src/data/flavor-notes.json](src/data/flavor-notes.json), cross-validated against every bean at build time.
 - **Shareable URLs** — `nuqs` syncs selected bean, map viewport, all filters (region, processing, roast, altitude, flavor notes) into the URL with shallow routing.
 - **Sharing & dynamic OG images** — a Share control (native Web Share API on mobile, copy-to-clipboard with a toast on desktop) on bean, comparison, and recipe views. Links unfurl with **on-the-fly Open Graph cards** rendered by [`/api/og`](src/app/api/og/route.tsx) — bean and comparison cards drawn with the flavor radar as inline SVG, over a warm roast gradient — plus a dedicated recipe card at [`/api/og/recipe`](src/app/api/og/recipe/route.tsx). Fully static bean pages are preserved: recipe links get their own permalink route ([`/bean/[slug]/recipe/[method]`](src/app/[locale]/bean/[slug]/recipe/[method]/page.tsx)) instead of query-param metadata.
@@ -45,7 +47,48 @@ An interactive world map of specialty coffee — origins, flavor profiles, brewi
 - **Brewing journal** — signed-in users can log **private brew notes** on any bean (method, 1–5★ rating, tasting notes, brew date), shown as an author-only timeline on the bean page and collected in the [`/notes`](src/app/[locale]/notes/page.tsx) journal with inline edit/delete.
 - **Discover collections** — the top of `/beans` leads with curated and seasonal rows — **In season now** (driven by each bean's harvest months, refreshed daily), **Editor's picks**, and **New additions** — above the full filterable catalog.
 - **Bilingual (English + 繁體中文)** — every route is served under a locale prefix (`/en/…`, `/zh-TW/…`) and a language switcher in the nav flips locale while preserving the current path *and* all `nuqs` query state (filters, selection, viewport). UI strings come from `next-intl` message catalogs; catalog content (bean names, descriptions, fun facts, tasting notes, brewing methods, the SCA flavor hierarchy, country names) is localized via id-keyed overlays merged onto the English source; all 13 Learn articles have Traditional Chinese counterparts. `⌘K` search indexes localized names *and* flavor labels, so you can search in Chinese. See [Internationalization](#internationalization-i18n).
-**Social & Community** - Web Share API social sharing with clipboard fallback, **dynamic Open Graph images** rendered with a flavor radar, **shareable brew-recipe cards** (copyable permalink *and* downloadable PNG), **account-synced favorites** and a **private brewing journal**. The account layer is *entirely optional* — with no database or auth secrets set, the app still builds and runs. See [Accounts &amp; backend](#accounts--backend-optional).
+- **Social & Community** — Web Share API social sharing with clipboard fallback, **dynamic Open Graph images** rendered with a flavor radar, **shareable brew-recipe cards** (copyable permalink *and* downloadable PNG), **account-synced favorites** and a **private brewing journal**. The account layer is *entirely optional* — with no database or auth secrets set, the app still builds and runs. See [Accounts &amp; backend](#accounts--backend-optional).
+- **Discoverable & installable** — a generated `sitemap.xml` (148 URLs, every entry carrying its `hreflang` alternates), `robots.txt`, canonical + `hreflang` tags on every page, schema.org JSON-LD, and a web app manifest so BeanMap installs to the home screen. See [Performance & SEO](#performance--seo).
+
+## Performance & SEO
+
+### Keeping the bundle off the critical path
+
+Heavy dependencies are loaded only when something actually needs them: Mapbox GL JS (466KB gzipped on its own) via a dynamic `CoffeeMap` import, D3 via `FlavorWheelLazy`, `cmdk` on first ⌘K, and `ComparisonView` / `BrewTimer` from the tray and panel that open them.
+
+Two things were quietly defeating that, both in the root layout, and both fixed:
+
+- **Framer Motion in the route wrapper.** `template.tsx` used a `motion.div` for the page-transition fade. Because `template.tsx` wraps *every* route, that pulled the whole animation engine (~43KB gzipped) into the shared bundle of even fully static Learn articles. It's now a CSS keyframe (`.page-fade` in `globals.css`), so Framer loads only on pages that genuinely animate.
+- **The search index in the RSC payload.** `<SearchCommand>` lives in the root layout, so whatever it receives is serialized into *every* page. It was taking full `CoffeeBean[]` plus the whole flavor-note tree — brewing recommendations, pour stages and all — to render a list of names. [src/lib/search.ts](src/lib/search.ts) now projects a slim `SearchableBean` server-side, with locale-resolved note labels.
+
+Measured initial JS, gzipped:
+
+| Page | Before | After | Modern browsers\* |
+|---|---|---|---|
+| `/en` (map) | 402KB | 360KB | 321KB |
+| `/en/beans` | 370KB | 327KB | 289KB |
+| `/en/bean/[slug]` | 310KB | 267KB | 229KB |
+| `/en/learn` | 305KB | 262KB | 224KB |
+
+\* excludes the 38.5KB legacy polyfill chunk, which is served `noModule` and never fetched by browsers that support ES modules.
+
+The Learn page's HTML also dropped from 216KB to 77KB raw. The remaining floor is framework code (react-dom, the Next runtime, Base UI, `next-intl`, `next-auth`), so the roadmap's `< 200KB` target isn't met yet — see [TASKS.md](TASKS.md) §5.2 for the next levers.
+
+Run `npm run analyze` to inspect the bundle. Note this uses Next 16's built-in Turbopack analyzer rather than `@next/bundle-analyzer`, which configures webpack and would be a silent no-op here.
+
+### Map rendering
+
+`CoffeeMap` drives its camera from Mapbox, not from React: `onMove` writes the viewport to the store on every animation frame and `onMouseMove` writes hover state on every pointer move. Subscribing to the whole Zustand store therefore re-rendered the map, its sources and layers — and the entire filter UI — roughly 60×/second while dragging. Every component now subscribes through a `useShallow` selector, and the map reads its initial camera once via `getState()` instead of subscribing to it. Filter state additionally passes through `useDeferredValue`, so dragging a flavor slider re-projects the GeoJSON at the trailing edge rather than once per intermediate value.
+
+### Discoverability
+
+Every route is locale-prefixed, so each page exists once per locale and needs to be declared as a translation rather than a duplicate. [src/lib/seo.ts](src/lib/seo.ts) centralizes that: canonical URL, `hreflang` alternates for `en` / `zh-TW` / `x-default`, and Open Graph defaults.
+
+- **[src/app/sitemap.ts](src/app/sitemap.ts)** — 148 URLs (6 static + 55 beans + 13 Learn articles, × 2 locales), each carrying its full alternate set.
+- **[src/app/robots.ts](src/app/robots.ts)** — allows everything except `/api/`, points at the sitemap.
+- **[src/lib/structured-data.ts](src/lib/structured-data.ts)** — JSON-LD emitted through a small `<JsonLd>` server component. Bean pages are modelled as an `Article` about a `Thing` (origin attributes as `additionalProperty`, plus `GeoCoordinates`), **not** as a `Product`: BeanMap sells nothing, and a `Product` with no `offers` / `review` / `aggregateRating` earns no rich result and reports missing required fields. Also `BreadcrumbList` throughout, `CollectionPage` + `ItemList` on `/beans`, and an `Organization` + `WebSite` graph on the home page.
+- **Indexation policy** — `/favorites` and `/notes` (per-visitor content), `/compare?beans=…` (any 2–3 of 55 beans is tens of thousands of near-identical URLs), and the per-method recipe permalinks (~440 per locale, canonical → parent bean page) are all `noindex, follow`. They keep their full OG cards, since they exist to be shared. They're deliberately **not** `Disallow`ed in `robots.txt`: a blocked URL is never fetched, so a crawler would never see the `noindex` or the canonical, and wouldn't follow the links back to the bean pages.
+- **[src/app/manifest.ts](src/app/manifest.ts)** — web app manifest with a matching `viewport.themeColor`. `start_url` is `/en` rather than `/`, so an installed app doesn't round-trip the i18n proxy on every launch.
 
 ## Internationalization (i18n)
 
@@ -60,7 +103,7 @@ An interactive world map of specialty coffee — origins, flavor profiles, brewi
 The entire catalog experience — map, search, filters, brewing tools, comparison, Learn, sharing, and dynamic OG images — is **fully static and needs only a Mapbox token**. Accounts add one thing: personal data that follows you across devices (synced favorites and private brew notes).
 
 - **Graceful degradation** — with no `DATABASE_URL` / `AUTH_SECRET` set, the app still builds and runs. The account avatar shows a sign-in prompt, the favorite heart and note forms nudge you to sign in, and the account APIs return `503 not_configured`. Nothing crashes; [src/db/index.ts](src/db/index.ts) and [src/auth.ts](src/auth.ts) never touch the database at import time.
-- **What you provision** — a free [Neon](https://neon.tech/) Postgres database and Google + GitHub OAuth apps. Full step-by-step instructions are in **[docs/phase-4-backend-setup.md](docs/phase-4-backend-setup.md)**. In short: set `DATABASE_URL`, run `npm run db:migrate` to create the tables, then set `AUTH_SECRET` + the OAuth credentials.
+- **What you provision** — a free [Neon](https://neon.tech/) Postgres database and Google + GitHub OAuth apps. set `DATABASE_URL`, run `npm run db:migrate` to create the tables, then set `AUTH_SECRET` + the OAuth credentials.
 - **Auth** — NextAuth v5 (Auth.js) with **JWT sessions**; the [Drizzle adapter](https://authjs.dev/getting-started/adapters/drizzle) persists the `user`/`account` rows on first sign-in ([src/auth.ts](src/auth.ts)). The client `SessionProvider` keeps every content page statically rendered — auth is checked **per-route** (`auth()` in the API routes and note UI), not in middleware, so the next-intl proxy stays untouched.
 - **Data model** — [src/db/schema.ts](src/db/schema.ts): the Auth.js standard tables (`user`, `account`, `session`, `verificationToken`) plus `favorite` (unique per user+bean) and `brew_note`. The auth-gated, `userId`-scoped API lives under [src/app/api/](src/app/api/) (`favorites`, `favorites/[beanSlug]`, `notes`, `notes/[id]`).
 - **Favorites sync** — favorites require an account and the server is the source of truth: they load into a Zustand store on sign-in ([src/lib/use-favorites-sync.ts](src/lib/use-favorites-sync.ts)) and toggle optimistically with rollback on failure.
@@ -107,6 +150,7 @@ The `NEXT_PUBLIC_*` vars are inlined into the client bundle at build time — ch
 | `npm run dev` | Start dev server (Turbopack) |
 | `npm run build` | Run Zod validation, then production build |
 | `npm run start` | Start production server |
+| `npm run analyze` | Production build with Next 16's Turbopack bundle analyzer (`next build --experimental-analyze`) |
 | `npm run lint` | Run ESLint |
 | `npm run validate:data` | Validate [src/data/](src/data/) against Zod schemas + cross-check flavor-note IDs, method IDs, and related-bean IDs; also assert every `zh-TW` content overlay + country name is present and that the `en`/`zh-TW` message catalogs match key-for-key |
 | `npm run expand:brewing` | Regenerate missing brewing recommendations via affinity weights |
@@ -136,13 +180,17 @@ bean-map/
 │   │   │   │   ├── page.tsx            # Hub listing processing + brewing articles
 │   │   │   │   ├── processing/[slug]/  # MDX article renderer
 │   │   │   │   └── brewing/[slug]/     # MDX article renderer
-│   │   │   ├── layout.tsx         # Locale (root) layout — <html lang>, fonts, ThemeProvider, NuqsAdapter, NextIntlClientProvider, SessionProvider, TopNav, Toaster, SignInDialog
+│   │   │   ├── layout.tsx         # Locale (root) layout — <html lang>, fonts, themeColor, canonical/hreflang, ThemeProvider, NuqsAdapter, NextIntlClientProvider, SessionProvider, TopNav, Toaster, SignInDialog
+│   │   │   ├── template.tsx       # Route-transition fade (CSS, not Framer — see Performance & SEO)
 │   │   │   └── page.tsx           # Home (map view)
 │   │   ├── api/               # Route handlers (not locale-prefixed)
 │   │   │   ├── og/                # Dynamic OG images (bean + comparison); og/recipe/ for recipe cards
 │   │   │   ├── auth/[...nextauth]/    # NextAuth v5 handlers
 │   │   │   ├── favorites/         # GET/POST + [beanSlug] DELETE (auth-gated, userId-scoped)
 │   │   │   └── notes/             # GET/POST + [id] PATCH/DELETE (auth-gated, userId-scoped)
+│   │   ├── sitemap.ts         # Generated sitemap.xml — all indexable routes × locales, with hreflang alternates
+│   │   ├── robots.ts          # Generated robots.txt
+│   │   ├── manifest.ts        # Web app manifest (PWA install metadata)
 │   │   ├── globals.css        # Tailwind v4 theme + coffee palette
 │   │   └── favicon.ico, icon.png, apple-icon.png   # Global metadata files (not locale-prefixed)
 │   │
@@ -164,7 +212,7 @@ bean-map/
 │   │   ├── visualization/     # FlavorRadar, FlavorWheel(+Lazy), ProcessDiagram, AltitudeChart, SeasonalChart
 │   │   ├── layout/            # TopNav, LocaleSwitcher, MobileBottomSheet, UserMenu
 │   │   ├── shared/            # ThemeProvider, ThemeToggle, SearchCommand, UrlStateSync, ShareButton, FavoriteButton,
-│   │   │                      #   Toaster, SignInDialog, BrandIcons, SessionProviderWrapper, FavoritesSync
+│   │   │                      #   Toaster, SignInDialog, BrandIcons, SessionProviderWrapper, FavoritesSync, JsonLd
 │   │   └── ui/                # shadcn/ui primitives (Button, Dialog, Sheet, Slider, …)
 │   │
 │   ├── content/    # MDX articles for the Learn section, per locale (English is source; zh-TW falls back to en)
@@ -174,7 +222,7 @@ bean-map/
 │   ├── lib/
 │   │   ├── data.ts               # Locale-aware bean / method / flavor-notes loaders (base + id-keyed overlay merge, per-locale cache)
 │   │   ├── schemas.ts            # Zod schemas mirroring src/types
-│   │   ├── search.ts             # Fuse.js index (localized names + flavor labels) + recent-searches helpers
+│   │   ├── search.ts             # Slim SearchableBean projection + Fuse.js index (localized names + flavor labels) + recent-searches helpers
 │   │   ├── similar.ts            # Euclidean distance over flavor profile
 │   │   ├── flavor-gradient.ts    # Deterministic CSS gradient from a bean's flavor profile
 │   │   ├── flavor-icons.ts       # Category → illustration/emoji map for the flavor wheel
@@ -186,6 +234,8 @@ bean-map/
 │   │   ├── use-media-query.ts    # SSR-safe matchMedia hook + prefers-reduced-motion helper
 │   │   ├── use-favorites-sync.ts # Loads account favorites into the store on sign-in
 │   │   ├── site.ts               # Absolute site URL / metadataBase resolver (OG + share links)
+│   │   ├── seo.ts                # Canonical + hreflang/x-default alternates, OG defaults, shared pageMetadata()
+│   │   ├── structured-data.ts    # schema.org JSON-LD builders (Article, BreadcrumbList, CollectionPage, Organization/WebSite)
 │   │   ├── radar-geometry.ts     # Pure flavor-radar geometry (shared by the component + OG routes)
 │   │   ├── radar-svg.ts          # Flavor radar as an SVG data URI for OG images
 │   │   ├── notes-types.ts        # Shared brew-note types
@@ -212,7 +262,6 @@ bean-map/
 │
 ├── drizzle/        # Generated SQL migrations (drizzle-kit)
 ├── drizzle.config.ts  # Drizzle Kit config — loads .env, points at src/db/schema.ts
-├── docs/           # phase-4-backend-setup.md (accounts + database setup guide)
 ├── .env.example    # Env var template
 ├── AGENTS.md       # Agent-facing notes (Next.js 16 caveats)
 ├── CLAUDE.md       # Claude Code project instructions
