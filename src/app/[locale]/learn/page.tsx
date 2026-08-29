@@ -3,6 +3,7 @@ import { pageMetadata } from "@/lib/seo";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getAllArticles, type ArticleSummary, type LearnCategory } from "@/lib/mdx";
+import { getCatalogStats } from "@/lib/catalog-stats";
 
 export async function generateMetadata({
   params,
@@ -11,11 +12,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "metadata.learn" });
+  const stats = getCatalogStats();
   return pageMetadata({
     locale,
     path: "/learn",
-    title: t("title"),
-    description: t("description"),
+    title: t("title", stats),
+    description: t("description", stats),
   });
 }
 

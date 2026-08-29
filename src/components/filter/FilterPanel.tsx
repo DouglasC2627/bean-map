@@ -46,9 +46,16 @@ const ROASTS: RoastLevel[] = [
 interface Props {
   beans: CoffeeBean[];
   flavorNotes?: FlavorNotesData;
+  /**
+   * Positioning for the toggle pill. Defaults to viewport-fixed, which is
+   * right for the pages that are a single scrolling column. The map page
+   * overrides it to `absolute` so the pill is anchored to the map section and
+   * scrolls away with it instead of floating over the copy underneath.
+   */
+  triggerClassName?: string;
 }
 
-export function FilterPanel({ beans, flavorNotes }: Props) {
+export function FilterPanel({ beans, flavorNotes, triggerClassName }: Props) {
   const t = useTranslations("filters");
   const tEnum = useTranslations("enums");
   const router = useRouter();
@@ -142,7 +149,10 @@ export function FilterPanel({ beans, flavorNotes }: Props) {
         onClick={() => setFilterPanelOpen(!isFilterPanelOpen)}
         aria-label={t("toggle")}
         aria-expanded={isFilterPanelOpen}
-        className="fixed left-3 top-18 z-30 flex items-center gap-2 rounded-md border border-border bg-background/90 px-3 py-2 text-sm shadow-md backdrop-blur hover:border-roast-medium"
+        className={cn(
+          "z-30 flex items-center gap-2 rounded-md border border-border bg-background/90 px-3 py-2 text-sm shadow-md backdrop-blur hover:border-roast-medium",
+          triggerClassName ?? "fixed left-3 top-18",
+        )}
       >
         <SlidersHorizontal className="h-4 w-4" />
         <span>{t("title")}</span>

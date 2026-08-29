@@ -20,11 +20,13 @@ import { FavoritesSync } from "@/components/shared/FavoritesSync";
 import { SignInDialog } from "@/components/shared/SignInDialog";
 import { Toaster } from "@/components/shared/Toaster";
 import { TopNav } from "@/components/layout/TopNav";
+import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SearchCommand } from "@/components/shared/SearchCommand";
 import { getBeans, getFlavorNotes } from "@/lib/data";
 import { toSearchableBeans } from "@/lib/search";
 import { routing } from "@/i18n/routing";
 import { siteUrl } from "@/lib/site";
+import { getCatalogStats } from "@/lib/catalog-stats";
 import { pageMetadata } from "@/lib/seo";
 
 const inter = Inter({
@@ -81,12 +83,17 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "metadata.home" });
+  // `metadata.home` carries the catalog counts as ICU placeholders, so the
+  // values have to be supplied here too — this runs for *every* route, not
+  // just `/`, since it is the site-wide fallback that each page's own
+  // `generateMetadata` overrides.
+  const stats = getCatalogStats();
   return {
     ...pageMetadata({
       locale,
       path: "/",
-      title: t("title"),
-      description: t("description"),
+      title: t("title", stats),
+      description: t("description", stats),
     }),
     metadataBase: new URL(siteUrl),
     applicationName: "BeanMap",
@@ -143,6 +150,7 @@ export default async function LocaleLayout({
                 <MotionProvider>
                   <TopNav />
                   <main className="flex-1 flex flex-col">{children}</main>
+                  <SiteFooter locale={locale} />
                   <SearchCommand beans={searchBeans} />
                   <Toaster />
                   <FavoritesSync />

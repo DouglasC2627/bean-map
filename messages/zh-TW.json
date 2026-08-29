@@ -98,53 +98,61 @@
     "deleteFailed": "無法刪除筆記",
     "edit": "編輯筆記",
     "delete": "刪除筆記",
+    "confirmTitle": "要刪除這則筆記嗎？",
+    "confirmBody": "這會永久刪除你的沖煮筆記，且無法復原。",
+    "confirmCta": "刪除",
+    "deleting": "刪除中…",
     "empty": "這款咖啡豆還沒有任何筆記。",
     "signInPrompt": "登入即可為這款咖啡豆保存私人的品飲筆記。",
     "signInCta": "登入"
   },
   "notes": {
-    "title": "沖煮日誌",
+    "title": "沖煮筆記",
     "subtitle": "你記錄過的每一則品飲筆記。",
     "loading": "正在載入你的筆記…",
-    "signInPrompt": "登入以查看你的沖煮日誌。",
+    "signInPrompt": "登入以查看你的沖煮筆記。",
     "signInCta": "登入",
     "empty": "你還沒有記錄任何沖煮筆記。",
     "emptyCta": "瀏覽咖啡豆"
   },
   "metadata": {
     "home": {
-      "title": "BeanMap — 咖啡產地、風味與沖煮",
-      "description": "一張互動式的世界咖啡豆地圖，呈現產地、風味輪廓與推薦沖煮方式。"
+      "title": "BeanMap — 互動式世界咖啡產地地圖",
+      "description": "在 3D 地球儀上探索 {countries} 個國家、{beans} 個精品咖啡產地。點選任一標記即可查看風味輪廓、海拔、處理法與沖煮配方。"
     },
     "beans": {
-      "title": "咖啡豆目錄 · BeanMap",
-      "description": "瀏覽 BeanMap 中的每一款咖啡豆檔案。"
+      "title": "咖啡豆目錄 — {beans} 款產地檔案 · BeanMap",
+      "description": "依國家、海拔、處理法、烘焙度與風味調瀏覽並篩選全部 {beans} 個咖啡產地，每份檔案都附有風味雷達圖與沖煮配方。"
     },
     "compare": {
       "title": "比較咖啡豆 · BeanMap",
-      "description": "並列比較咖啡豆檔案。",
+      "description": "把最多三個咖啡產地並列比較：疊合的風味雷達圖、海拔與處理法，以及各自最適合的沖煮方式。",
       "titleWith": "BeanMap · 比較 {names}",
       "descriptionWith": "比較 {names} 的風味輪廓、產地與沖煮契合度。"
     },
     "flavors": {
-      "title": "風味輪 · BeanMap",
-      "description": "探索咖啡的風味類別、子類別與風味調。點選風味輪上的任一區塊即可在地圖上篩選咖啡豆。"
+      "title": "咖啡風味輪 · BeanMap",
+      "description": "以互動式旭日圖呈現的 SCA 風味輪：{categories} 個類別、{notes} 種風味調。點選任一區塊即可把地圖篩選成帶有該風味的咖啡豆。"
     },
     "insights": {
-      "title": "風土透視 · BeanMap",
-      "description": "依海拔、採收季節及其他面向探索咖啡產地。"
+      "title": "咖啡產地透視 · BeanMap",
+      "description": "橫跨整個目錄的圖表：各產地的生長海拔，以及顯示當下正值產季的採收行事曆。"
     },
     "learn": {
-      "title": "學堂 · BeanMap",
-      "description": "關於咖啡處理法與沖煮技巧的背景知識。"
+      "title": "咖啡學堂：處理法與沖煮指南 · BeanMap",
+      "description": "{articles} 篇圖解指南 — 水洗、日曬、蜜處理、厭氧與濕剝處理如何改變風味，以及 V60、Chemex、愛樂壓等沖煮配方。"
     },
     "favorites": {
       "title": "收藏 · BeanMap",
       "description": "你在 BeanMap 上收藏的咖啡豆。"
     },
     "notes": {
-      "title": "沖煮日誌 · BeanMap",
+      "title": "沖煮筆記 · BeanMap",
       "description": "你的個人咖啡沖煮筆記。"
+    },
+    "about": {
+      "title": "關於 BeanMap",
+      "description": "一個免費、開放原始碼的咖啡豆地圖集：{beans} 份產地檔案、SCA 風味輪與 {methods} 種沖煮方式。"
     }
   },
   "nav": {
@@ -159,7 +167,27 @@
     "search": "搜尋",
     "openMenu": "開啟選單",
     "closeMenu": "關閉選單",
-    "switchLanguage": "切換語言"
+    "switchLanguage": "切換語言",
+    "about": "關於"
+  },
+  "footer": {
+    "tagline": "互動式世界咖啡豆地圖 — 咖啡豆產地、風味、沖煮建議、and more...",
+    "exploreHeading": "探索",
+    "learnHeading": "學堂",
+    "projectHeading": "專案",
+    "map": "世界地圖",
+    "beans": "咖啡豆目錄",
+    "flavors": "風味輪",
+    "insights": "風土透視",
+    "compare": "比較咖啡豆",
+    "learnIndex": "所有指南",
+    "processing": "處理法",
+    "brewing": "沖煮指南",
+    "about": "關於 BeanMap",
+    "source": "GitHub 原始碼",
+    "license": "MIT 授權",
+    "note": "一個獨立的開放原始碼專案。BeanMap 不販售任何商品，也與任何烘豆商無隸屬關係。",
+    "copyright": "© {year} BeanMap"
   },
   "filters": {
     "toggle": "切換篩選",
@@ -202,7 +230,7 @@
   },
   "beans": {
     "heading": "咖啡豆目錄",
-    "subtitle": "瀏覽、排序並篩選每一款咖啡豆檔案。",
+    "subtitle": "目錄中的每一個產地。可依名稱、海拔或酸質排序，並依國家、處理法、烘焙度或風味調篩選。",
     "browseAll": "瀏覽全部"
   },
   "beansBrowser": {
@@ -360,6 +388,89 @@
     "brewingLabel": "沖煮指南",
     "notFoundTitle": "找不到頁面 · BeanMap"
   },
+  "about": {
+    "heading": "關於 BeanMap",
+    "lead": "BeanMap 是一個免費、開放原始碼的咖啡豆地圖集。在這裡，你可以更加認識各種咖啡豆，以及個別咖啡豆的產區、風味、沖煮方式。",
+    "statsHeading": "統計",
+    "stats": {
+      "beans": "個咖啡豆產地",
+      "countries": "個國家",
+      "methods": "種沖煮方式",
+      "notes": "種 SCA 風味調",
+      "articles": "篇指南"
+    },
+    "whatHeading": "BeanMap 精選",
+    "what": {
+      "map": {
+        "title": "探索咖啡世界地圖",
+        "body": "轉動地球儀，依產區或風味篩選，點選任一標記即可開啟咖啡豆檔案。"
+      },
+      "beans": {
+        "title": "瀏覽每一支咖啡豆",
+        "body": "呈現全部 {beans} 個產地，另有當季與精選系列。"
+      },
+      "flavors": {
+        "title": "從風味出發",
+        "body": "以可互動圖表呈現 SCA 風味輪 — 點選一個風味調，即可篩選對應風味的咖啡豆。"
+      },
+      "insights": {
+        "title": "了解更多",
+        "body": "橫跨整個咖啡豆目錄的海拔與採收行事曆圖表。"
+      },
+      "compare": {
+        "title": "並列比較",
+        "body": "允許疊合最多三張咖啡豆風味雷達圖，並排比較各種咖啡豆以及各自適合哪一種沖煮方式。"
+      },
+      "learn": {
+        "title": "學習咖啡手藝",
+        "body": "{articles} 篇處理法與沖煮技巧指南，附上沖煮計時器。"
+      }
+    },
+    "dataHeading": "資料從何而來",
+    "dataBody1": "每一份產地檔案都是根據公開的生產者與進口商資訊、杯測記錄與各產區採收資料手工撰寫，再對照 SCA 風味語彙表標註。座標標示的是產區，而不是單一莊園。",
+    "dataBody2": "風味輪廓以六個軸線評分 — 酸質、body、甜感、苦韻、複雜度與果香，範圍是 1 到 10。",
+    "dataBody3": "咖啡檔案包含研磨度、水溫、粉水比與注水節奏，並附上每種方式與該咖啡豆的契合度分數。不過你的磨豆機、水質、咖啡豆烘焙等都會影響最終結果，這也正是為什麼你可以透過咖啡豆目錄底端的沖煮筆記，記錄實際上屬於你真正有效的做法。",
+    "openHeading": "一切開元",
+    "openBody": "BeanMap 不賣咖啡、亦無任何廣告，只是一個獨立的專案，與網站中提到的各式合作社或品牌皆無隸屬關係。程式碼與資料目錄皆以 MIT 授權放在 GitHub 上，非常歡迎以 pull request 提交勘誤或提供新的咖啡豆資訊。",
+    "openCta": "在 GitHub 上查看原始碼",
+    "privacyHeading": "帳號與隱私",
+    "privacyBody": "網站不強制創建帳號，所有功能均可在未登入狀態下使用。個人帳號可透過 Google 或 GitHub 登入，提供跨裝置同步的咖啡豆收藏，以及個人專屬的沖煮筆記。",
+    "faqHeading": "常見問題",
+    "faq": {
+      "what": {
+        "q": "BeanMap 是什麼？",
+        "a": "BeanMap 是一張免費、開源的互動式世界咖啡地圖。把來自 {countries} 個國家的 {beans} 個咖啡產地全數置於 3D 地球儀；點選標記即可開啟該產地咖啡豆的風味輪廓、海拔、處理法、採收季節與推薦沖煮配方。"
+      },
+      "free": {
+        "q": "BeanMap 可以免費使用嗎？",
+        "a": "可以。BeanMap 是免費的開放原始碼專案，採用 MIT 授權。沒有廣告行銷，也不需要註冊帳號。"
+      },
+      "data": {
+        "q": "BeanMap 的咖啡資料從哪裡來？",
+        "a": "產地檔案是根據公開的生產者與進口商資訊、杯測記錄與各產區採收資料手工整理，再對照 SCA 風味語彙表標註（{categories} 個類別、{subcategories} 個子類別、{notes} 種風味調）。座標標示的是產區，而非個別莊園。"
+      },
+      "buy": {
+        "q": "可以在 BeanMap 上買咖啡嗎？",
+        "a": "不行。BeanMap 是一部參考用的地圖集，不是商店。它沒有購物功能，也與任何烘豆商沒有商業關係。你可以在這裡尋找適合你的咖啡豆，然後再自行購買。"
+      },
+      "pick": {
+        "q": "我要怎麼找到自己會喜歡的咖啡？",
+        "a": "從你已經喜歡的風味開始。打開風味輪，點選像黑醋栗或茉莉這樣的風味調，地圖就會篩選出帶有該風味的咖啡豆產地。你也可以依海拔、處理法與烘焙度篩選。"
+      },
+      "beanBelt": {
+        "q": "什麼是咖啡帶（Bean Belt）？",
+        "a": "咖啡帶是環繞赤道、介於北回歸線與南回歸線之間（約南北緯 23.44 度）的地帶，幾乎所有商業咖啡都長在這裡。"
+      },
+      "account": {
+        "q": "我需要註冊帳號嗎？",
+        "a": "不需要。咖啡豆地圖、搜尋、篩選、比較、沖煮計算機、計時器與全部 {articles} 篇學堂文章在未登入時都能使用。帳號令提供跨裝置同步咖啡豆收藏，以及私人沖煮筆記功能。"
+      },
+      "languages": {
+        "q": "BeanMap 支援哪些語言？",
+        "a": "英文與繁體中文。每一個頁面、每一份咖啡豆檔案與全部 {articles} 篇學堂文章都已完整翻譯，而且切換語言時會保留你目前的篩選條件、選取項目與地圖視角。"
+      }
+    }
+  },
   "brew": {
     "best": "最佳",
     "shareRecipe": "分享配方",
@@ -468,6 +579,40 @@
     "loadingSubtitle": "正在載入互動地圖…",
     "tokenMissingTitle": "缺少 Mapbox token",
     "tokenMissingBody": "請將 <code>NEXT_PUBLIC_MAPBOX_TOKEN</code> 加入 <code>.env.local</code>（參見 <code>.env.example</code>）並重新啟動開發伺服器。"
+  },
+  "home": {
+    "heading": "在互動式世界地圖上探索咖啡產地",
+    "lead": "BeanMap 把來自 {countries} 個國家的 {beans} 個精品咖啡產地標在一顆可以轉動的地球儀上。點選標記即可飛到該產區，以六軸雷達圖閱讀它的風味輪廓，並取得為那支咖啡豆調校過的沖煮配方 — 研磨度、水溫、粉水比與注水節奏。",
+    "statsHeading": "目錄概覽",
+    "stats": {
+      "beans": "個咖啡產地",
+      "countries": "個國家",
+      "methods": "種沖煮方式",
+      "notes": "種 SCA 風味調",
+      "articles": "篇圖解指南"
+    },
+    "beanBeltHeading": "為什麼咖啡都長在赤道附近",
+    "beanBeltBody": "阿拉比卡需要海拔、雨量與氣溫都恰到好處的窄帶條件，而這樣的條件幾乎只存在於北回歸線與南回歸線之間 — 大約南北緯 23.44 度。BeanMap 把這條「咖啡帶」直接畫在地球儀上，你也就看得出為什麼衣索比亞、哥倫比亞與印尼總是出現在咖啡豆袋上。",
+    "nextHeading": "接下來可以去哪裡",
+    "cards": {
+      "beans": {
+        "title": "咖啡豆目錄",
+        "body": "以網格或可排序表格瀏覽完整目錄，上方還有當季與精選系列。"
+      },
+      "flavors": {
+        "title": "風味輪",
+        "body": "以互動式旭日圖呈現的 SCA 風味輪。點選任一風味調，全站都會篩選成帶有該風味的咖啡豆。"
+      },
+      "insights": {
+        "title": "風土透視",
+        "body": "橫跨整個目錄的海拔與採收行事曆圖表，一眼看出現在正值哪些產地的產季。"
+      },
+      "learn": {
+        "title": "學堂",
+        "body": "{articles} 篇處理法與沖煮指南，附圖解與可以跟著沖的內建計時器。"
+      }
+    },
+    "aboutLink": "進一步了解這個專案"
   },
   "common": {
     "masl": "公尺",

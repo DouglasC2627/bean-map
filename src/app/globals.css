@@ -46,6 +46,16 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+  /* Red wine, for the delete affordance. Two tokens rather than one, and
+     themed rather than a flat hex like the palette colors above, because the
+     two roles pull in opposite directions in dark mode: a fill has to stay
+     deep enough to still read as wine, while an icon sitting directly on the
+     espresso background has to be light enough to clear 4.5:1. One value
+     cannot do both — it comes out either invisible or pink.
+       --wine         solid fill; always paired with `text-cream`
+       --wine-accent  text/icon on the page background */
+  --color-wine: var(--wine);
+  --color-wine-accent: var(--wine-accent);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -80,6 +90,10 @@
   --accent: #f0e8dc;
   --accent-foreground: #1a0f09;
   --destructive: #c1440e;
+  /* On cream, one deep claret serves both roles: 7.5:1 as text, and cream on
+     it is 8.9:1 as a fill. */
+  --wine: #8c2f3f;
+  --wine-accent: #8c2f3f;
   --border: #e6dbc9;
   --input: #e6dbc9;
   --ring: #6f4e37;
@@ -103,6 +117,12 @@
   --accent: #3b2314;
   --accent-foreground: #f0e8dc;
   --destructive: #e46a3e;
+  /* Lifted just off the claret so the button separates from the popover while
+     still reading as wine; cream on it is 6.1:1. */
+  --wine: #9c3548;
+  /* Lifted much further, because this one sits directly on the espresso
+     background as a 16px icon: 5.1:1. Deeper values disappear into the page. */
+  --wine-accent: #c9697c;
   --border: #3b2314;
   --input: #3b2314;
   --ring: #a67c52;

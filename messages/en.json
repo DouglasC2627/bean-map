@@ -98,6 +98,10 @@
     "deleteFailed": "Couldn't delete the note",
     "edit": "Edit note",
     "delete": "Delete note",
+    "confirmTitle": "Delete this note?",
+    "confirmBody": "This permanently deletes your brew note. It can't be undone.",
+    "confirmCta": "Delete",
+    "deleting": "Deleting…",
     "empty": "No notes for this bean yet.",
     "signInPrompt": "Sign in to keep private tasting notes for this bean.",
     "signInCta": "Sign in"
@@ -113,30 +117,30 @@
   },
   "metadata": {
     "home": {
-      "title": "BeanMap — Coffee origins, flavors & brewing",
-      "description": "An interactive world map of coffee beans, their origins, flavor profiles, and recommended brewing methods."
+      "title": "BeanMap — Interactive world map of coffee origins",
+      "description": "Spin a 3D globe through {beans} specialty coffee origins in {countries} countries. Click any marker for flavor profiles, altitude, processing, and brewing recipes."
     },
     "beans": {
-      "title": "All beans · BeanMap",
-      "description": "Browse every coffee bean profile in BeanMap."
+      "title": "All coffee beans — {beans} origin profiles · BeanMap",
+      "description": "Browse and filter all {beans} coffee origins by country, altitude, processing, roast, and flavor note — each profile has a flavor radar and brewing recipes."
     },
     "compare": {
       "title": "Compare beans · BeanMap",
-      "description": "Side-by-side comparison of coffee bean profiles.",
+      "description": "Put up to three coffee origins side by side: overlaid flavor radars, altitude and processing, and which brewing method suits each one best.",
       "titleWith": "BeanMap · Compare {names}",
       "descriptionWith": "Compare flavor profiles, origin, and brewing affinity for {names}."
     },
     "flavors": {
-      "title": "Flavor Wheel · BeanMap",
-      "description": "Explore coffee flavor categories, subcategories, and notes. Filter beans on the map by tapping any segment of the wheel."
+      "title": "Coffee flavor wheel · BeanMap",
+      "description": "The SCA flavor wheel as an interactive sunburst: {categories} categories and {notes} tasting notes. Click any segment to filter the map to beans that taste like it."
     },
     "insights": {
-      "title": "Insights · BeanMap",
-      "description": "Explore coffee origins by altitude, harvest season, and other dimensions."
+      "title": "Coffee origin insights · BeanMap",
+      "description": "Charts across the whole catalog: growing altitude by origin, and a harvest calendar showing which coffees are in season right now."
     },
     "learn": {
-      "title": "Learn · BeanMap",
-      "description": "Background reading on coffee processing methods and brewing techniques."
+      "title": "Learn coffee: processing & brewing guides · BeanMap",
+      "description": "{articles} illustrated guides — how washed, natural, honey, anaerobic, and wet-hulled processing change the cup, plus recipes for V60, Chemex, AeroPress, and more."
     },
     "favorites": {
       "title": "Favorites · BeanMap",
@@ -145,6 +149,10 @@
     "notes": {
       "title": "Brewing journal · BeanMap",
       "description": "Your personal coffee brewing notes."
+    },
+    "about": {
+      "title": "About BeanMap — what it is and how it works",
+      "description": "A free, open-source atlas of specialty coffee: {beans} origin profiles, an SCA flavor wheel, {methods} brewing methods. What's inside, and where the data comes from."
     }
   },
   "nav": {
@@ -159,7 +167,27 @@
     "search": "Search",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
-    "switchLanguage": "Switch language"
+    "switchLanguage": "Switch language",
+    "about": "About"
+  },
+  "footer": {
+    "tagline": "An interactive world map of specialty coffee — where every bean comes from, what it tastes like, and how to brew it.",
+    "exploreHeading": "Explore",
+    "learnHeading": "Learn",
+    "projectHeading": "Project",
+    "map": "World map",
+    "beans": "All beans",
+    "flavors": "Flavor wheel",
+    "insights": "Insights",
+    "compare": "Compare beans",
+    "learnIndex": "All guides",
+    "processing": "Processing methods",
+    "brewing": "Brewing guides",
+    "about": "About BeanMap",
+    "source": "Source on GitHub",
+    "license": "MIT license",
+    "note": "An independent, open-source project. BeanMap sells nothing and is not affiliated with any roaster.",
+    "copyright": "© {year} BeanMap"
   },
   "filters": {
     "toggle": "Toggle filters",
@@ -202,7 +230,7 @@
   },
   "beans": {
     "heading": "All beans",
-    "subtitle": "Browse, sort, and filter every bean profile.",
+    "subtitle": "Every origin in the catalog. Sort by name, altitude, or acidity, and filter by country, processing method, roast level, or flavor note.",
     "browseAll": "Browse all"
   },
   "beansBrowser": {
@@ -360,6 +388,89 @@
     "brewingLabel": "Brewing guide",
     "notFoundTitle": "Not found · BeanMap"
   },
+  "about": {
+    "heading": "About BeanMap",
+    "lead": "BeanMap is a free, open-source atlas of specialty coffee. It answers three questions about any bean — where on Earth it grew, what it tastes like, and how to brew it — starting from a spinnable globe rather than a list.",
+    "statsHeading": "What's inside",
+    "stats": {
+      "beans": "coffee origins",
+      "countries": "countries",
+      "methods": "brewing methods",
+      "notes": "SCA flavor notes",
+      "articles": "illustrated guides"
+    },
+    "whatHeading": "What you can do here",
+    "what": {
+      "map": {
+        "title": "Explore the world map",
+        "body": "Spin the globe, filter by region or flavor, and click any marker to fly to an origin and open its profile."
+      },
+      "beans": {
+        "title": "Browse every bean",
+        "body": "All {beans} origins as a grid or sortable table, plus seasonal and curated collections."
+      },
+      "flavors": {
+        "title": "Start from a flavor",
+        "body": "The SCA flavor wheel as an interactive sunburst — click a note and the whole app filters to beans that taste like it."
+      },
+      "insights": {
+        "title": "See the patterns",
+        "body": "Altitude and harvest-calendar charts across the catalog, filtered the same way as the map."
+      },
+      "compare": {
+        "title": "Compare side by side",
+        "body": "Overlay up to three flavor radars and see which brewing method each bean suits best."
+      },
+      "learn": {
+        "title": "Learn the craft",
+        "body": "{articles} guides on processing methods and brewing techniques, with diagrams and a live brew timer."
+      }
+    },
+    "dataHeading": "Where the data comes from",
+    "dataBody1": "Every origin profile is written by hand from published producer and importer information, cupping notes, and regional harvest data, then tagged against the SCA flavor lexicon. Coordinates mark the growing region, not a single farm — most of these origins are hundreds of smallholders rather than one estate.",
+    "dataBody2": "Flavor profiles are scored on six axes — acidity, body, sweetness, bitterness, complexity, and fruitiness — from 1 to 10. That is a deliberate simplification: it exists so origins can be compared at a glance, not to replace cupping. Two coffees with the same radar shape can still taste quite different in the cup.",
+    "dataBody3": "Brewing recipes are starting points — grind size, water temperature, ratio, and a pour schedule — with an affinity score for how well each method suits that bean. Your grinder, your water, and the roast date all move the target, which is exactly why there is a brewing journal for recording what actually worked.",
+    "openHeading": "Open source, no ads, nothing for sale",
+    "openBody": "BeanMap sells no coffee, runs no ads, and takes no affiliate commission. It is an independent side project, not a roaster or a retailer, and it is not affiliated with any of the farms, cooperatives, or brands it describes. Code and catalog are both MIT-licensed on GitHub, so corrections and new origins are very welcome as pull requests.",
+    "openCta": "View the source on GitHub",
+    "privacyHeading": "Accounts and privacy",
+    "privacyBody": "Everything here works signed out: the map, search, filters, comparison, brewing calculator, timer, and all the Learn articles are public and static. Signing in with Google or GitHub adds exactly two things — favorites that follow you between devices, and a private brewing journal only you can read.",
+    "faqHeading": "Frequently asked questions",
+    "faq": {
+      "what": {
+        "q": "What is BeanMap?",
+        "a": "BeanMap is a free, interactive world map of specialty coffee. It plots {beans} coffee origins from {countries} countries onto a 3D globe; clicking a marker opens that origin's flavor profile, altitude, processing method, harvest season, and recommended brewing recipes."
+      },
+      "free": {
+        "q": "Is BeanMap free to use?",
+        "a": "Yes. BeanMap is free and open source under the MIT license. There is no paywall, no advertising, no affiliate link, and no account required."
+      },
+      "data": {
+        "q": "Where does BeanMap's coffee data come from?",
+        "a": "Origin profiles are compiled by hand from published producer and importer information, cupping notes, and regional harvest data, then tagged against the SCA flavor lexicon ({categories} categories, {subcategories} subcategories, {notes} notes). Coordinates mark the growing region rather than an individual farm."
+      },
+      "buy": {
+        "q": "Can I buy coffee on BeanMap?",
+        "a": "No. BeanMap is a reference atlas, not a shop. It has no storefront and no commercial relationship with any roaster — use it to work out what you want, then buy it wherever you like."
+      },
+      "pick": {
+        "q": "How do I find a coffee I will enjoy?",
+        "a": "Start from a flavor you already like. Open the flavor wheel and click a note such as blackcurrant or jasmine, and the map filters down to origins that taste that way. You can also filter by altitude, processing method, and roast level, or compare up to three beans side by side."
+      },
+      "beanBelt": {
+        "q": "What is the Bean Belt?",
+        "a": "The Bean Belt is the band around the equator, between the Tropics of Cancer and Capricorn at roughly 23.44° north and south, where virtually all commercial coffee grows. BeanMap draws it directly on the globe so the pattern is visible at a glance."
+      },
+      "account": {
+        "q": "Do I need an account?",
+        "a": "No. The map, search, filters, comparison, brewing calculator, timer, and all {articles} Learn articles work signed out. An account only adds favorites that sync between devices and a private brewing journal."
+      },
+      "languages": {
+        "q": "What languages does BeanMap support?",
+        "a": "English and Traditional Chinese (繁體中文). Every page, every bean profile, and all {articles} Learn articles are fully translated, and the language switcher keeps your current filters, selection, and map position."
+      }
+    }
+  },
   "brew": {
     "best": "Best",
     "shareRecipe": "Share recipe",
@@ -468,6 +579,40 @@
     "loadingSubtitle": "Loading the interactive map…",
     "tokenMissingTitle": "Mapbox token missing",
     "tokenMissingBody": "Add <code>NEXT_PUBLIC_MAPBOX_TOKEN</code> to <code>.env.local</code> (see <code>.env.example</code>) and restart the dev server."
+  },
+  "home": {
+    "heading": "Explore coffee origins on an interactive world map",
+    "lead": "BeanMap plots {beans} specialty coffee origins from {countries} countries onto a spinnable globe. Click a marker to fly to the growing region, read its flavor profile as a six-axis radar, and get a brewing recipe tuned to that particular bean — grind, water temperature, ratio, and pour schedule.",
+    "statsHeading": "The catalog at a glance",
+    "stats": {
+      "beans": "coffee origins",
+      "countries": "countries",
+      "methods": "brewing methods",
+      "notes": "SCA flavor notes",
+      "articles": "illustrated guides"
+    },
+    "beanBeltHeading": "Why everything sits near the equator",
+    "beanBeltBody": "Arabica needs a narrow band of altitude, rainfall, and temperature that only really exists between the Tropics of Cancer and Capricorn — roughly 23.44° north and south. BeanMap draws that band, the Bean Belt, straight onto the globe, which is why Ethiopia, Colombia, and Indonesia keep turning up on your bag of beans.",
+    "nextHeading": "Where to go next",
+    "cards": {
+      "beans": {
+        "title": "All beans",
+        "body": "The full catalog as a grid or sortable table, with seasonal and curated collections up top."
+      },
+      "flavors": {
+        "title": "Flavor wheel",
+        "body": "The SCA wheel as an interactive sunburst. Click a note to filter the whole app to beans that taste like it."
+      },
+      "insights": {
+        "title": "Insights",
+        "body": "Altitude and harvest-calendar charts across the catalog, so you can see what is in season now."
+      },
+      "learn": {
+        "title": "Learn",
+        "body": "{articles} guides on processing and brewing, with diagrams and a built-in timer you can brew along to."
+      }
+    },
+    "aboutLink": "Read more about the project"
   },
   "common": {
     "masl": "masl",

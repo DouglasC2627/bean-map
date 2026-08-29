@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { useAuthDialog } from "@/store/auth-dialog";
 import type { BrewNote, MethodOption } from "@/lib/notes-types";
 import { BrewNoteForm } from "@/components/brewing/BrewNoteForm";
+import { DeleteNoteDialog } from "@/components/brewing/DeleteNoteDialog";
 
 interface Props {
   beanSlug: string;
@@ -26,9 +27,18 @@ export function BrewNotesSection({ beanSlug, methods }: Props) {
   const [notes, setNotes] = useState<BrewNote[]>([]);
   const [loading, setLoading] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<BrewNote | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const methodName = (id: string | null) =>
     id ? (methods.find((m) => m.id === id)?.name ?? id) : null;
+
+  const noteDate = (n: BrewNote) =>
+    n.brewedAt ?? new Date(n.createdAt).toLocaleDateString();
+
+  /** Identifies the note in the confirm dialog, in the row's own words. */
+  const noteSummary = (n: BrewNote) =>
+    [methodName(n.methodId), noteDate(n)].filter(Boolean).join(" · ");
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -85,16 +95,23 @@ export function BrewNotesSection({ beanSlug, methods }: Props) {
     setEditingId(null);
   };
 
-  const onDelete = async (id: string) => {
-    const prev = notes;
-    setNotes(notes.filter((n) => n.id !== id));
+  // Confirmed in DeleteNoteDialog first, so the row is removed on success
+  // rather than optimistically: the user has already waited for a dialog, and
+  // a row that vanishes and springs back on failure reads as a second bug.
+  const onConfirmDelete = async () => {
+    if (!pendingDelete) return;
+    const id = pendingDelete.id;
+    setDeleting(true);
     try {
       const res = await fetch(`/api/notes/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error(String(res.status));
+      setNotes((prev) => prev.filter((n) => n.id !== id));
       toast.success(t("deleted"));
     } catch {
-      setNotes(prev);
       toast.error(t("deleteFailed"));
+    } finally {
+      setDeleting(false);
+      setPendingDelete(null);
     }
   };
 
@@ -129,8 +146,7 @@ export function BrewNotesSection({ beanSlug, methods }: Props) {
                   <span className="font-medium">{methodName(n.methodId)}</span>
                 )}
                 <span className="text-xs text-muted-foreground">
-                  {n.brewedAt ??
-                    new Date(n.createdAt).toLocaleDateString()}
+                  {noteDate(n)}
                 </span>
                 {n.rating != null && (
                   <span className="flex items-center gap-0.5" aria-label={t("stars", { n: n.rating })}>
@@ -158,9 +174,9 @@ export function BrewNotesSection({ beanSlug, methods }: Props) {
                   </button>
                   <button
                     type="button"
-                    onClick={() => onDelete(n.id)}
+                    onClick={() => setPendingDelete(n)}
                     aria-label={t("delete")}
-                    className="rounded p-1 text-muted-foreground hover:text-cherry-red"
+                    className="rounded p-1 text-muted-foreground hover:text-wine-accent"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -178,6 +194,17 @@ export function BrewNotesSection({ beanSlug, methods }: Props) {
           </li>
         )}
       </ul>
+
+      <DeleteNoteDialog
+        note={
+          pendingDelete
+            ? { id: pendingDelete.id, summary: noteSummary(pendingDelete) }
+            : null
+        }
+        pending={deleting}
+        onCancel={() => setPendingDelete(null)}
+        onConfirm={onConfirmDelete}
+      />
     </section>
   );
 }

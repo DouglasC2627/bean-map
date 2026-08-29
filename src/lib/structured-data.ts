@@ -1,4 +1,5 @@
 import type { CoffeeBean } from "@/types";
+import { routing } from "@/i18n/routing";
 import { siteUrl } from "@/lib/site";
 import { localizedUrl } from "@/lib/seo";
 
@@ -17,19 +18,37 @@ import { localizedUrl } from "@/lib/seo";
 const ORGANIZATION_ID = `${siteUrl}/#organization`;
 const WEBSITE_ID = `${siteUrl}/#website`;
 
+export const SOURCE_REPO_URL = "https://github.com/DouglasC2627/bean-map";
+
 export function organizationSchema() {
   return {
     "@type": "Organization",
     "@id": ORGANIZATION_ID,
     name: "BeanMap",
+    alternateName: "Bean Map",
     url: siteUrl,
     logo: `${siteUrl}/logo.png`,
     description:
       "An interactive world map of coffee beans, their origins, flavor profiles, and recommended brewing methods.",
+    // The only public profile that actually belongs to the project. `sameAs`
+    // is how an engine (and an LLM summarizing the site) reconciles "BeanMap"
+    // the name with a verifiable entity elsewhere on the web.
+    sameAs: [SOURCE_REPO_URL],
   };
 }
 
-export function websiteSchema(locale: string) {
+/**
+ * The `Organization` + `WebSite` pair every page hangs off, plus the home
+ * page's own `WebPage`.
+ *
+ * `about` / `mainEntity` links the map page to the About page: the About page
+ * is where the prose describing BeanMap lives, and the map page is mostly a
+ * canvas, so this is what tells a crawler the two are one subject.
+ */
+export function websiteSchema(
+  locale: string,
+  home?: { name: string; description: string },
+) {
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -42,7 +61,93 @@ export function websiteSchema(locale: string) {
         inLanguage: locale,
         publisher: { "@id": ORGANIZATION_ID },
       },
+      ...(home
+        ? [
+            {
+              "@type": "WebPage",
+              "@id": `${localizedUrl(locale, "/")}#webpage`,
+              url: localizedUrl(locale, "/"),
+              name: home.name,
+              description: home.description,
+              inLanguage: locale,
+              isPartOf: { "@id": WEBSITE_ID },
+              about: { "@id": `${localizedUrl(locale, "/about")}#about` },
+              primaryImageOfPage: `${siteUrl}/logo.png`,
+            },
+          ]
+        : []),
     ],
+  };
+}
+
+/**
+ * The About page, modelled as an `AboutPage` whose `mainEntity` *is* the
+ * organization. That identity is the point: it gives "BeanMap" a single node
+ * carrying the description, the license, and the feature list, which is the
+ * shape an AI overview can quote from without inferring anything.
+ */
+export function aboutPageSchema({
+  locale,
+  name,
+  description,
+  features,
+}: {
+  locale: string;
+  name: string;
+  description: string;
+  features: string[];
+}) {
+  const url = localizedUrl(locale, "/about");
+  return {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "@id": `${url}#about`,
+    url,
+    name,
+    description,
+    inLanguage: locale,
+    isPartOf: { "@id": WEBSITE_ID },
+    mainEntity: {
+      "@type": "WebApplication",
+      name: "BeanMap",
+      url: localizedUrl(locale, "/"),
+      applicationCategory: "ReferenceApplication",
+      operatingSystem: "Any (web browser)",
+      browserRequirements: "Requires JavaScript and WebGL for the map view.",
+      description,
+      inLanguage: [...routing.locales],
+      license: "https://opensource.org/licenses/MIT",
+      isAccessibleForFree: true,
+      publisher: { "@id": ORGANIZATION_ID },
+      featureList: features,
+      // Explicit: BeanMap sells nothing. Without this a crawler seeing a
+      // catalog of coffee has every reason to guess it is a storefront.
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "USD",
+        availability: "https://schema.org/InStock",
+      },
+    },
+  };
+}
+
+export function faqSchema(
+  locale: string,
+  path: string,
+  items: Array<{ q: string; a: string }>,
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": `${localizedUrl(locale, path)}#faq`,
+    inLanguage: locale,
+    isPartOf: { "@id": WEBSITE_ID },
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
   };
 }
 

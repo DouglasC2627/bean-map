@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getBeans, getFlavorNotes } from "@/lib/data";
+import { getCatalogStats } from "@/lib/catalog-stats";
 import { FlavorsExplorer } from "./FlavorsExplorer";
 
 export async function generateMetadata({
@@ -11,11 +12,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "metadata.flavors" });
+  const stats = getCatalogStats();
   return pageMetadata({
     locale,
     path: "/explore/flavors",
-    title: t("title"),
-    description: t("description"),
+    title: t("title", stats),
+    description: t("description", stats),
   });
 }
 

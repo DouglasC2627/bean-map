@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { useAuthDialog } from "@/store/auth-dialog";
 import type { BrewNote, MethodOption } from "@/lib/notes-types";
 import { BrewNoteForm } from "./BrewNoteForm";
+import { DeleteNoteDialog } from "./DeleteNoteDialog";
 
 interface Props {
   beans: Array<{ slug: string; name: string }>;
@@ -25,11 +26,22 @@ export function NotesJournal({ beans, methods }: Props) {
   const [notes, setNotes] = useState<BrewNote[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<BrewNote | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const beanName = (slug: string) =>
     beans.find((b) => b.slug === slug)?.name ?? slug;
   const methodName = (id: string | null) =>
     id ? (methods.find((m) => m.id === id)?.name ?? id) : null;
+
+  const noteDate = (n: BrewNote) =>
+    n.brewedAt ?? new Date(n.createdAt).toLocaleDateString();
+
+  /** Identifies the note in the confirm dialog, in the row's own words. */
+  const noteSummary = (n: BrewNote) =>
+    [beanName(n.beanSlug), methodName(n.methodId), noteDate(n)]
+      .filter(Boolean)
+      .join(" · ");
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -101,95 +113,113 @@ export function NotesJournal({ beans, methods }: Props) {
     setEditingId(null);
   };
 
-  const onDelete = async (id: string) => {
-    const prev = notes;
-    setNotes(notes.filter((n) => n.id !== id));
+  // See BrewNotesSection: confirmed first, so the row goes on success only.
+  const onConfirmDelete = async () => {
+    if (!pendingDelete) return;
+    const id = pendingDelete.id;
+    setDeleting(true);
     try {
       const res = await fetch(`/api/notes/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error(String(res.status));
+      setNotes((prev) => prev.filter((n) => n.id !== id));
       toast.success(tn("deleted"));
     } catch {
-      setNotes(prev);
       toast.error(tn("deleteFailed"));
+    } finally {
+      setDeleting(false);
+      setPendingDelete(null);
     }
   };
 
   return (
-    <ul className="space-y-3">
-      {notes.map((n) =>
-        editingId === n.id ? (
-          <li key={n.id}>
-            <BrewNoteForm
-              beanSlug={n.beanSlug}
-              methods={methods}
-              initial={n}
-              onSaved={onSaved}
-              onCancel={() => setEditingId(null)}
-            />
-          </li>
-        ) : (
-          <li
-            key={n.id}
-            className="rounded-lg border border-border bg-surface/60 p-4"
-          >
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
-              <Link
-                href={`/bean/${n.beanSlug}`}
-                className="font-medium hover:text-roast-medium"
-              >
-                {beanName(n.beanSlug)}
-              </Link>
-              {methodName(n.methodId) && (
-                <span className="text-muted-foreground">
-                  {methodName(n.methodId)}
+    <>
+      <ul className="space-y-3">
+        {notes.map((n) =>
+          editingId === n.id ? (
+            <li key={n.id}>
+              <BrewNoteForm
+                beanSlug={n.beanSlug}
+                methods={methods}
+                initial={n}
+                onSaved={onSaved}
+                onCancel={() => setEditingId(null)}
+              />
+            </li>
+          ) : (
+            <li
+              key={n.id}
+              className="rounded-lg border border-border bg-surface/60 p-4"
+            >
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+                <Link
+                  href={`/bean/${n.beanSlug}`}
+                  className="font-medium hover:text-roast-medium"
+                >
+                  {beanName(n.beanSlug)}
+                </Link>
+                {methodName(n.methodId) && (
+                  <span className="text-muted-foreground">
+                    {methodName(n.methodId)}
+                  </span>
+                )}
+                <span className="text-xs text-muted-foreground">
+                  {noteDate(n)}
                 </span>
-              )}
-              <span className="text-xs text-muted-foreground">
-                {n.brewedAt ?? new Date(n.createdAt).toLocaleDateString()}
-              </span>
-              {n.rating != null && (
-                <span
-                  className="flex items-center gap-0.5"
-                  aria-label={tn("stars", { n: n.rating })}
-                >
-                  {Array.from({ length: 5 }, (_, i) => (
-                    <Star
-                      key={i}
-                      className={cn(
-                        "h-3.5 w-3.5",
-                        i < n.rating!
-                          ? "fill-roast-medium text-roast-medium"
-                          : "text-muted-foreground/30",
-                      )}
-                    />
-                  ))}
+                {n.rating != null && (
+                  <span
+                    className="flex items-center gap-0.5"
+                    aria-label={tn("stars", { n: n.rating })}
+                  >
+                    {Array.from({ length: 5 }, (_, i) => (
+                      <Star
+                        key={i}
+                        className={cn(
+                          "h-3.5 w-3.5",
+                          i < n.rating!
+                            ? "fill-roast-medium text-roast-medium"
+                            : "text-muted-foreground/30",
+                        )}
+                      />
+                    ))}
+                  </span>
+                )}
+                <span className="ml-auto flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => setEditingId(n.id)}
+                    aria-label={tn("edit")}
+                    className="rounded p-1 text-muted-foreground hover:text-roast-medium"
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPendingDelete(n)}
+                    aria-label={tn("delete")}
+                    className="rounded p-1 text-muted-foreground hover:text-wine-accent"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
                 </span>
+              </div>
+              {n.note && (
+                <p className="mt-2 text-sm whitespace-pre-wrap">{n.note}</p>
               )}
-              <span className="ml-auto flex items-center gap-1">
-                <button
-                  type="button"
-                  onClick={() => setEditingId(n.id)}
-                  aria-label={tn("edit")}
-                  className="rounded p-1 text-muted-foreground hover:text-roast-medium"
-                >
-                  <Pencil className="h-4 w-4" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => onDelete(n.id)}
-                  aria-label={tn("delete")}
-                  className="rounded p-1 text-muted-foreground hover:text-cherry-red"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </button>
-              </span>
-            </div>
-            {n.note && (
-              <p className="mt-2 text-sm whitespace-pre-wrap">{n.note}</p>
-            )}
-          </li>
-        ),
-      )}
-    </ul>
+            </li>
+          ),
+        )}
+      </ul>
+
+      <DeleteNoteDialog
+        note={
+          pendingDelete
+            ? { id: pendingDelete.id, summary: noteSummary(pendingDelete) }
+            : null
+        }
+        pending={deleting}
+        onCancel={() => setPendingDelete(null)}
+        onConfirm={onConfirmDelete}
+      />
+    </>
   );
 }

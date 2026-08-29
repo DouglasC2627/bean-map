@@ -11,6 +11,7 @@ import { BeanCollections } from "@/components/bean/BeanCollections";
 import { FilterPanel } from "@/components/filter/FilterPanel";
 import { ComparisonTray } from "@/components/compare/ComparisonTray";
 import { JsonLd } from "@/components/shared/JsonLd";
+import { getCatalogStats } from "@/lib/catalog-stats";
 import { beanListSchema, breadcrumbSchema } from "@/lib/structured-data";
 
 // Refresh at most daily so the "In season now" collection tracks the calendar.
@@ -23,11 +24,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "metadata.beans" });
+  const stats = getCatalogStats();
   return pageMetadata({
     locale,
     path: "/beans",
-    title: t("title"),
-    description: t("description"),
+    title: t("title", stats),
+    description: t("description", stats),
   });
 }
 
@@ -41,13 +43,19 @@ export default async function BeansPage({
   const t = await getTranslations({ locale, namespace: "beans" });
   const tNav = await getTranslations({ locale, namespace: "nav" });
   const tMeta = await getTranslations({ locale, namespace: "metadata.beans" });
+  const stats = getCatalogStats();
   const beans = getBeans(locale);
   const flavorNotes = getFlavorNotes(locale);
   const methods = getBrewingMethods(locale);
   return (
     <div className="mx-auto w-full max-w-screen-2xl px-4 py-6 pb-24">
       <JsonLd
-        data={beanListSchema(locale, beans, t("heading"), tMeta("description"))}
+        data={beanListSchema(
+          locale,
+          beans,
+          t("heading"),
+          tMeta("description", stats),
+        )}
       />
       <JsonLd
         data={breadcrumbSchema(locale, [

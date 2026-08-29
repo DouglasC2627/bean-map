@@ -105,6 +105,12 @@ export function TopNav() {
           >
             {t("learn")}
           </Link>
+          <Link
+            href="/about"
+            className="hidden rounded-md px-2 py-1 text-sm whitespace-nowrap hover:text-roast-medium xl:inline-block"
+          >
+            {t("about")}
+          </Link>
           <LocaleSwitcher />
           <ThemeToggle />
           <UserMenu />
@@ -171,6 +177,14 @@ export function TopNav() {
                 role="menuitem"
               >
                 {t("learn")}
+              </Link>
+              <Link
+                href="/about"
+                onClick={closeMenu}
+                className="block rounded-md px-3 py-2 text-sm hover:bg-parchment/60 dark:hover:bg-roast-dark/40"
+                role="menuitem"
+              >
+                {t("about")}
               </Link>
             </div>
           </div>

@@ -12,10 +12,15 @@ import { FlavorWheelOverlay } from "@/components/map/FlavorWheelOverlay";
 
 /**
  * Branded backdrop rendered *behind* the map and left permanently in the DOM.
- * Its large display heading paints at first-paint and stays put, so it becomes
- * a stable LCP element (~FCP) instead of LCP waiting several seconds for
- * Mapbox's own DOM. The opaque map covers it once loaded; it also gives the
- * otherwise-headingless map page a real <h1>.
+ * Its large display text paints at first-paint and stays put, so it becomes a
+ * stable LCP element (~FCP) instead of LCP waiting several seconds for
+ * Mapbox's own DOM. The opaque map covers it once loaded.
+ *
+ * Deliberately a <p>, not an <h1>: this is loading copy that a visitor sees
+ * for a second or two, and it used to be the map page's only heading — which
+ * made "Loading the interactive map…" the most descriptive text a crawler
+ * could find here. The page's real <h1> now lives in the intro section below
+ * the map (see app/[locale]/HomeIntro.tsx).
  */
 function MapBackdrop() {
   const t = useTranslations("map");
@@ -23,9 +28,9 @@ function MapBackdrop() {
     <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center overflow-hidden bg-parchment dark:bg-roast-dark">
       <div aria-hidden className="skeleton absolute inset-0" />
       <div className="relative flex max-w-xl flex-col items-center gap-3 px-6 text-center">
-        <h1 className="font-display text-4xl leading-tight text-roast-dark sm:text-5xl dark:text-cream">
+        <p className="font-display text-4xl leading-tight text-roast-dark sm:text-5xl dark:text-cream">
           {t("loadingTitle")}
-        </h1>
+        </p>
         <p className="text-sm text-muted-foreground">{t("loadingSubtitle")}</p>
       </div>
     </div>
@@ -47,17 +52,33 @@ interface Props {
 
 export function MapView({ beans, methods, flavorNotes }: Props) {
   return (
-    <div className="relative flex flex-1 flex-col overflow-x-clip">
+    <div className="relative flex flex-col overflow-x-clip">
       <Suspense fallback={null}>
         <UrlStateSync beans={beans} />
       </Suspense>
-      {/* Persistent LCP anchor behind the map (see MapBackdrop). */}
-      <div className="relative flex min-h-[70vh] flex-1 flex-col">
+      {/*
+        An explicit height rather than `flex-1`, because the home page now has
+        content below the map (HomeIntro + the site footer) and the map must
+        still fill the first screen exactly. `svh` is the viewport with mobile
+        browser chrome *expanded*, so nothing is cut off on first load — and
+        the few pixels of the intro that peek through hint that there is more
+        to scroll to. 3.5rem is the sticky TopNav.
+
+        This element is also the positioning context for the two map controls
+        below, which are `absolute` so they scroll away with the map instead of
+        floating over the copy underneath it.
+      */}
+      <div className="relative flex h-[calc(100svh-3.5rem)] min-h-104 flex-col">
+        {/* Persistent LCP anchor behind the map (see MapBackdrop). */}
         <MapBackdrop />
         <CoffeeMap beans={beans} flavorNotes={flavorNotes} />
+        <FilterPanel
+          beans={beans}
+          flavorNotes={flavorNotes}
+          triggerClassName="absolute left-3 top-4"
+        />
+        <FlavorWheelOverlay beans={beans} flavorNotes={flavorNotes} />
       </div>
-      <FilterPanel beans={beans} flavorNotes={flavorNotes} />
-      <FlavorWheelOverlay beans={beans} flavorNotes={flavorNotes} />
       <BeanPanel beans={beans} methods={methods} flavorNotes={flavorNotes} />
       <ComparisonTray
         beans={beans}
