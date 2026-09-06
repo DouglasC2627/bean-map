@@ -2,6 +2,9 @@ import { getTranslations } from "next-intl/server";
 import { ArrowRight, BookOpen, Flower2, Grid3x3, LineChart } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { getCatalogStats } from "@/lib/catalog-stats";
+import { getBeans } from "@/lib/data";
+import { ORIGIN_REGIONS } from "@/lib/origins";
+import { countryFlagEmoji } from "@/lib/utils";
 
 /**
  * The prose half of the map home page, rendered below the fold.
@@ -24,9 +27,34 @@ const CARDS = [
   { key: "learn", href: "/learn", Icon: BookOpen },
 ] as const;
 
+/**
+ * Every producing country in the catalog, grouped by region, with its bean
+ * count — built from the localized records so the names render in the reader's
+ * language.
+ */
+function originsByRegion(locale: string) {
+  const beans = getBeans(locale);
+
+  const counts = new Map<string, { name: string; count: number }>();
+  for (const bean of beans) {
+    const entry = counts.get(bean.countryCode);
+    if (entry) entry.count += 1;
+    else counts.set(bean.countryCode, { name: bean.country, count: 1 });
+  }
+
+  return ORIGIN_REGIONS.map((region) => ({
+    key: region.key,
+    countries: region.countries
+      .filter((code) => counts.has(code))
+      .map((code) => ({ code, ...counts.get(code)! })),
+  })).filter((region) => region.countries.length > 0);
+}
+
 export async function HomeIntro({ locale }: { locale: string }) {
   const t = await getTranslations({ locale, namespace: "home" });
+  const tFilters = await getTranslations({ locale, namespace: "filters" });
   const stats = getCatalogStats();
+  const origins = originsByRegion(locale);
 
   const statItems = [
     { value: stats.beans, label: t("stats.beans") },
@@ -88,6 +116,51 @@ export async function HomeIntro({ locale }: { locale: string }) {
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
           {t("beanBeltBody")}
         </p>
+      </section>
+
+      {/* Links carry `?region=<cc>`, which the map hydrates from the URL on
+          load.*/}
+      <section aria-labelledby="home-origins" className="mt-12">
+        <h2 id="home-origins" className="font-display text-2xl leading-tight">
+          {t("originsHeading")}
+        </h2>
+        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+          {t("originsBody", stats)}
+        </p>
+        <div className="mt-5 space-y-5">
+          {origins.map((region) => (
+            <section key={region.key} aria-labelledby={`origins-${region.key}`}>
+              <h3
+                id={`origins-${region.key}`}
+                className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground"
+              >
+                {tFilters(`regions.${region.key}`)}
+              </h3>
+              <ul className="flex flex-wrap gap-2">
+                {region.countries.map((country) => (
+                  <li key={country.code}>
+                    <Link
+                      href={{ pathname: "/", query: { region: country.code } }}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface/60 px-3 py-1.5 text-sm transition hover:border-roast-medium"
+                    >
+                      <span aria-hidden className="flag">
+                        {countryFlagEmoji(country.code)}
+                      </span>
+                      {country.name}
+                      <span className="text-xs text-muted-foreground">
+                        {country.count}
+                        {/* Reuses the stat-tile unit ("coffee origins" /
+                            "個咖啡產地") so the bare number isn't read out as
+                            part of the country name. */}
+                        <span className="sr-only"> {t("stats.beans")}</span>
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
       </section>
 
       <section aria-labelledby="home-next" className="mt-12">

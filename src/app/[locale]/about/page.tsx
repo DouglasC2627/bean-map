@@ -38,12 +38,13 @@ import {
 const FAQ_KEYS = [
   "what",
   "free",
+  "origins",
   "data",
   "buy",
   "pick",
+  "flavorWheel",
   "beanBelt",
   "account",
-  "languages",
 ] as const;
 
 const WHAT_CARDS = [

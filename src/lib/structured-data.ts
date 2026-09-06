@@ -20,12 +20,22 @@ const WEBSITE_ID = `${siteUrl}/#website`;
 
 export const SOURCE_REPO_URL = "https://github.com/DouglasC2627/bean-map";
 
+/**
+ * The names this project is actually known by, in both languages it publishes.
+ */
+const ALTERNATE_NAMES = [
+  "Bean Map",
+  "咖啡地圖",
+  "咖啡豆地圖",
+  "咖啡產地地圖",
+];
+
 export function organizationSchema() {
   return {
     "@type": "Organization",
     "@id": ORGANIZATION_ID,
     name: "BeanMap",
-    alternateName: "Bean Map",
+    alternateName: ALTERNATE_NAMES,
     url: siteUrl,
     logo: `${siteUrl}/logo.png`,
     description:
@@ -57,6 +67,7 @@ export function websiteSchema(
         "@type": "WebSite",
         "@id": WEBSITE_ID,
         name: "BeanMap",
+        alternateName: ALTERNATE_NAMES,
         url: localizedUrl(locale, "/"),
         inLanguage: locale,
         publisher: { "@id": ORGANIZATION_ID },

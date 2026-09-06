@@ -20,21 +20,46 @@ export function localizedUrl(locale: string, path: string): string {
 }
 
 /**
+ * Extra `hreflang` values that alias a locale we actually publish.
+ */
+const localeAliases: Record<string, readonly string[]> = {
+  "zh-TW": ["zh", "zh-Hant", "zh-Hant-TW", "zh-HK", "zh-MO"],
+};
+
+/**
+ * The full `hreflang` → href map for one path: every published locale, every
+ * alias tag above, and `x-default`.
+ *
+ * `toHref` decides whether the values come out root-relative (page metadata,
+ * where Next resolves them against `metadataBase`) or absolute (the sitemap,
+ * which has no such base).
+ */
+export function hreflangLanguages(
+  path: string,
+  toHref: (locale: string, path: string) => string = localizedPath,
+): Record<string, string> {
+  const languages: Record<string, string> = {};
+  for (const l of routing.locales) {
+    const href = toHref(l, path);
+    languages[l] = href;
+    for (const alias of localeAliases[l] ?? []) {
+      languages[alias] = href;
+    }
+  }
+  languages["x-default"] = toHref(routing.defaultLocale, path);
+  return languages;
+}
+
+/**
  * Canonical URL for the current locale plus the full `hreflang` set.
  *
  * `x-default` points at the default locale so engines have a language-neutral
  * entry point for users whose language we don't publish.
  */
 export function alternates(locale: string, path: string): Metadata["alternates"] {
-  const languages: Record<string, string> = {};
-  for (const l of routing.locales) {
-    languages[l] = localizedPath(l, path);
-  }
-  languages["x-default"] = localizedPath(routing.defaultLocale, path);
-
   return {
     canonical: localizedPath(locale, path),
-    languages,
+    languages: hreflangLanguages(path),
   };
 }
 

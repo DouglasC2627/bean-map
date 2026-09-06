@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
 import { getBeans } from "@/lib/data";
 import { getArticleSlugs } from "@/lib/mdx";
-import { localizedUrl } from "@/lib/seo";
+import { hreflangLanguages, localizedUrl } from "@/lib/seo";
 
 /**
  * Sitemap for every indexable route, in every locale.
@@ -64,15 +64,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified,
       changeFrequency: route.changeFrequency,
       priority: route.priority,
-      alternates: {
-        languages: {
-          ...Object.fromEntries(
-            routing.locales.map((l) => [l, localizedUrl(l, route.path)]),
-          ),
-          // Mirrors the x-default hreflang in the page <head>.
-          "x-default": localizedUrl(routing.defaultLocale, route.path),
-        },
-      },
+      // Same tag set as the <head> hreflang block (aliases and x-default
+      // included) — the two have to agree or Google discards the pairing.
+      alternates: { languages: hreflangLanguages(route.path, localizedUrl) },
     })),
   );
 }

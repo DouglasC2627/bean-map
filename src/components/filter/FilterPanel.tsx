@@ -14,18 +14,8 @@ import { useBeanMap, filterBeans } from "@/store";
 import { useShallow } from "zustand/react/shallow";
 import { Slider } from "@/components/ui/slider";
 import { cn, countryFlagEmoji } from "@/lib/utils";
+import { ORIGIN_REGIONS } from "@/lib/origins";
 import { FlavorSliders } from "./FlavorSliders";
-
-const CONTINENTS: Array<{ key: string; countries: string[] }> = [
-  { key: "africa", countries: ["ET", "KE", "RW", "TZ", "BI", "UG"] },
-  {
-    key: "central-america",
-    countries: ["GT", "CR", "PA", "HN", "NI", "SV", "MX"],
-  },
-  { key: "south-america", countries: ["CO", "BR", "PE", "BO"] },
-  { key: "asia-pacific", countries: ["ID", "YE", "IN", "PG"] },
-  { key: "islands", countries: ["JM", "US"] },
-];
 
 const PROCESSINGS: ProcessingMethod[] = [
   "washed",
@@ -119,7 +109,7 @@ export function FilterPanel({ beans, flavorNotes, triggerClassName }: Props) {
   // Group countries present in the dataset
   const availableByContinent = useMemo(() => {
     const present = new Set(beans.map((b) => b.countryCode));
-    return CONTINENTS.map((c) => ({
+    return ORIGIN_REGIONS.map((c) => ({
       ...c,
       countries: c.countries.filter((cc) => present.has(cc)),
     })).filter((c) => c.countries.length > 0);

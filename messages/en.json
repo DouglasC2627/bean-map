@@ -465,9 +465,13 @@
         "q": "Do I need an account?",
         "a": "No. The map, search, filters, comparison, brewing calculator, timer, and all {articles} Learn articles work signed out. An account only adds favorites that sync between devices and a private brewing journal."
       },
-      "languages": {
-        "q": "What languages does BeanMap support?",
-        "a": "English and Traditional Chinese (繁體中文). Every page, every bean profile, and all {articles} Learn articles are fully translated, and the language switcher keeps your current filters, selection, and map position."
+      "origins": {
+        "q": "Which countries grow the coffee on BeanMap?",
+        "a": "{countries} of them. East African origins — Ethiopia, Kenya, Rwanda — lean floral with bright acidity; Latin American ones such as Colombia, Guatemala, Costa Rica, and Brazil sit in balanced caramel-and-cocoa territory; Asian origins like Indonesia, Vietnam, and India tend to be heavy-bodied and low in acid. The home page lists every producing country, and each one opens that country's beans on the map."
+      },
+      "flavorWheel": {
+        "q": "How do I read the coffee flavor wheel?",
+        "a": "The SCA wheel runs from {categories} broad families at the center — fruity, floral, nutty/cocoa — outward to {notes} specific tasting notes. Read it inside-out: name the family first, then move outward for the closest description. Click any segment on BeanMap and the map filters to the origins that taste like it."
       }
     }
   },
@@ -612,7 +616,9 @@
         "body": "{articles} guides on processing and brewing, with diagrams and a built-in timer you can brew along to."
       }
     },
-    "aboutLink": "Read more about the project"
+    "aboutLink": "Read more about the project",
+    "originsHeading": "Coffee origins by country",
+    "originsBody": "The catalog spans {countries} coffee-growing countries. Pick one to see its growing regions, flavor signatures, and brewing notes on the map."
   },
   "common": {
     "masl": "masl",

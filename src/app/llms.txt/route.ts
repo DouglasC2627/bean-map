@@ -10,15 +10,7 @@ import { SOURCE_REPO_URL } from "@/lib/structured-data";
  * `/llms.txt` — the emerging convention for handing an LLM a compact, curated
  * map of a site instead of making it infer one from rendered HTML.
  *
- * This matters more here than on most sites: the pages a model would most want
- * to read (the map, the flavor wheel, the insights charts) are canvases and
- * SVGs whose content only exists after JavaScript runs. This file states in
- * plain text what lives where, so an assistant answering "what is BeanMap?" or
- * "where does Ethiopian Yirgacheffe grow?" has something to cite.
- *
- * English only, by design: it's a routing aid, and every URL here has its
- * `hreflang` alternates declared on the page itself.
- *
+
  * The i18n proxy skips any path containing a dot, so this is served as-is at
  * the origin root rather than being redirected to /en/llms.txt.
  */
@@ -119,6 +111,41 @@ export function GET(): Response {
         localizedUrl(locale, `/learn/brewing/${article.slug}`),
         article.frontmatter.summary ?? article.frontmatter.description,
       ),
+    ),
+    "",
+
+    "## 繁體中文 (Traditional Chinese)",
+    "",
+    `> BeanMap（咖啡地圖）是一張免費、開放原始碼的互動式世界咖啡地圖，` +
+      `收錄 ${stats.countries} 個國家、${stats.beans} 個精品咖啡產地。` +
+      `每個咖啡產區都有六軸風味輪廓、SCA 風味調標註、海拔、處理法、採收季節，` +
+      `以及 ${stats.methods} 種沖煮方式的手沖配方。BeanMap 不販售咖啡、沒有廣告，` +
+      `也與任何烘豆商無隸屬關係。`,
+    "",
+    line(
+      "咖啡世界地圖（首頁）",
+      localizedUrl("zh-TW", "/"),
+      "互動式地球儀，含咖啡帶圖層，可依產區、處理法、烘焙度、海拔與風味調篩選，下方並列出全部咖啡產國",
+    ),
+    line(
+      "咖啡豆目錄",
+      localizedUrl("zh-TW", "/beans"),
+      `全部 ${stats.beans} 個咖啡產地的完整清單，可排序、可篩選`,
+    ),
+    line(
+      "咖啡風味輪",
+      localizedUrl("zh-TW", "/explore/flavors"),
+      `互動式 SCA 風味輪：${stats.categories} 個類別、${stats.notes} 種風味調`,
+    ),
+    line(
+      "咖啡學堂",
+      localizedUrl("zh-TW", "/learn"),
+      `${stats.articles} 篇處理法與手沖沖煮圖解指南`,
+    ),
+    line(
+      "關於 BeanMap",
+      localizedUrl("zh-TW", "/about"),
+      "網站介紹、資料來源、風味評分方式與常見問題",
     ),
     "",
     "## Optional",
