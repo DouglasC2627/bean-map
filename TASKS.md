@@ -710,6 +710,61 @@ visualizations are inline SVG. Audited rather than implemented:
 - [ ] Submit sitemap to Google Search Console
 - [ ] Create launch announcement / social media posts
 
+### 5.13 Onboarding
+The home page *is* the map: a WebGL canvas with no visible affordances. Three
+things were undiscoverable — the flavor wheel (its only launcher on the map is
+a button *inside* the filter panel), the zoom model (there is no
+`NavigationControl`; zoom is scroll/pinch or click-a-cluster), and that ⌘K
+indexes flavor notes, not just names.
+- [x] Guided tour that **drives the real UI** rather than illustrating it —
+      each step calls the existing store actions (`requestFlyTo`,
+      `requestFitBounds`, `selectBean`, `setFilterPanelOpen`,
+      `setFlavorWheelOpen`), so the app performs what the card describes.
+      Deliberately no screenshots, GIFs or video: assets would need 4 variants
+      each (light/dark x en/zh-TW), would rot on the next bean or restyle, and
+      would add weight to the heaviest route. Copy lives in the message
+      catalogs and is covered by the existing key-parity gate.
+- [x] Six steps on desktop (welcome, globe, origin, filters, flavor wheel,
+      ⌘K), four on mobile — the gesture copy folds into the origin step and
+      the ⌘K step is dropped. One step table, subset by breakpoint.
+- [x] Hand-rolled spotlight: a transparent box over the anchored control with
+      `box-shadow: 0 0 0 9999px`, so the control stays lit while everything
+      else dims. No SVG mask, no clip-path, no tour library, no new dependency
+      (`driver.js` / `react-joyride` / `shepherd` all ship their own DOM and
+      none can drive the Mapbox camera). CSS keyframes, not Framer — see 5.2.
+- [x] `data-tour` anchors on the filter pill/panel, flavor-wheel button and
+      overlay, bean panel (both the desktop aside and the mobile sheet), and
+      both search buttons. Nothing in the app had a stable selector before;
+      these double as fixtures for 5.10.
+- [x] First visit only, recorded in `localStorage` under `beanmap.onboarding`
+      with a `version` so a future change can re-trigger. Waits for the map's
+      `load` (lifted to the store as `isMapLoaded`) so it never covers the
+      `MapBackdrop` LCP anchor. Suppressed when the URL carries state —
+      `?bean=`, `?region=` and friends are shared links and `HomeIntro`'s
+      country chips, whose visitor already has intent.
+- [x] Replay from anywhere via a "How it works" link in `SiteFooter` →
+      `/?tour=1`. A plain link, so the footer stays a zero-JS server component.
+- [x] Snapshot/restore on exit rather than `resetFilters()` — a replaying
+      visitor may already have filters set, and wiping them would destroy
+      their work. Filters, selection, camera and panel state all go back.
+- [x] Keyboard + a11y: `role="dialog"`, focus moved to the card each step and
+      trapped, focus returned on exit, `Esc` skips, arrows navigate,
+      `aria-live` step counter.
+- [x] **Fixed alongside:** every `flyTo`/`fitBounds` in `CoffeeMap` hard-coded
+      `duration: 900`/`600` with no `prefers-reduced-motion` handling. The
+      global CSS kill switch cannot reach Mapbox, which animates on its own
+      timer, so those camera flights ignored the setting entirely. Durations
+      are now gated to `0` under reduced motion.
+- [x] Bundle: +483 bytes gzipped on `/en` initial JS (369,945 → 370,428). The
+      tour itself is a 2.9KB lazy chunk that `/en` does not reference.
+      `hasUrlState` lives in the gate rather than beside the step table
+      specifically to keep that split — importing from `onboarding-steps.ts`
+      dragged the whole step table into the initial bundle.
+- [ ] Fold the tour steps into the Playwright suite once 5.10 sets it up (the
+      throwaway script covered 37 checks: auto-start, all six steps driving
+      the app, restore-on-exit, the seen flag, deep-link suppression, replay,
+      zh-TW, dark mode, mobile subset, reduced motion, keyboard).
+
 ### Phase 5 Verification
 - [ ] Lighthouse scores: Performance 90+, Accessibility 95+, Best Practices 95+, SEO 95+
 - [ ] Core Web Vitals pass in Vercel Analytics

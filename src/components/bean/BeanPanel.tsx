@@ -129,6 +129,7 @@ export function BeanPanel({ beans, methods, flavorNotes }: Props) {
             <motion.aside
               key="bean-panel"
               ref={asideRef}
+              data-tour="bean-panel"
               aria-label={
                 bean ? t("profileOf", { name: bean.name }) : t("beanProfile")
               }
@@ -153,6 +154,7 @@ export function BeanPanel({ beans, methods, flavorNotes }: Props) {
         snapPoints={[0.3, 0.6, 0.92]}
         initialSnap={1}
         scrollRef={sheetScrollRef}
+        dataTour="bean-panel"
         label={bean ? t("profileOf", { name: bean.name }) : t("beanProfile")}
       >
         {renderContent(sheetScrollRef)}

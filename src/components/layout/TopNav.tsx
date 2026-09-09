@@ -54,6 +54,7 @@ export function TopNav() {
         <div className="flex items-center justify-self-center">
           <button
             type="button"
+            data-tour="search"
             onClick={() => setOpen(true)}
             className="hidden items-center gap-2 rounded-md border border-border bg-surface/60 px-3 py-1.5 text-sm text-muted-foreground hover:border-roast-medium md:inline-flex"
             aria-label={t("searchBeans")}
@@ -66,6 +67,7 @@ export function TopNav() {
           </button>
           <button
             type="button"
+            data-tour="search"
             onClick={() => setOpen(true)}
             aria-label={t("search")}
             className="rounded-md p-1.5 text-muted-foreground hover:text-foreground md:hidden"

@@ -183,6 +183,7 @@
     "learnIndex": "All guides",
     "processing": "Processing methods",
     "brewing": "Brewing guides",
+    "howItWorks": "How it works",
     "about": "About BeanMap",
     "source": "Source on GitHub",
     "license": "MIT license",
@@ -630,5 +631,40 @@
     "toggleTheme": "Toggle theme",
     "dragToResize": "Drag to resize",
     "bottomSheet": "Bottom sheet"
+  },
+  "onboarding": {
+    "progress": "{current} of {total}",
+    "start": "Take the tour",
+    "next": "Next",
+    "back": "Back",
+    "skip": "Skip",
+    "done": "Done",
+    "steps": {
+      "welcome": {
+        "title": "Welcome to BeanMap",
+        "body": "{beans} coffee origins from {countries} countries, each with a flavor profile and brewing recommendations. Here is the one-minute version of how it all works."
+      },
+      "globe": {
+        "title": "Start with the globe",
+        "body": "Drag to spin it, scroll to zoom, and click a cluster to open the origins inside. The dashed band across the tropics is the Bean Belt — almost all coffee grows within it."
+      },
+      "origin": {
+        "title": "Open an origin",
+        "body": "Clicking a marker flies here and opens the profile: a six-axis flavor radar, tasting notes, brewing recommendations ranked by how well they suit the bean, and similar origins from elsewhere.",
+        "bodyMobile": "Tap any dot to fly there and open its profile — flavor radar, tasting notes and brewing recommendations. Pinch to zoom, drag to spin, and tap a cluster to open the origins inside. Drag the sheet upward for the full profile."
+      },
+      "filters": {
+        "title": "Narrow the map",
+        "body": "Filter by region, altitude, processing method, roast and flavor strength. Origins that stop matching fade instead of vanishing, so you keep your bearings — and the counter tells you how many are left."
+      },
+      "flavorWheel": {
+        "title": "Or start from taste",
+        "body": "The flavor wheel opens from the filters. Click any segment — a whole family like fruity, or a single note like blackcurrant — and the map narrows to origins that taste that way."
+      },
+      "search": {
+        "title": "Search by flavor, not just name",
+        "body": "Press ⌘K to search origins, countries and tasting notes — searching blackcurrant finds the Kenyans. Every view you build is kept in the URL, so you can bookmark or share it."
+      }
+    }
   }
 }

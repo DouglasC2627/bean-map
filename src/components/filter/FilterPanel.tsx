@@ -136,6 +136,7 @@ export function FilterPanel({ beans, flavorNotes, triggerClassName }: Props) {
       {/* Toggle button (always visible on the map) */}
       <button
         type="button"
+        data-tour="filters-trigger"
         onClick={() => setFilterPanelOpen(!isFilterPanelOpen)}
         aria-label={t("toggle")}
         aria-expanded={isFilterPanelOpen}
@@ -167,6 +168,7 @@ export function FilterPanel({ beans, flavorNotes, triggerClassName }: Props) {
       />
 
       <aside
+        data-tour="filters-panel"
         aria-label={t("title")}
         aria-hidden={!isFilterPanelOpen}
         className={cn(
@@ -320,6 +322,7 @@ export function FilterPanel({ beans, flavorNotes, triggerClassName }: Props) {
         <Section title={t("flavorNotes")}>
           <button
             type="button"
+            data-tour="flavor-wheel-button"
             onClick={() => setFlavorWheelOpen(!isFlavorWheelOpen)}
             aria-pressed={isFlavorWheelOpen}
             className={cn(

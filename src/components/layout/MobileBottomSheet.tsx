@@ -25,6 +25,8 @@ type MobileBottomSheetProps = {
   className?: string;
   /** Forwarded to the sheet's scrollable content area (e.g. for parallax). */
   scrollRef?: React.Ref<HTMLDivElement>;
+  /** Optional `data-tour` anchor, so the onboarding tour can spotlight it. */
+  dataTour?: string;
   children: ReactNode;
 };
 
@@ -50,6 +52,7 @@ export function MobileBottomSheet({
   label,
   className,
   scrollRef,
+  dataTour,
   children,
 }: MobileBottomSheetProps) {
   const t = useTranslations("common");
@@ -210,6 +213,7 @@ export function MobileBottomSheet({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
+        data-tour={dataTour}
         className={cn(
           "fixed bottom-0 left-0 right-0 z-30 flex flex-col rounded-t-2xl border-t border-border bg-background/95 shadow-2xl backdrop-blur-sm",
           className,

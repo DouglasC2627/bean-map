@@ -24,6 +24,7 @@ import { useTheme } from "next-themes";
 import { useTranslations } from "next-intl";
 import type { CoffeeBean, FlavorNotesData } from "@/types";
 import { useBeanMap, filterBeans } from "@/store";
+import { usePrefersReducedMotion } from "@/lib/use-media-query";
 import { RegionHighlight } from "./RegionHighlight";
 import { BeanBelt } from "./BeanBelt";
 
@@ -147,6 +148,7 @@ export function CoffeeMap({ beans, flavorNotes }: Props) {
     setHoveredRegion,
     fitBoundsRequestId,
     flyToRequest,
+    setMapLoaded: publishMapLoaded,
   } = useBeanMap(
     useShallow((s) => ({
       setViewport: s.setViewport,
@@ -155,8 +157,23 @@ export function CoffeeMap({ beans, flavorNotes }: Props) {
       setHoveredRegion: s.setHoveredRegion,
       fitBoundsRequestId: s.fitBoundsRequestId,
       flyToRequest: s.flyToRequest,
+      setMapLoaded: s.setMapLoaded,
     })),
   );
+
+  // Camera flights are the map's own animation, so the global CSS
+  // `prefers-reduced-motion` kill switch in globals.css cannot reach them —
+  // Mapbox animates on its own timer, not with CSS transitions.
+  const reduceMotion = usePrefersReducedMotion();
+  const flightMs = reduceMotion ? 0 : 900;
+  const zoomMs = reduceMotion ? 0 : 600;
+
+  // Mirror load state into the store so things outside the map (the
+  // onboarding tour) can wait for it, and clear it on unmount.
+  useEffect(() => {
+    publishMapLoaded(mapLoaded);
+    return () => publishMapLoaded(false);
+  }, [mapLoaded, publishMapLoaded]);
 
   // Read once for the initial camera; deliberately not subscribed (see above).
   const initialViewport = useRef(useBeanMap.getState().viewport).current;
@@ -189,9 +206,9 @@ export function CoffeeMap({ beans, flavorNotes }: Props) {
     mapRef.current?.flyTo({
       center: flyToRequest.coords,
       zoom: flyToRequest.zoom,
-      duration: 900,
+      duration: flightMs,
     });
-  }, [flyToRequest, mapLoaded]);
+  }, [flyToRequest, mapLoaded, flightMs]);
 
   // Fit map to filtered results when a fit-bounds request is dispatched.
   useEffect(() => {
@@ -204,7 +221,7 @@ export function CoffeeMap({ beans, flavorNotes }: Props) {
       map.flyTo({
         center: targets[0].coordinates,
         zoom: 5,
-        duration: 900,
+        duration: flightMs,
       });
       return;
     }
@@ -225,9 +242,9 @@ export function CoffeeMap({ beans, flavorNotes }: Props) {
         [minLng, minLat],
         [maxLng, maxLat],
       ],
-      { padding: 80, duration: 900, maxZoom: 6 },
+      { padding: 80, duration: flightMs, maxZoom: 6 },
     );
-  }, [fitBoundsRequestId, mapLoaded]);
+  }, [fitBoundsRequestId, mapLoaded, flightMs]);
 
   const geojson = useMemo(
     () => ({
@@ -294,7 +311,7 @@ export function CoffeeMap({ beans, flavorNotes }: Props) {
               mapRef.current?.flyTo({
                 center: points[0],
                 zoom: 7,
-                duration: 600,
+                duration: zoomMs,
               });
               return;
             }
@@ -314,7 +331,7 @@ export function CoffeeMap({ beans, flavorNotes }: Props) {
                 [minLng, minLat],
                 [maxLng, maxLat],
               ],
-              { padding: 80, duration: 600, maxZoom: 7 },
+              { padding: 80, duration: zoomMs, maxZoom: 7 },
             );
           },
         );
@@ -322,11 +339,11 @@ export function CoffeeMap({ beans, flavorNotes }: Props) {
       }
 
       if (props?.id) {
-        mapRef.current?.flyTo({ center: coords, zoom: 5, duration: 900 });
+        mapRef.current?.flyTo({ center: coords, zoom: 5, duration: flightMs });
         selectBean(props.id);
       }
     },
-    [selectBean],
+    [selectBean, flightMs, zoomMs],
   );
 
   if (!token) {

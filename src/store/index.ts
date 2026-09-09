@@ -81,6 +81,17 @@ export interface BeanMapState {
   isFlavorWheelOpen: boolean;
   setFlavorWheelOpen: (open: boolean) => void;
 
+  /**
+   * True once Mapbox has fired `load` and the sources/layers are mounted.
+   * Lifted out of `CoffeeMap`'s local state so anything outside the map can
+   * wait for it — the onboarding tour must not spotlight controls while the
+   * `MapBackdrop` loading anchor is still showing. Stays false forever when
+   * `NEXT_PUBLIC_MAPBOX_TOKEN` is unset, since `CoffeeMap` renders the
+   * token-missing card instead of a map.
+   */
+  isMapLoaded: boolean;
+  setMapLoaded: (loaded: boolean) => void;
+
   // events
   fitBoundsRequestId: number;
   requestFitBounds: () => void;
@@ -212,6 +223,9 @@ export const useBeanMap = create<BeanMapState>((set) => ({
         ? { isFlavorWheelOpen: true, selectedBeanId: null, isBeanPanelOpen: false }
         : { isFlavorWheelOpen: false },
     ),
+
+  isMapLoaded: false,
+  setMapLoaded: (loaded) => set({ isMapLoaded: loaded }),
 
   fitBoundsRequestId: 0,
   requestFitBounds: () =>

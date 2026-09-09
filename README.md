@@ -2,8 +2,6 @@
 
 An interactive world map of specialty coffee — origins, flavor profiles, brewing recommendations, and an interactive flavor wheel tailored to each bean.
 
-**Status:** *Still Under Development* — Phases 1 & 2 complete; Phase 3 substantially complete; Phase 4 (Social & Community) complete; **Phase 5 (Polish & Launch) in progress — performance and SEO landed** (see [Performance & SEO](#performance--seo)); fully bilingual (English + Traditional Chinese, Taiwan). 55 bean profiles across 41 countries with full SCA flavor-note tagging, a Bean Belt overlay tracing the equatorial coffee-growing band on the globe, custom Mapbox styles, SSR bean pages with per-bean flavor-driven gradient art and "Did you know?" trivia, a responsive panel with a draggable mobile bottom sheet, dark/light mode, faceted filters, ⌘K search, brewing recommendation cards with dose calculator + interactive brew timer, a /beans browser with grid/table toggle, Euclidean similar-beans, side-by-side bean comparison, a D3 flavor wheel with category/subcategory/note filtering, a complete MDX-powered Learn section (13 articles with embedded SVG diagrams and timers), shareable URLs, and **`/zh-TW/` locale routing with an in-nav language switcher** — every UI string, all catalog content (beans, brewing methods, the SCA flavor hierarchy, country names), and all 13 Learn articles are translated.
-
 ## Tech stack
 
 - **Framework:** [Next.js 16](https://nextjs.org/) (App Router, Turbopack) + [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
@@ -50,57 +48,6 @@ An interactive world map of specialty coffee — origins, flavor profiles, brewi
 - **Social & Community** — Web Share API social sharing with clipboard fallback, **dynamic Open Graph images** rendered with a flavor radar, **shareable brew-recipe cards** (copyable permalink *and* downloadable PNG), **account-synced favorites** and a **private brewing journal**. The account layer is *entirely optional* — with no database or auth secrets set, the app still builds and runs. See [Accounts &amp; backend](#accounts--backend-optional).
 - **About page** — [`/about`](src/app/[locale]/about/page.tsx) explains what BeanMap is, what's in it, where the catalog data comes from, how the six-axis flavor scores should (and shouldn't) be read, and that nothing here is for sale — closing with an 8-question FAQ that is also emitted as `FAQPage` JSON-LD.
 - **Discoverable & installable** — a generated `sitemap.xml` (150 URLs, every entry carrying its `hreflang` alternates), `robots.txt`, an [`llms.txt`](src/app/llms.txt/route.ts) site map for models, canonical + `hreflang` tags on every page, schema.org JSON-LD, a site-wide footer of internal links, and a web app manifest so BeanMap installs to the home screen. See [Performance & SEO](#performance--seo).
-
-## Performance & SEO
-
-### Keeping the bundle off the critical path
-
-Heavy dependencies are loaded only when something actually needs them: Mapbox GL JS (466KB gzipped on its own) via a dynamic `CoffeeMap` import, D3 via `FlavorWheelLazy`, `cmdk` on first ⌘K, and `ComparisonView` / `BrewTimer` from the tray and panel that open them.
-
-Two things were quietly defeating that, both in the root layout, and both fixed:
-
-- **Framer Motion in the route wrapper.** `template.tsx` used a `motion.div` for the page-transition fade. Because `template.tsx` wraps *every* route, that pulled the whole animation engine (~43KB gzipped) into the shared bundle of even fully static Learn articles. It's now a CSS keyframe (`.page-fade` in `globals.css`), so Framer loads only on pages that genuinely animate.
-- **The search index in the RSC payload.** `<SearchCommand>` lives in the root layout, so whatever it receives is serialized into *every* page. It was taking full `CoffeeBean[]` plus the whole flavor-note tree — brewing recommendations, pour stages and all — to render a list of names. [src/lib/search.ts](src/lib/search.ts) now projects a slim `SearchableBean` server-side, with locale-resolved note labels.
-
-Measured initial JS, gzipped:
-
-| Page | Before | After | Modern browsers\* |
-|---|---|---|---|
-| `/en` (map) | 402KB | 360KB | 321KB |
-| `/en/beans` | 370KB | 327KB | 289KB |
-| `/en/bean/[slug]` | 310KB | 267KB | 229KB |
-| `/en/learn` | 305KB | 262KB | 224KB |
-
-\* excludes the 38.5KB legacy polyfill chunk, which is served `noModule` and never fetched by browsers that support ES modules.
-
-The Learn page's HTML also dropped from 216KB to 77KB raw. The remaining floor is framework code (react-dom, the Next runtime, Base UI, `next-intl`, `next-auth`), so the roadmap's `< 200KB` target isn't met yet — see [TASKS.md](TASKS.md) §5.2 for the next levers.
-
-Run `npm run analyze` to inspect the bundle. Note this uses Next 16's built-in Turbopack analyzer rather than `@next/bundle-analyzer`, which configures webpack and would be a silent no-op here.
-
-### Map rendering
-
-`CoffeeMap` drives its camera from Mapbox, not from React: `onMove` writes the viewport to the store on every animation frame and `onMouseMove` writes hover state on every pointer move. Subscribing to the whole Zustand store therefore re-rendered the map, its sources and layers — and the entire filter UI — roughly 60×/second while dragging. Every component now subscribes through a `useShallow` selector, and the map reads its initial camera once via `getState()` instead of subscribing to it. Filter state additionally passes through `useDeferredValue`, so dragging a flavor slider re-projects the GeoJSON at the trailing edge rather than once per intermediate value.
-
-### Discoverability
-
-Every route is locale-prefixed, so each page exists once per locale and needs to be declared as a translation rather than a duplicate. [src/lib/seo.ts](src/lib/seo.ts) centralizes that: canonical URL, `hreflang` alternates for `en` / `zh-TW` / `x-default`, and Open Graph defaults.
-
-- **[src/app/sitemap.ts](src/app/sitemap.ts)** — 150 URLs (7 static + 55 beans + 13 Learn articles, × 2 locales), each carrying its full alternate set.
-- **[src/app/robots.ts](src/app/robots.ts)** — allows everything except `/api/`, points at the sitemap.
-- **[src/lib/structured-data.ts](src/lib/structured-data.ts)** — JSON-LD emitted through a small `<JsonLd>` server component. Bean pages are modelled as an `Article` about a `Thing` (origin attributes as `additionalProperty`, plus `GeoCoordinates`), **not** as a `Product`: BeanMap sells nothing, and a `Product` with no `offers` / `review` / `aggregateRating` earns no rich result and reports missing required fields. Also `BreadcrumbList` throughout, `CollectionPage` + `ItemList` on `/beans`, an `Organization` + `WebSite` + `WebPage` graph on the home page, and `AboutPage` → `WebApplication` + `FAQPage` on `/about`.
-- **Indexation policy** — `/favorites` and `/notes` (per-visitor content), `/compare?beans=…` (any 2–3 of 55 beans is tens of thousands of near-identical URLs), and the per-method recipe permalinks (~440 per locale, canonical → parent bean page) are all `noindex, follow`. They keep their full OG cards, since they exist to be shared. They're deliberately **not** `Disallow`ed in `robots.txt`: a blocked URL is never fetched, so a crawler would never see the `noindex` or the canonical, and wouldn't follow the links back to the bean pages.
-- **[src/app/manifest.ts](src/app/manifest.ts)** — web app manifest with a matching `viewport.themeColor`. `start_url` is `/en` rather than `/`, so an installed app doesn't round-trip the i18n proxy on every launch.
-
-### Making the map page indexable
-
-Google was ranking `/beans` for the query "BeanMap" and never showing the map at all — and the snippet it wrote for `/beans` ("*Browse every coffee bean profile in BeanMap*", then a run-on of scraped card text) told a searcher nothing about what the page was for. Both problems had the same root cause: the pages had no prose worth quoting.
-
-- **The map page had nothing to index.** `/` is a WebGL canvas. Its only text was the loading backdrop, whose `<h1>` read *"Mapping the world's coffee"* over *"Loading the interactive map…"* — so the most descriptive string on the site's most important page was a spinner caption. The map is now a fixed `100svh` section with [HomeIntro](src/app/[locale]/HomeIntro.tsx) — a real `<h1>`, a paragraph explaining what the site does, the catalog counts, and links into every hub — server-rendered below it. The backdrop text is now a `<p>`, which keeps its job as the LCP anchor without claiming to be the page heading.
-- **Meta descriptions were too short to survive.** Under ~100 characters Google discards the tag and synthesizes one from the page body, which is exactly what produced that snippet. Every `metadata.*` description was rewritten to 140–160 characters and to answer *what will I see if I click this*.
-- **[src/lib/catalog-stats.ts](src/lib/catalog-stats.ts)** — the counts in that copy ("55 coffee origins from 41 countries") are ICU placeholders filled from the data, not typed into the translation files. Adding a bean updates the page copy, the meta descriptions, the JSON-LD, and `llms.txt` together; a hard-coded number would rot silently, and `validate-data` can't check prose.
-- **[SiteFooter](src/components/layout/SiteFooter.tsx)** — a server-rendered footer on every route. Site-wide internal links in the initial HTML are what an engine reads to work out a site's main sections, which is the precondition for sitelinks; before this, the map page shipped none.
-- **[/about](src/app/[locale]/about/page.tsx)** — the page that says what BeanMap is in plain language, with an 8-question FAQ emitted as `FAQPage` JSON-LD. Its `AboutPage` node's `mainEntity` is a `WebApplication` carrying the license, `isAccessibleForFree`, and a `featureList`, and an explicit zero-price `offers` — a catalog of coffee with no such statement reads like a storefront.
-- **[/llms.txt](src/app/llms.txt/route.ts)** — the [llms.txt](https://llmstxt.org/) convention: a plain-text map of the site for models, generated from the same data. It matters more here than on most sites, because the pages an assistant would most want to read (the map, the flavor wheel, the insights charts) are canvases and SVGs whose content only exists after JavaScript runs. The i18n proxy skips any path containing a dot, so it is served at the origin root rather than redirected to `/en/llms.txt`.
 
 ## Internationalization (i18n)
 
@@ -223,6 +170,7 @@ bean-map/
 │   │   ├── compare/           # ComparisonTray, ComparisonView, CompareToggle
 │   │   ├── visualization/     # FlavorRadar, FlavorWheel(+Lazy), ProcessDiagram, AltitudeChart, SeasonalChart
 │   │   ├── layout/            # TopNav, LocaleSwitcher, MobileBottomSheet, UserMenu
+│   │   ├── onboarding/        # OnboardingGate (tiny, eager) + OnboardingTour/Spotlight/TourCard (lazy)
 │   │   ├── shared/            # ThemeProvider, ThemeToggle, SearchCommand, UrlStateSync, ShareButton, FavoriteButton,
 │   │   │                      #   Toaster, SignInDialog, BrandIcons, SessionProviderWrapper, FavoritesSync, JsonLd
 │   │   └── ui/                # shadcn/ui primitives (Button, Dialog, Sheet, Slider, …)

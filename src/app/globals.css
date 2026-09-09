@@ -235,6 +235,41 @@ pre,
   }
 }
 
+/* Onboarding tour overlay. CSS rather than Framer for the same reason as
+   .page-fade above — the tour is on the map, already the heaviest route. */
+
+/* The scrim cut-out: a transparent box over the control being explained,
+   with a huge box-shadow spread painting the dim everywhere else. That is
+   what lets the highlighted control stay lit while sitting under the layer,
+   with no SVG mask and no clip-path. */
+.tour-cutout {
+  box-shadow: 0 0 0 9999px color-mix(in srgb, var(--color-espresso) 60%, transparent);
+  transition:
+    top 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    left 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    width 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    height 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tour-fade {
+  animation: page-fade-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.tour-card {
+  animation: tour-card-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes tour-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Shimmering placeholder for data-loading states. The reduced-motion rule
    below halts the sweep, leaving a flat muted block. */
 .skeleton {

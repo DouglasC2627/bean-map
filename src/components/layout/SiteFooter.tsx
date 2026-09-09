@@ -85,6 +85,20 @@ export async function SiteFooter({ locale }: { locale: string }) {
               {t("projectHeading")}
             </h2>
             <ul className="mt-3 space-y-2">
+              {/*
+                Replays the map onboarding tour. A plain link with a query
+                param rather than a button, so the footer stays a zero-JS
+                server component and this works from any route in any locale:
+                OnboardingGate picks `?tour=1` up on the map page and clears
+                it. */}
+              <li>
+                <Link
+                  href={{ pathname: "/", query: { tour: "1" } }}
+                  className="text-sm text-muted-foreground hover:text-roast-medium dark:hover:text-roast-light"
+                >
+                  {t("howItWorks")}
+                </Link>
+              </li>
               <li>
                 <Link
                   href="/about"

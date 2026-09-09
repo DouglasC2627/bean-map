@@ -9,6 +9,7 @@ import { FilterPanel } from "@/components/filter/FilterPanel";
 import { UrlStateSync } from "@/components/shared/UrlStateSync";
 import { ComparisonTray } from "@/components/compare/ComparisonTray";
 import { FlavorWheelOverlay } from "@/components/map/FlavorWheelOverlay";
+import { OnboardingGate } from "@/components/onboarding/OnboardingGate";
 
 /**
  * Branded backdrop rendered *behind* the map and left permanently in the DOM.
@@ -85,6 +86,15 @@ export function MapView({ beans, methods, flavorNotes }: Props) {
         methods={methods}
         flavorNotes={flavorNotes}
       />
+      {/*
+        Mounted here rather than in the root layout: the tour only exists on
+        the map, and anything in the layout is serialized into the RSC payload
+        of every route — including the static Learn articles.
+        Suspense for the same reason as UrlStateSync: it reads search params.
+      */}
+      <Suspense fallback={null}>
+        <OnboardingGate beans={beans} />
+      </Suspense>
     </div>
   );
 }

@@ -56,7 +56,10 @@ export function FlavorWheelOverlay({ beans, flavorNotes }: Props) {
   return (
     // Absolute, not fixed: it is anchored to the map section (see MapView) so
     // it scrolls away with the map rather than floating over the copy below.
-    <div className="absolute right-3 top-4 z-40 w-[min(360px,calc(100vw-1.5rem))] rounded-lg border border-border bg-background/95 p-3 shadow-xl backdrop-blur">
+    <div
+      data-tour="flavor-wheel"
+      className="absolute right-3 top-4 z-40 w-[min(360px,calc(100vw-1.5rem))] rounded-lg border border-border bg-background/95 p-3 shadow-xl backdrop-blur"
+    >
       <div className="mb-1 flex items-center justify-between">
         <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           {t("title")}
