@@ -194,7 +194,7 @@
     "toggle": "切換篩選",
     "close": "關閉篩選",
     "title": "篩選",
-    "reset": "重設",
+    "reset": "重置",
     "matchCount": "符合 <mono>{matching}</mono> / 共 {total} 款咖啡豆",
     "showOnMap": "在地圖上顯示",
     "viewOnMap": "在地圖上檢視",
@@ -583,7 +583,8 @@
     "loadingTitle": "描繪世界咖啡地圖",
     "loadingSubtitle": "正在載入互動地圖…",
     "tokenMissingTitle": "缺少 Mapbox token",
-    "tokenMissingBody": "請將 <code>NEXT_PUBLIC_MAPBOX_TOKEN</code> 加入 <code>.env.local</code>（參見 <code>.env.example</code>）並重新啟動開發伺服器。"
+    "tokenMissingBody": "請將 <code>NEXT_PUBLIC_MAPBOX_TOKEN</code> 加入 <code>.env.local</code>（參見 <code>.env.example</code>）並重新啟動開發伺服器。",
+    "scrollHint": "關於 BeanMap"
   },
   "home": {
     "heading": "在互動式咖啡地圖上探索世界咖啡產地",

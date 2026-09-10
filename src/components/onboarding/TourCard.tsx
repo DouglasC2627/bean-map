@@ -43,7 +43,7 @@ interface Position {
 /**
  * Picks the side of the anchor with room for the card, preferring below, then
  * above, then right, then left; falls back to whichever has the most space.
- * The cross axis is clamped so the card never leaves the viewport.
+ * Both axes are then clamped so the card never leaves the viewport.
  */
 function place(
   rect: AnchorRect,
@@ -65,41 +65,48 @@ function place(
     order.find((s) => space[s] >= needed(s)) ??
     order.reduce((best, s) => (space[s] > space[best] ? s : best), order[0]);
 
-  const clamp = (v: number, max: number) =>
-    Math.max(MARGIN, Math.min(v, max - MARGIN));
+  /**
+   * Keep an edge inside the viewport on BOTH axes. Only the cross axis used
+   * to be clamped, so a card placed above a tall mobile bottom sheet got a
+   * negative `top` and slid off the screen behind the nav, taking its Next
+   * button with it. `Math.max(MARGIN, …)` wins over the upper bound on
+   * purpose: if the card is taller than the space, pin its top and let it
+   * scroll internally rather than pushing its head off-screen.
+   */
+  const fit = (v: number, size: number, extent: number) =>
+    Math.max(MARGIN, Math.min(v, extent - size - MARGIN));
+
+  const centeredLeft = fit(
+    rect.left + rect.width / 2 - card.width / 2,
+    card.width,
+    view.width,
+  );
+  const centeredTop = fit(
+    rect.top + rect.height / 2 - card.height / 2,
+    card.height,
+    view.height,
+  );
 
   switch (side) {
     case "bottom":
       return {
-        top: rect.top + rect.height + GAP,
-        left: clamp(
-          rect.left + rect.width / 2 - card.width / 2,
-          view.width - card.width,
-        ),
+        top: fit(rect.top + rect.height + GAP, card.height, view.height),
+        left: centeredLeft,
       };
     case "top":
       return {
-        top: rect.top - GAP - card.height,
-        left: clamp(
-          rect.left + rect.width / 2 - card.width / 2,
-          view.width - card.width,
-        ),
+        top: fit(rect.top - GAP - card.height, card.height, view.height),
+        left: centeredLeft,
       };
     case "right":
       return {
-        top: clamp(
-          rect.top + rect.height / 2 - card.height / 2,
-          view.height - card.height,
-        ),
-        left: rect.left + rect.width + GAP,
+        top: centeredTop,
+        left: fit(rect.left + rect.width + GAP, card.width, view.width),
       };
     case "left":
       return {
-        top: clamp(
-          rect.top + rect.height / 2 - card.height / 2,
-          view.height - card.height,
-        ),
-        left: rect.left - GAP - card.width,
+        top: centeredTop,
+        left: fit(rect.left - GAP - card.width, card.width, view.width),
       };
   }
 }
@@ -137,11 +144,12 @@ export function TourCard({
     const card = { width: el.offsetWidth, height: el.offsetHeight };
 
     if (!rect) {
+      const top =
+        fallback === "bottom"
+          ? view.height - card.height - MARGIN * 3
+          : view.height / 2 - card.height / 2;
       setPos({
-        top:
-          fallback === "bottom"
-            ? view.height - card.height - MARGIN * 3
-            : Math.max(MARGIN, view.height / 2 - card.height / 2),
+        top: Math.max(MARGIN, Math.min(top, view.height - card.height - MARGIN)),
         left: Math.max(MARGIN, view.width / 2 - card.width / 2),
       });
       return;
@@ -159,6 +167,7 @@ export function TourCard({
       tabIndex={-1}
       className={cn(
         "tour-card pointer-events-auto fixed z-62 w-[min(21rem,calc(100vw-1.5rem))]",
+        "max-h-[calc(100svh-1.5rem)] overflow-y-auto overscroll-contain",
         "rounded-lg border border-border bg-background/95 p-4 shadow-xl backdrop-blur",
         "focus-visible:outline-none",
         // Hidden until measured, so it never flashes at 0,0 on the first frame.

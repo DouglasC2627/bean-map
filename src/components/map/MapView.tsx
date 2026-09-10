@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import { useTranslations } from "next-intl";
+import { ChevronDown } from "lucide-react";
 import type { CoffeeBean, BrewingMethod, FlavorNotesData } from "@/types";
 import { BeanPanel } from "@/components/bean/BeanPanel";
 import { FilterPanel } from "@/components/filter/FilterPanel";
@@ -10,6 +11,7 @@ import { UrlStateSync } from "@/components/shared/UrlStateSync";
 import { ComparisonTray } from "@/components/compare/ComparisonTray";
 import { FlavorWheelOverlay } from "@/components/map/FlavorWheelOverlay";
 import { OnboardingGate } from "@/components/onboarding/OnboardingGate";
+import { usePrefersReducedMotion } from "@/lib/use-media-query";
 
 /**
  * Branded backdrop rendered *behind* the map and left permanently in the DOM.
@@ -38,6 +40,33 @@ function MapBackdrop() {
   );
 }
 
+/**
+ * The way down to the intro copy, pinned to the bottom of the map section.
+ */
+function ScrollCue() {
+  const t = useTranslations("map");
+  const reduceMotion = usePrefersReducedMotion();
+  return (
+    <a
+      href="#home-intro"
+      onClick={(e) => {
+        const target = document.getElementById("home-intro");
+
+        if (!target) return;
+        e.preventDefault();
+        target.scrollIntoView({
+          behavior: reduceMotion ? "auto" : "smooth",
+          block: "start",
+        });
+      }}
+      className="absolute inset-x-0 bottom-9 z-30 mx-auto flex w-fit items-center gap-1.5 rounded-full border border-border bg-background/80 px-3.5 py-1.5 text-xs text-muted-foreground shadow-sm backdrop-blur transition hover:border-roast-medium hover:text-foreground"
+    >
+      {t("scrollHint")}
+      <ChevronDown aria-hidden className="h-3.5 w-3.5" />
+    </a>
+  );
+}
+
 // No `loading` fallback: the map renders nothing until ready, so the persistent
 // MapBackdrop shows through, then the loaded map paints on top of it.
 const CoffeeMap = dynamic(
@@ -57,18 +86,6 @@ export function MapView({ beans, methods, flavorNotes }: Props) {
       <Suspense fallback={null}>
         <UrlStateSync beans={beans} />
       </Suspense>
-      {/*
-        An explicit height rather than `flex-1`, because the home page now has
-        content below the map (HomeIntro + the site footer) and the map must
-        still fill the first screen exactly. `svh` is the viewport with mobile
-        browser chrome *expanded*, so nothing is cut off on first load — and
-        the few pixels of the intro that peek through hint that there is more
-        to scroll to. 3.5rem is the sticky TopNav.
-
-        This element is also the positioning context for the two map controls
-        below, which are `absolute` so they scroll away with the map instead of
-        floating over the copy underneath it.
-      */}
       <div className="relative flex h-[calc(100svh-3.5rem)] min-h-104 flex-col">
         {/* Persistent LCP anchor behind the map (see MapBackdrop). */}
         <MapBackdrop />
@@ -79,6 +96,7 @@ export function MapView({ beans, methods, flavorNotes }: Props) {
           triggerClassName="absolute left-3 top-4"
         />
         <FlavorWheelOverlay beans={beans} flavorNotes={flavorNotes} />
+        <ScrollCue />
       </div>
       <BeanPanel beans={beans} methods={methods} flavorNotes={flavorNotes} />
       <ComparisonTray

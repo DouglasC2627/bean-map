@@ -69,7 +69,7 @@ export async function HomeIntro({ locale }: { locale: string }) {
       <section aria-labelledby="home-intro">
         <h1
           id="home-intro"
-          className="max-w-3xl font-display text-3xl leading-tight sm:text-4xl"
+          className="max-w-3xl scroll-mt-20 font-display text-3xl leading-tight sm:text-4xl"
         >
           {t("heading")}
         </h1>

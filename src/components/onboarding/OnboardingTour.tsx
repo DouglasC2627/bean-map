@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef } from "react";
+import { createPortal } from "react-dom";
 import { useTranslations } from "next-intl";
 import type { CoffeeBean } from "@/types";
 import { useBeanMap, type FilterState, type ViewportState } from "@/store";
@@ -182,19 +183,51 @@ export function OnboardingTour({ beans }: Props) {
     return () => window.removeEventListener("keydown", onKey, true);
   }, [finish, next, back]);
 
+  /**
+   * Freeze the page under the tour.
+   */
+  useEffect(() => {
+    const root = document.documentElement;
+    const { body } = document;
+    const prev = {
+      rootOverflow: root.style.overflow,
+      bodyOverflow: body.style.overflow,
+      bodyPaddingRight: body.style.paddingRight,
+    };
+    // Desktop only: the vanishing scrollbar would otherwise reflow the page
+    // sideways the moment the tour opens, dragging every anchor with it.
+    const scrollbar = window.innerWidth - root.clientWidth;
+
+    root.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    if (scrollbar > 0) body.style.paddingRight = `${scrollbar}px`;
+
+    return () => {
+      root.style.overflow = prev.rootOverflow;
+      body.style.overflow = prev.bodyOverflow;
+      body.style.paddingRight = prev.bodyPaddingRight;
+    };
+  }, []);
+
   // Mobile folds the globe-gesture copy into the origin step (see stepsFor).
   const bodyKey =
     isMobile && current.id === "origin"
       ? "steps.origin.bodyMobile"
       : `steps.${current.id}.body`;
 
-  return (
+  /*
+    Rendered into <body>, not in place.
+  */
+  return createPortal(
     <>
       {/*
         Transparent catcher below the scrim. The tour operates the UI itself,
         so letting clicks reach the app underneath would desync the two.
       */}
-      <div aria-hidden className="fixed inset-0 z-60" />
+      <div
+        aria-hidden
+        className="fixed inset-0 z-60 touch-none overscroll-none"
+      />
       <Spotlight rect={rect} scrim={current.scrim} />
       <TourCard
         ref={cardRef}
@@ -221,6 +254,7 @@ export function OnboardingTour({ beans }: Props) {
         onNext={next}
         onSkip={finish}
       />
-    </>
+    </>,
+    document.body,
   );
 }
