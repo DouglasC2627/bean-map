@@ -143,7 +143,7 @@ export default async function AboutPage({
             >
               <dt className="sr-only">{s.label}</dt>
               <dd>
-                <span className="block font-display text-3xl text-roast-medium dark:text-roast-light">
+                <span className="block font-display text-3xl text-roast-accent">
                   {s.value}
                 </span>
                 <span className="mt-1 block text-xs tracking-wide text-muted-foreground">
@@ -171,7 +171,7 @@ export default async function AboutPage({
               >
                 <Icon
                   aria-hidden
-                  className="mt-0.5 h-5 w-5 shrink-0 text-roast-medium dark:text-roast-light"
+                  className="mt-0.5 h-5 w-5 shrink-0 text-roast-accent"
                 />
                 <div>
                   <h3 className="font-display text-lg leading-tight">

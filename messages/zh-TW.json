@@ -168,7 +168,8 @@
     "openMenu": "開啟選單",
     "closeMenu": "關閉選單",
     "switchLanguage": "切換語言",
-    "about": "關於"
+    "about": "關於",
+    "skipToContent": "跳至主要內容"
   },
   "footer": {
     "tagline": "互動式世界咖啡豆地圖 — 咖啡產地、咖啡產區、SCA 風味輪與手沖沖煮建議。",
@@ -213,7 +214,9 @@
     "flavorWheel": "風味輪",
     "hide": "隱藏",
     "open": "開啟",
-    "flavorProfile": "風味輪廓"
+    "flavorProfile": "風味輪廓",
+    "rangeMin": "{label}，最小值",
+    "rangeMax": "{label}，最大值"
   },
   "activeFilters": {
     "label": "篩選條件：",
@@ -355,9 +358,10 @@
     "allBeans": "咖啡豆目錄",
     "bean": "咖啡豆",
     "empty": "沒有可顯示的咖啡豆。",
-    "harvestAria": "{month} 採收",
-    "notHarvestedAria": "{month} 非採收期",
-    "currentMonthNote": "標示欄位：當前月份（{month}）。"
+    "harvested": "採收",
+    "notHarvested": "非採收期",
+    "currentMonthNote": "標示欄位：當前月份（{month}）。",
+    "tableCaption": "各咖啡豆的採收月份"
   },
   "flavorsExplorer": {
     "beansMatching": "符合的咖啡豆",
@@ -584,7 +588,14 @@
     "loadingSubtitle": "正在載入互動地圖…",
     "tokenMissingTitle": "缺少 Mapbox token",
     "tokenMissingBody": "請將 <code>NEXT_PUBLIC_MAPBOX_TOKEN</code> 加入 <code>.env.local</code>（參見 <code>.env.example</code>）並重新啟動開發伺服器。",
-    "scrollHint": "關於 BeanMap"
+    "scrollHint": "關於 BeanMap",
+    "beanList": {
+      "show": "以清單瀏覽咖啡豆",
+      "hide": "關閉咖啡豆清單",
+      "heading": "地圖上的咖啡豆",
+      "count": "顯示 {total} 支中的 {matching} 支",
+      "empty": "沒有符合目前篩選條件的咖啡豆。"
+    }
   },
   "home": {
     "heading": "在互動式咖啡地圖上探索世界咖啡產地",

@@ -345,7 +345,7 @@ function BeanPanelContent({
           </div>
           <Link
             href={`/learn/processing/${bean.processing}`}
-            className="text-roast-medium hover:underline"
+            className="text-roast-accent hover:underline"
           >
             {tEnum(`processing.${bean.processing}`)}
           </Link>
@@ -436,7 +436,7 @@ function BeanPanelContent({
         <p>{bean.description}</p>
         {bean.funFact && (
           <div className="mt-3 rounded-md border border-border bg-parchment/40 p-3 dark:bg-roast-dark/40">
-            <div className="text-[10px] font-semibold uppercase tracking-wider text-roast-medium">
+            <div className="text-[10px] font-semibold uppercase tracking-wider text-roast-accent">
               {t("didYouKnow")}
             </div>
             <p className="mt-1 text-xs leading-relaxed text-muted-foreground">

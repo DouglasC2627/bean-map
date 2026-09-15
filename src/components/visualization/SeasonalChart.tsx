@@ -65,18 +65,23 @@ export function SeasonalChart({
   return (
     <div className={cn("overflow-x-auto", className)}>
       <table className="w-full min-w-160 border-separate border-spacing-y-0.5 text-xs">
+        <caption className="sr-only">{t("tableCaption")}</caption>
         <thead>
           <tr>
-            <th className="sticky left-0 z-10 bg-background px-2 py-1 text-left text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+            <th
+              scope="col"
+              className="sticky left-0 z-10 bg-background px-2 py-1 text-left text-[10px] font-medium uppercase tracking-wider text-muted-foreground"
+            >
               {t("bean")}
             </th>
             {MONTHS.map((m) => (
               <th
                 key={m}
+                scope="col"
                 className={cn(
                   "px-1 py-1 text-center text-[10px] font-mono",
                   m === currentMonth
-                    ? "text-cherry-red"
+                    ? "text-cherry-accent"
                     : "text-muted-foreground",
                 )}
               >
@@ -111,7 +116,10 @@ export function SeasonalChart({
                     data-bean-id={bean.id}
                     className="hover:bg-parchment/30 dark:hover:bg-roast-dark/30"
                   >
-                    <td className="sticky left-0 z-10 max-w-40 truncate bg-background px-2 py-0.5">
+                    <th
+                      scope="row"
+                      className="sticky left-0 z-10 max-w-40 truncate bg-background px-2 py-0.5 font-normal"
+                    >
                       <Tag
                         type={onSelectBean ? "button" : undefined}
                         onClick={
@@ -119,26 +127,29 @@ export function SeasonalChart({
                         }
                         className={cn(
                           "block w-full truncate text-left",
-                          onSelectBean && "hover:text-roast-medium",
+                          onSelectBean && "hover:text-roast-accent",
                         )}
                         title={`${bean.name} — ${bean.country}`}
                       >
                         {bean.name}
                       </Tag>
-                    </td>
+                    </th>
                     {MONTHS.map((m) => {
                       const active = harvestSet.has(m);
                       const isCurrent = m === currentMonth;
                       return (
                         <td key={m} className="px-1 py-0.5 text-center">
+                          {/* The month and the bean come from the column and
+                              row headers, so the cell only has to say which
+                              of the two states it is. Real text rather than an
+                              `aria-label`: a label is prohibited on a <span>
+                              with no role, and a screen reader reading the
+                              table cell by cell needs cell *content*. */}
+                          <span className="sr-only">
+                            {active ? t("harvested") : t("notHarvested")}
+                          </span>
                           <span
-                            aria-label={
-                              active
-                                ? t("harvestAria", { month: monthName(m, locale) })
-                                : t("notHarvestedAria", {
-                                    month: monthName(m, locale),
-                                  })
-                            }
+                            aria-hidden
                             className={cn(
                               "mx-auto block h-4 rounded-sm",
                               active

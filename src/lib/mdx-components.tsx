@@ -87,7 +87,7 @@ export const mdxComponents: MDXComponents = {
   ),
   a: ({ children, ...props }) => (
     <a
-      className="text-roast-medium underline-offset-2 hover:underline"
+      className="text-roast-accent underline underline-offset-2"
       {...props}
     >
       {children}
@@ -100,14 +100,14 @@ export const mdxComponents: MDXComponents = {
     title?: string;
     children: React.ReactNode;
   }) => (
-    <aside className="my-4 rounded-md border border-border bg-surface/60 p-4">
+    <div className="my-4 rounded-md border border-border bg-surface/60 p-4">
       {title && (
         <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           {title}
         </div>
       )}
       <div className="text-sm">{children}</div>
-    </aside>
+    </div>
   ),
   BrewTimer,
   ProcessDiagram,

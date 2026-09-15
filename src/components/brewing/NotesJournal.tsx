@@ -153,7 +153,7 @@ export function NotesJournal({ beans, methods }: Props) {
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
                 <Link
                   href={`/bean/${n.beanSlug}`}
-                  className="font-medium hover:text-roast-medium"
+                  className="font-medium hover:text-roast-accent"
                 >
                   {beanName(n.beanSlug)}
                 </Link>
@@ -176,7 +176,7 @@ export function NotesJournal({ beans, methods }: Props) {
                         className={cn(
                           "h-3.5 w-3.5",
                           i < n.rating!
-                            ? "fill-roast-medium text-roast-medium"
+                            ? "fill-roast-accent text-roast-accent"
                             : "text-muted-foreground/30",
                         )}
                       />
@@ -188,7 +188,7 @@ export function NotesJournal({ beans, methods }: Props) {
                     type="button"
                     onClick={() => setEditingId(n.id)}
                     aria-label={tn("edit")}
-                    className="rounded p-1 text-muted-foreground hover:text-roast-medium"
+                    className="rounded p-1 text-muted-foreground hover:text-roast-accent"
                   >
                     <Pencil className="h-4 w-4" />
                   </button>

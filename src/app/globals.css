@@ -56,6 +56,21 @@
        --wine-accent  text/icon on the page background */
   --color-wine: var(--wine);
   --color-wine-accent: var(--wine-accent);
+  /* The brand brown as *ink* — links, active icons, emphasis text. Themed
+     rather than a flat palette hex for the same reason as --wine-accent: the
+     literal `roast-medium` (#6f4e37) is only 2.4:1 on the espresso background,
+     so every `text-roast-medium` was a contrast failure in dark mode. Fills
+     (`bg-roast-medium`, paired with `text-cream`) still use the flat palette
+     color — it is only the ink role that has to flip. */
+  --color-roast-accent: var(--roast-accent);
+  /* Same split for the cherry red: the flat #c1440e clears 3:1 as a ring or
+     border on espresso but only reaches 3.6:1 as text, so the ink role needs
+     its own lifted value. */
+  --color-cherry-accent: var(--cherry-accent);
+  /* And the same again for the green "shared trait" badge, which prints its
+     own colour on a 20%-tint of itself — the flat #4a7c59 reaches only
+     3.3:1 against that tint. */
+  --color-leaf-accent: var(--leaf-accent);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -94,6 +109,12 @@
      it is 8.9:1 as a fill. */
   --wine: #8c2f3f;
   --wine-accent: #8c2f3f;
+  /* 6.9:1 on the cream background. */
+  --roast-accent: #6f4e37;
+  /* 5.4:1 on the cream background. */
+  --cherry-accent: #c1440e;
+  /* 5.3:1 on `bg-leaf-green/20` over the light card surface. */
+  --leaf-accent: #2f5d3d;
   --border: #e6dbc9;
   --input: #e6dbc9;
   --ring: #6f4e37;
@@ -123,6 +144,12 @@
   /* Lifted much further, because this one sits directly on the espresso
      background as a 16px icon: 5.1:1. Deeper values disappear into the page. */
   --wine-accent: #c9697c;
+  /* 5.0:1 on the espresso background, 4.9:1 on the lifted card surface. */
+  --roast-accent: #a67c52;
+  /* 5.6:1 on the espresso background. */
+  --cherry-accent: #e46a3e;
+  /* 8:1 on `bg-leaf-green/20` over the dark card surface. */
+  --leaf-accent: #8fcfa1;
   --border: #3b2314;
   --input: #3b2314;
   --ring: #a67c52;

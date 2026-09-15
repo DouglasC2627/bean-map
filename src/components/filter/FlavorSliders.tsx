@@ -15,6 +15,7 @@ const AXES: Array<keyof FlavorRanges> = [
 
 export function FlavorSliders() {
   const tAxes = useTranslations("axes");
+  const t = useTranslations("filters");
   const { filters, setFlavorRange } = useBeanMap(
     useShallow((s) => ({
       filters: s.filters,
@@ -38,6 +39,10 @@ export function FlavorSliders() {
               min={1}
               max={10}
               step={1}
+              thumbLabels={[
+                t("rangeMin", { label: tAxes(axis) }),
+                t("rangeMax", { label: tAxes(axis) }),
+              ]}
               value={range}
               onValueChange={(v) => {
                 if (Array.isArray(v) && v.length === 2) {

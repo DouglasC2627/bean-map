@@ -54,7 +54,7 @@ export default async function RecipePage({ params }: Params) {
     <div className="mx-auto w-full max-w-md px-4 py-10">
       <Link
         href={`/bean/${bean.slug}`}
-        className="text-sm text-roast-medium hover:underline"
+        className="text-sm text-roast-accent hover:underline"
       >
         {t("backToBean", { name: bean.name })}
       </Link>

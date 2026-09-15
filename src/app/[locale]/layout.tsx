@@ -19,6 +19,7 @@ import { SessionProviderWrapper } from "@/components/shared/SessionProviderWrapp
 import { FavoritesSync } from "@/components/shared/FavoritesSync";
 import { SignInDialog } from "@/components/shared/SignInDialog";
 import { Toaster } from "@/components/shared/Toaster";
+import { SkipToContent } from "@/components/layout/SkipToContent";
 import { TopNav } from "@/components/layout/TopNav";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SearchCommand } from "@/components/shared/SearchCommand";
@@ -148,8 +149,19 @@ export default async function LocaleLayout({
             <NextIntlClientProvider>
               <SessionProviderWrapper>
                 <MotionProvider>
+                  <SkipToContent />
                   <TopNav />
-                  <main className="flex-1 flex flex-col">{children}</main>
+                  {/* `tabIndex={-1}` so the skip link can actually move focus
+                      here — without it the browser scrolls to the target but
+                      leaves focus on the link, and the next Tab goes straight
+                      back into the nav. */}
+                  <main
+                    id="main-content"
+                    tabIndex={-1}
+                    className="flex-1 flex flex-col outline-none"
+                  >
+                    {children}
+                  </main>
                   <SiteFooter locale={locale} />
                   <SearchCommand beans={searchBeans} />
                   <Toaster />

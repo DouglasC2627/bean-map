@@ -276,12 +276,12 @@ export function BrewTimer({
       )}
     >
       <div className="flex items-center justify-between gap-3">
-        <h4
+        <h3
           id={titleId}
-          className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+          className="font-sans text-xs font-semibold uppercase tracking-wider text-muted-foreground"
         >
           {methodName ? t("methodTimer", { method: methodName }) : t("brewTimer")}
-        </h4>
+        </h3>
         <button
           type="button"
           onClick={toggleSound}
@@ -341,7 +341,7 @@ export function BrewTimer({
         <div className="flex flex-1 flex-col gap-1 text-sm">
           {inBloom ? (
             <div className="text-xs">
-              <span className="font-semibold text-roast-medium">
+              <span className="font-semibold text-roast-accent">
                 {t("bloom")}
               </span>{" "}
               <span className="text-muted-foreground">

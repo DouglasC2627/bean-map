@@ -43,7 +43,7 @@ export function ShareButton({
           aria-label={t("share")}
           title={t("share")}
           className={cn(
-            "inline-flex items-center justify-center rounded-md p-1 text-muted-foreground transition hover:text-roast-medium",
+            "inline-flex items-center justify-center rounded-md p-1 text-muted-foreground transition hover:text-roast-accent",
             className,
           )}
         >

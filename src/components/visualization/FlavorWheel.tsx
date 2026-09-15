@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import {
   hierarchy,
@@ -189,6 +189,54 @@ export function FlavorWheel({
     [root],
   );
 
+  // Roving tabindex. The wheel has 120+ arcs; giving each one `tabIndex={0}`
+  // put every segment in the page tab order, so a keyboard user had to press
+  // Tab over a hundred times to get past the wheel. Instead the wheel is a
+  // single tab stop and the arrow keys move between segments — the standard
+  // composite-widget pattern.
+  const [rawFocusIndex, setFocusIndex] = useState(0);
+  const segmentRefs = useRef<(SVGPathElement | null)[]>([]);
+
+  const focusSegment = useCallback((i: number) => {
+    setFocusIndex(i);
+    segmentRefs.current[i]?.focus();
+  }, []);
+
+  const onSegmentKeyDown = useCallback(
+    (e: React.KeyboardEvent<SVGPathElement>, i: number, id: string) => {
+      const last = segmentRefs.current.length - 1;
+      switch (e.key) {
+        case "Enter":
+        case " ":
+          e.preventDefault();
+          onToggle(id);
+          return;
+        case "ArrowRight":
+        case "ArrowDown":
+          e.preventDefault();
+          focusSegment(i >= last ? 0 : i + 1);
+          return;
+        case "ArrowLeft":
+        case "ArrowUp":
+          e.preventDefault();
+          focusSegment(i <= 0 ? last : i - 1);
+          return;
+        case "Home":
+          e.preventDefault();
+          focusSegment(0);
+          return;
+        case "End":
+          e.preventDefault();
+          focusSegment(last);
+          return;
+      }
+    },
+    [focusSegment, onToggle],
+  );
+
+  // Clamped, so a shorter node list can never leave the wheel with no tab stop.
+  const focusIndex = Math.min(rawFocusIndex, Math.max(0, allNodes.length - 1));
+
   const onSegmentEnter = (n: WheelRect) => {
     setHover({
       id: n.data.id,
@@ -288,7 +336,10 @@ export function FlavorWheel({
     >
       <svg
         viewBox={`0 0 ${size} ${size}`}
-        role="img"
+        // Not role="img": an image is a leaf node in the accessibility tree,
+        // and these arcs are real buttons. A labelled group is the container
+        // role that may hold focusable descendants.
+        role="group"
         aria-label={t("aria")}
         // Render fluidly: the viewBox keeps the internal coordinate space at
         // `size`, while width:100% + height:auto scale the wheel down to fit
@@ -296,7 +347,7 @@ export function FlavorWheel({
         className="block h-auto w-full overflow-visible"
       >
         <g transform={`translate(${center}, ${center})`}>
-          {allNodes.map((n) => {
+          {allNodes.map((n, i) => {
             const lightenAmount =
               n.depth === 1 ? 0 : n.depth === 2 ? 0.2 : 0.4;
             const isSelected = selectedIds.has(n.data.id);
@@ -313,6 +364,9 @@ export function FlavorWheel({
             return (
               <path
                 key={`${n.data.kind}-${n.data.id}`}
+                ref={(el) => {
+                  segmentRefs.current[i] = el;
+                }}
                 d={arcGen(n) ?? undefined}
                 fill={fill}
                 fillOpacity={fillOpacity}
@@ -321,17 +375,16 @@ export function FlavorWheel({
                 }
                 strokeWidth={isSelected ? 2 : 0.5}
                 strokeOpacity={isHighlighted ? 1 : 0.4}
-                className="cursor-pointer transition-[fill-opacity,stroke-width,stroke-opacity] duration-200"
+                className="cursor-pointer transition-[fill-opacity,stroke-width,stroke-opacity] duration-200 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-ring"
                 onMouseEnter={() => onSegmentEnter(n)}
+                onFocus={() => {
+                  setFocusIndex(i);
+                  onSegmentEnter(n);
+                }}
                 onClick={() => onToggle(n.data.id)}
                 role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    onToggle(n.data.id);
-                  }
-                }}
+                tabIndex={i === focusIndex ? 0 : -1}
+                onKeyDown={(e) => onSegmentKeyDown(e, i, n.data.id)}
                 aria-label={`${t("segmentAria", { name: n.data.name, count })}${isSelected ? t("selectedSuffix") : ""}`}
                 aria-pressed={isSelected}
               />

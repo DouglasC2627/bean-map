@@ -99,7 +99,7 @@ export default async function BeanDetailPage({ params }: Params) {
       />
       <Link
         href="/beans"
-        className="text-sm text-roast-medium hover:underline"
+        className="text-sm text-roast-accent hover:underline"
       >
         {t("backToBeans")}
       </Link>
@@ -118,7 +118,7 @@ export default async function BeanDetailPage({ params }: Params) {
           {bean.region} · {formatAltitude(bean.altitudeMasl, tCommon("masl"))} ·{" "}
           <Link
             href={`/learn/processing/${bean.processing}`}
-            className="text-roast-medium hover:underline"
+            className="text-roast-accent underline underline-offset-2"
           >
             {tEnum(`processing.${bean.processing}`)}
           </Link>
@@ -145,12 +145,12 @@ export default async function BeanDetailPage({ params }: Params) {
       </section>
 
       {bean.funFact && (
-        <aside className="rounded-lg border border-border bg-parchment/40 p-4 dark:bg-roast-dark/40">
-          <div className="text-xs font-semibold uppercase tracking-wider text-roast-medium">
+        <div className="rounded-lg border border-border bg-parchment/40 p-4 dark:bg-roast-dark/40">
+          <div className="text-xs font-semibold uppercase tracking-wider text-roast-accent">
             {t("didYouKnow")}
           </div>
           <p className="mt-1 text-sm leading-relaxed">{bean.funFact}</p>
-        </aside>
+        </div>
       )}
 
       <section className="grid gap-6 border-t border-border py-6 sm:grid-cols-2">
@@ -181,7 +181,7 @@ export default async function BeanDetailPage({ params }: Params) {
               <dd>
                 <Link
                   href={`/learn/processing/${bean.processing}`}
-                  className="text-roast-medium hover:underline"
+                  className="text-roast-accent hover:underline"
                 >
                   {tEnum(`processing.${bean.processing}`)}
                 </Link>
@@ -238,24 +238,22 @@ export default async function BeanDetailPage({ params }: Params) {
                     </span>
                   </div>
                   <dl className="mt-2 grid grid-cols-2 gap-1 font-mono text-xs text-muted-foreground">
-                    <div>{t("grind")}</div>
-                    <div className="text-right text-foreground">
+                    <dt>{t("grind")}</dt>
+                    <dd className="text-right text-foreground">
                       {tEnum(`grind.${rec.grindSize}`)} ({rec.grindMicrons}µm)
-                    </div>
-                    <div>{t("temp")}</div>
-                    <div className="text-right text-foreground">
+                    </dd>
+                    <dt>{t("temp")}</dt>
+                    <dd className="text-right text-foreground">
                       {rec.waterTempC}°C
-                    </div>
-                    <div>{t("ratio")}</div>
-                    <div className="text-right text-foreground">
-                      {rec.ratio}
-                    </div>
-                    <div>{t("brew")}</div>
-                    <div className="text-right text-foreground">
+                    </dd>
+                    <dt>{t("ratio")}</dt>
+                    <dd className="text-right text-foreground">{rec.ratio}</dd>
+                    <dt>{t("brew")}</dt>
+                    <dd className="text-right text-foreground">
                       {rec.brewSeconds >= 600
                         ? `${Math.round(rec.brewSeconds / 3600)}h`
                         : `${rec.brewSeconds}s`}
-                    </div>
+                    </dd>
                   </dl>
                   <p className="mt-2 text-sm">{rec.tastingNotes}</p>
                 </div>

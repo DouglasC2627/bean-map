@@ -180,7 +180,7 @@ function ComparisonBody({
             </div>
             <Link
               href={`/bean/${b.slug}`}
-              className="font-display text-lg leading-tight hover:text-roast-medium"
+              className="font-display text-lg leading-tight hover:text-roast-accent"
             >
               {b.name}
             </Link>
@@ -197,18 +197,18 @@ function ComparisonBody({
       </section>
 
       <section>
-        <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <h2 className="mb-3 font-sans text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           {t("flavorOverlay")}
-        </h3>
+        </h2>
         <div className="rounded-lg border border-border bg-surface/40 p-4">
           <FlavorRadar series={series} size={300} showLegend />
         </div>
       </section>
 
       <section>
-        <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <h2 className="mb-2 font-sans text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           {t("originProcessing")}
-        </h3>
+        </h2>
         <div className="overflow-x-auto rounded-lg border border-border">
           <table className="w-full text-sm">
             <thead className="bg-parchment/50 dark:bg-roast-dark/40">
@@ -298,9 +298,9 @@ function ComparisonBody({
       {methodIds.length > 0 && (
         <section>
           <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <h2 className="font-sans text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               {t("brewingComparison")}
-            </h3>
+            </h2>
             <div className="flex flex-wrap gap-1">
               {methodIds.map((id) => {
                 const m = methodById.get(id);
@@ -341,7 +341,7 @@ function ComparisonBody({
                         {b.name}
                         {bestForSelected?.beanId === b.id && (
                           <span
-                            className="inline-flex items-center gap-1 rounded-full bg-leaf-green/20 px-1.5 py-0.5 text-[10px] font-medium text-leaf-green"
+                            className="inline-flex items-center gap-1 rounded-full bg-leaf-green/20 px-1.5 py-0.5 text-[10px] font-medium text-leaf-accent"
                             title={t("bestTitle")}
                           >
                             <Trophy className="h-3 w-3" />

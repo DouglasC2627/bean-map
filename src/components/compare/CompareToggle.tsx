@@ -47,8 +47,8 @@ export function CompareToggle({ beanId, className, variant = "default" }: Props)
         }
         className={cn(
           "inline-flex items-center justify-center rounded-md p-1 text-muted-foreground transition",
-          inCompare && "text-roast-medium",
-          !atLimit && "hover:text-roast-medium",
+          inCompare && "text-roast-accent",
+          !atLimit && "hover:text-roast-accent",
           atLimit && "cursor-not-allowed opacity-50",
           className,
         )}

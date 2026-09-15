@@ -633,17 +633,52 @@ visualizations are inline SVG. Audited rather than implemented:
 - [ ] Test with Google Rich Results Test *(needs a public URL)*
 
 ### 5.6 Accessibility Audit
-- [ ] Full keyboard navigation audit: every interactive element reachable and operable via keyboard
+- [x] Full keyboard navigation audit: every interactive element reachable and operable via keyboard
+      Tab-walked all 10 routes: every stop has an accessible name and a visible
+      focus ring. Two structural fixes came out of it — the closed filter panel
+      is now `inert` (its 58 controls were still tab-stops while hidden), and
+      the flavor wheel uses a roving tabindex so its 122 arcs are one tab stop
+      with arrow-key navigation instead of 122.
 - [ ] Screen reader testing with VoiceOver (macOS) and NVDA (Windows)
-- [ ] Run `axe-core` automated audit on all pages, fix all violations
-- [ ] Map accessibility: provide a hidden bean list as an equivalent non-visual navigation method
-- [ ] All images have descriptive `alt` text
-- [ ] Radar charts and flavor wheel include screen-reader-only data tables
-- [ ] Color contrast: verify all text meets WCAG 2.1 AA (4.5:1 body, 3:1 large)
-- [ ] Focus indicators: visible ring on all interactive elements
-- [ ] `prefers-reduced-motion` disables all animations
-- [ ] Skip-to-content link for keyboard users
-- [ ] Aria labels on all icon-only buttons
+      Still to do by hand — cannot be automated. The tree it will read is in
+      better shape now (see the table/heading/landmark fixes below).
+- [x] Run `axe-core` automated audit on all pages, fix all violations
+      0 violations across 13 routes x 2 locales x light/dark, plus the
+      interactive states (open dialogs, filter panel, bean panel, comparison
+      view, onboarding tour, mobile bottom sheet). Was 1,374 nodes across 8
+      rules. Fixed: `aria-prohibited-attr` (SeasonalChart now a real data table
+      with `scope` headers), `definition-list`, `landmark-complementary-is-top-level`,
+      `aria-hidden-focus`, `heading-order`, `link-in-text-block`,
+      `nested-interactive`, `label` (Base UI slider thumbs render hidden
+      `<input type="range">` elements that had no name).
+- [x] Map accessibility: provide a hidden bean list as an equivalent non-visual navigation method
+      `src/components/map/MapBeanList.tsx`. Mapbox paints pins into a canvas,
+      so they are absent from the a11y tree. This is a disclosure whose trigger
+      is `sr-only` until focused, first in DOM order inside the map section;
+      each entry does what clicking a pin does (select + fly to), and it reads
+      the same filter state the map does so the two always agree.
+- [x] All images have descriptive `alt` text
+      Both logos and the avatar are decorative next to their own text labels,
+      so they correctly carry `alt=""` rather than duplicating it.
+- [x] Radar charts and flavor wheel include screen-reader-only data tables
+      Already present in `FlavorRadar` and `FlavorWheel`; verified.
+- [x] Color contrast: verify all text meets WCAG 2.1 AA (4.5:1 body, 3:1 large)
+      The palette browns/reds/greens were only ~2.4-3.6:1 as *text* on the dark
+      background. Added themed ink tokens next to the existing `--wine-accent`
+      precedent — `--roast-accent`, `--cherry-accent`, `--leaf-accent` — which
+      flip per theme. Fills keep the flat palette colors.
+- [x] Focus indicators: visible ring on all interactive elements
+- [x] `prefers-reduced-motion` disables all animations
+      Was already handled globally (CSS kill switch, Framer `MotionConfig`,
+      Mapbox camera flights, react-spring). One gap closed: the locate-bean
+      `scrollIntoView` passed `behavior: "smooth"` explicitly, which beats the
+      CSS `scroll-behavior` override.
+- [x] Skip-to-content link for keyboard users
+      `src/components/layout/SkipToContent.tsx`; `<main>` took `id` +
+      `tabIndex={-1}` so focus actually lands there.
+- [x] Aria labels on all icon-only buttons
+      Verified by the tab-walk rather than by inspection — every focusable
+      control on every route resolves to a non-empty accessible name.
 
 ### 5.7 Error Handling
 - [ ] Add React Error Boundaries around: Map component, visualization components, auth-dependent sections

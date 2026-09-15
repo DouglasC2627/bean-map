@@ -49,7 +49,7 @@ export function BeanCard({ bean, flavorNotes, index = 0 }: Props) {
       </div>
       <Link
         href={`/bean/${bean.slug}`}
-        className="block font-display text-lg leading-tight hover:text-roast-medium"
+        className="block font-display text-lg leading-tight hover:text-roast-accent"
       >
         {bean.name}
       </Link>
@@ -71,13 +71,13 @@ export function BeanCard({ bean, flavorNotes, index = 0 }: Props) {
         <div className="flex items-center gap-3">
           <Link
             href={`/bean/${bean.slug}`}
-            className="text-xs text-roast-medium hover:underline"
+            className="text-xs text-roast-accent hover:underline"
           >
             {t("viewProfile")}
           </Link>
           <Link
             href={`/?bean=${bean.slug}`}
-            className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-roast-medium"
+            className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-roast-accent"
           >
             <MapIcon className="h-3 w-3" />
             {t("showOnMap")}

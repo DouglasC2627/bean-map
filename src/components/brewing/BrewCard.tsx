@@ -57,7 +57,7 @@ export function BrewCard({
             className={cn(
               "h-2.5 w-2.5",
               i < rec.difficulty
-                ? "fill-roast-medium text-roast-medium"
+                ? "fill-roast-accent text-roast-accent"
                 : "text-muted-foreground/40",
             )}
           />

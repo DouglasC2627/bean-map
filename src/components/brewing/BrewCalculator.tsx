@@ -47,7 +47,7 @@ export function BrewCalculator({ recommendation }: Props) {
   return (
     <div className="space-y-3 rounded-lg border border-border bg-surface/60 p-4">
       <div className="flex items-baseline justify-between">
-        <h4 className="text-sm font-medium">{t("doseCalculator")}</h4>
+        <h3 className="font-sans text-sm font-medium">{t("doseCalculator")}</h3>
         <span className="font-mono text-xs text-muted-foreground">
           {recommendation.ratio}
         </span>

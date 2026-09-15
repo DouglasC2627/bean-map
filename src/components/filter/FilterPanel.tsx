@@ -167,10 +167,15 @@ export function FilterPanel({ beans, flavorNotes, triggerClassName }: Props) {
         )}
       />
 
-      <aside
+      {/* `inert` as well as `aria-hidden`: the panel stays mounted and merely
+          translated off-screen when closed, so without it every control inside
+          remained in the tab order while hidden from assistive tech. */}
+      <div
         data-tour="filters-panel"
+        role="region"
         aria-label={t("title")}
         aria-hidden={!isFilterPanelOpen}
+        inert={!isFilterPanelOpen}
         className={cn(
           "fixed z-30 flex flex-col overflow-x-hidden overflow-y-auto bg-background/95 shadow-xl backdrop-blur-sm transition-transform duration-300",
           // mobile: bottom sheet
@@ -304,6 +309,10 @@ export function FilterPanel({ beans, flavorNotes, triggerClassName }: Props) {
               min={0}
               max={2500}
               step={50}
+              thumbLabels={[
+                t("rangeMin", { label: t("altitude") }),
+                t("rangeMax", { label: t("altitude") }),
+              ]}
               value={filters.altitudeRange}
               onValueChange={(v) => {
                 if (Array.isArray(v) && v.length === 2) {
@@ -367,7 +376,7 @@ export function FilterPanel({ beans, flavorNotes, triggerClassName }: Props) {
             </div>
           )}
         </div>
-      </aside>
+      </div>
     </>
   );
 }

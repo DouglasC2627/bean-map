@@ -70,7 +70,7 @@ export async function SiteFooter({ locale }: { locale: string }) {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-muted-foreground hover:text-roast-medium dark:hover:text-roast-light"
+                      className="text-sm text-muted-foreground hover:text-roast-accent"
                     >
                       {link.label}
                     </Link>
@@ -94,7 +94,7 @@ export async function SiteFooter({ locale }: { locale: string }) {
               <li>
                 <Link
                   href={{ pathname: "/", query: { tour: "1" } }}
-                  className="text-sm text-muted-foreground hover:text-roast-medium dark:hover:text-roast-light"
+                  className="text-sm text-muted-foreground hover:text-roast-accent"
                 >
                   {t("howItWorks")}
                 </Link>
@@ -102,7 +102,7 @@ export async function SiteFooter({ locale }: { locale: string }) {
               <li>
                 <Link
                   href="/about"
-                  className="text-sm text-muted-foreground hover:text-roast-medium dark:hover:text-roast-light"
+                  className="text-sm text-muted-foreground hover:text-roast-accent"
                 >
                   {t("about")}
                 </Link>
@@ -112,7 +112,7 @@ export async function SiteFooter({ locale }: { locale: string }) {
                   href={SOURCE_REPO_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-roast-medium dark:hover:text-roast-light"
+                  className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-roast-accent"
                 >
                   <GitHubIcon className="h-3.5 w-3.5" />
                   {t("source")}
@@ -123,7 +123,7 @@ export async function SiteFooter({ locale }: { locale: string }) {
                   href={`${SOURCE_REPO_URL}/blob/main/LICENSE`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-muted-foreground hover:text-roast-medium dark:hover:text-roast-light"
+                  className="text-sm text-muted-foreground hover:text-roast-accent"
                 >
                   {t("license")}
                 </a>

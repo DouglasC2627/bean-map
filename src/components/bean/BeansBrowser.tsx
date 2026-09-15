@@ -185,7 +185,7 @@ export function BeansBrowser({ beans, flavorNotes }: Props) {
                   <td className="px-3 py-2">
                     <Link
                       href={`/bean/${b.slug}`}
-                      className="font-medium hover:text-roast-medium"
+                      className="font-medium hover:text-roast-accent"
                     >
                       {b.name}
                     </Link>
@@ -226,7 +226,7 @@ export function BeansBrowser({ beans, flavorNotes }: Props) {
                       />
                       <Link
                         href={`/?bean=${b.slug}`}
-                        className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-roast-medium"
+                        className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-roast-accent"
                       >
                         <MapIcon className="h-3 w-3" />
                         {t("map")}

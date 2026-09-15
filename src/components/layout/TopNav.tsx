@@ -79,37 +79,37 @@ export function TopNav() {
         <nav className="flex items-center gap-3 justify-self-end">
           <Link
             href="/"
-            className="hidden rounded-md px-2 py-1 text-sm whitespace-nowrap hover:text-roast-medium sm:inline-block"
+            className="hidden rounded-md px-2 py-1 text-sm whitespace-nowrap hover:text-roast-accent sm:inline-block"
           >
             {t("explore")}
           </Link>
           <Link
             href="/beans"
-            className="hidden rounded-md px-2 py-1 text-sm whitespace-nowrap hover:text-roast-medium sm:inline-block"
+            className="hidden rounded-md px-2 py-1 text-sm whitespace-nowrap hover:text-roast-accent sm:inline-block"
           >
             {t("beans")}
           </Link>
           <Link
             href="/explore/insights"
-            className="hidden rounded-md px-2 py-1 text-sm whitespace-nowrap hover:text-roast-medium md:inline-block"
+            className="hidden rounded-md px-2 py-1 text-sm whitespace-nowrap hover:text-roast-accent md:inline-block"
           >
             {t("insights")}
           </Link>
           <Link
             href="/explore/flavors"
-            className="hidden rounded-md px-2 py-1 text-sm whitespace-nowrap hover:text-roast-medium lg:inline-block"
+            className="hidden rounded-md px-2 py-1 text-sm whitespace-nowrap hover:text-roast-accent lg:inline-block"
           >
             {t("flavors")}
           </Link>
           <Link
             href="/learn"
-            className="hidden rounded-md px-2 py-1 text-sm whitespace-nowrap hover:text-roast-medium lg:inline-block"
+            className="hidden rounded-md px-2 py-1 text-sm whitespace-nowrap hover:text-roast-accent lg:inline-block"
           >
             {t("learn")}
           </Link>
           <Link
             href="/about"
-            className="hidden rounded-md px-2 py-1 text-sm whitespace-nowrap hover:text-roast-medium xl:inline-block"
+            className="hidden rounded-md px-2 py-1 text-sm whitespace-nowrap hover:text-roast-accent xl:inline-block"
           >
             {t("about")}
           </Link>

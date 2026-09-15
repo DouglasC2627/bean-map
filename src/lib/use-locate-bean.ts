@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useBeanMap } from "@/store";
+import { usePrefersReducedMotion } from "@/lib/use-media-query";
 
 /**
  * Listens for `locateRequest` (raised by the search command on the Beans and
@@ -15,6 +16,10 @@ import { useBeanMap } from "@/store";
 export function useLocateBeanOnPage() {
   const locateRequest = useBeanMap((s) => s.locateRequest);
   const lastHandled = useRef(0);
+  // An explicit `behavior` option beats the CSS `scroll-behavior: auto` that
+  // the reduced-motion rule in globals.css sets, so this one has to opt out
+  // in JS (same as the map's scroll cue).
+  const reduceMotion = usePrefersReducedMotion();
 
   useEffect(() => {
     if (!locateRequest || locateRequest.id === lastHandled.current) return;
@@ -23,7 +28,10 @@ export function useLocateBeanOnPage() {
     const selector = `[data-bean-id="${CSS.escape(locateRequest.beanId)}"]`;
 
     const reveal = (el: HTMLElement) => {
-      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      el.scrollIntoView({
+        behavior: reduceMotion ? "auto" : "smooth",
+        block: "center",
+      });
       // Restart the highlight animation if it's already mid-flight.
       el.classList.remove("bean-locate-highlight");
       void el.offsetWidth;
@@ -51,5 +59,5 @@ export function useLocateBeanOnPage() {
       }
     }, 80);
     return () => window.clearInterval(interval);
-  }, [locateRequest]);
+  }, [locateRequest, reduceMotion]);
 }

@@ -76,9 +76,9 @@ export function BrewDetailModal({
         </DialogHeader>
 
         <section>
-          <h4 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          <h3 className="mb-2 font-sans text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             {t("grind")}
-          </h4>
+          </h3>
           <div className="flex items-end gap-1">
             {GRIND_SCALE.map((g, i) => (
               <div
@@ -117,7 +117,7 @@ export function BrewDetailModal({
             <button
               type="button"
               onClick={() => setTempUnit(tempUnit === "C" ? "F" : "C")}
-              className="font-mono text-base hover:text-roast-medium"
+              className="font-mono text-base hover:text-roast-accent"
               aria-label={t("toggleTempUnit")}
             >
               {tempUnit === "C"
@@ -141,7 +141,7 @@ export function BrewDetailModal({
                   className={cn(
                     "h-3 w-3",
                     i < rec.difficulty
-                      ? "fill-roast-medium text-roast-medium"
+                      ? "fill-roast-accent text-roast-accent"
                       : "text-muted-foreground/40",
                   )}
                 />
@@ -168,9 +168,9 @@ export function BrewDetailModal({
 
         {rec.pourStages && rec.pourStages.length > 0 && (
           <section>
-            <h4 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <h3 className="mb-2 font-sans text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               {t("pourSchedule")}
-            </h4>
+            </h3>
             <ol className="space-y-1.5">
               {rec.pourStages.map((stage, i) => (
                 <li
@@ -192,9 +192,9 @@ export function BrewDetailModal({
 
         {method?.equipment && method.equipment.length > 0 && (
           <section>
-            <h4 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <h3 className="mb-2 font-sans text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               {t("equipment")}
-            </h4>
+            </h3>
             <ul className="flex flex-wrap gap-1.5 text-xs">
               {method.equipment.map((e) => (
                 <li
@@ -209,9 +209,9 @@ export function BrewDetailModal({
         )}
 
         <section>
-          <h4 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          <h3 className="mb-2 font-sans text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             {t("whyThisWorks")}
-          </h4>
+          </h3>
           <p className="text-sm">{rec.tastingNotes}</p>
         </section>
 
@@ -219,7 +219,7 @@ export function BrewDetailModal({
           {guideSlug ? (
             <Link
               href={`/learn/brewing/${guideSlug}`}
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-roast-medium hover:underline"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-roast-accent hover:underline"
             >
               {t("readGuide", {
                 name: method?.name ?? t("brewingFallbackName"),

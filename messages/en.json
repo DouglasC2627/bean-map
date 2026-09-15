@@ -168,7 +168,8 @@
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "switchLanguage": "Switch language",
-    "about": "About"
+    "about": "About",
+    "skipToContent": "Skip to main content"
   },
   "footer": {
     "tagline": "An interactive world map of specialty coffee — where every bean comes from, what it tastes like, and how to brew it.",
@@ -213,7 +214,9 @@
     "flavorWheel": "Flavor wheel",
     "hide": "Hide",
     "open": "Open",
-    "flavorProfile": "Flavor Profile"
+    "flavorProfile": "Flavor Profile",
+    "rangeMin": "{label}, minimum",
+    "rangeMax": "{label}, maximum"
   },
   "activeFilters": {
     "label": "Filters:",
@@ -355,9 +358,10 @@
     "allBeans": "All beans",
     "bean": "Bean",
     "empty": "No beans to display.",
-    "harvestAria": "{month} harvest",
-    "notHarvestedAria": "{month} not harvested",
-    "currentMonthNote": "Highlighted column: current month ({month})."
+    "harvested": "Harvest",
+    "notHarvested": "Not harvested",
+    "currentMonthNote": "Highlighted column: current month ({month}).",
+    "tableCaption": "Harvest months by bean"
   },
   "flavorsExplorer": {
     "beansMatching": "Beans matching",
@@ -584,7 +588,14 @@
     "loadingSubtitle": "Loading the interactive map…",
     "tokenMissingTitle": "Mapbox token missing",
     "tokenMissingBody": "Add <code>NEXT_PUBLIC_MAPBOX_TOKEN</code> to <code>.env.local</code> (see <code>.env.example</code>) and restart the dev server.",
-    "scrollHint": "About BeanMap"
+    "scrollHint": "About BeanMap",
+    "beanList": {
+      "show": "Browse beans as a list",
+      "hide": "Close bean list",
+      "heading": "Beans on the map",
+      "count": "Showing {matching} of {total} beans",
+      "empty": "No beans match the current filters."
+    }
   },
   "home": {
     "heading": "Explore coffee origins on an interactive world map",

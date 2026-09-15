@@ -79,8 +79,8 @@ export function FavoriteButton({
         aria-label={label}
         title={label}
         className={cn(
-          "inline-flex items-center justify-center rounded-md p-1 text-muted-foreground transition hover:text-cherry-red",
-          filled && "text-cherry-red",
+          "inline-flex items-center justify-center rounded-md p-1 text-muted-foreground transition hover:text-cherry-accent",
+          filled && "text-cherry-accent",
           className,
         )}
       >
@@ -99,8 +99,8 @@ export function FavoriteButton({
       className={cn(
         "inline-flex items-center gap-1 rounded-md border px-2 py-1 text-xs transition",
         filled
-          ? "border-cherry-red bg-cherry-red/10 text-cherry-red"
-          : "border-border text-muted-foreground hover:border-cherry-red hover:text-cherry-red",
+          ? "border-cherry-red bg-cherry-red/10 text-cherry-accent"
+          : "border-border text-muted-foreground hover:border-cherry-red hover:text-cherry-accent",
         className,
       )}
     >

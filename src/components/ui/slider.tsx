@@ -2,14 +2,21 @@ import { Slider as SliderPrimitive } from "@base-ui/react/slider"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * `thumbLabels` names each thumb. Base UI renders a hidden
+ * `<input type="range">` per thumb, and those inputs are what a screen reader
+ * and a keyboard actually land on — without a label they are announced as an
+ * unnamed slider (and fail axe's `label` rule).
+ */
 function Slider({
   className,
   defaultValue,
   value,
   min = 0,
   max = 100,
+  thumbLabels,
   ...props
-}: SliderPrimitive.Root.Props) {
+}: SliderPrimitive.Root.Props & { thumbLabels?: string[] }) {
   const _values = Array.isArray(value)
     ? value
     : Array.isArray(defaultValue)
@@ -41,6 +48,10 @@ function Slider({
           <SliderPrimitive.Thumb
             data-slot="slider-thumb"
             key={index}
+            index={index}
+            getAriaLabel={
+              thumbLabels ? (i: number) => thumbLabels[i] ?? "" : undefined
+            }
             className="relative block size-3 shrink-0 rounded-full border border-ring bg-white ring-ring/50 transition-[color,box-shadow] select-none after:absolute after:-inset-2 hover:ring-3 focus-visible:ring-3 focus-visible:outline-hidden active:ring-3 disabled:pointer-events-none disabled:opacity-50"
           />
         ))}

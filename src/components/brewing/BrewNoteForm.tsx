@@ -121,8 +121,8 @@ export function BrewNoteForm({
                   className={cn(
                     "h-5 w-5 transition",
                     n <= rating
-                      ? "fill-roast-medium text-roast-medium"
-                      : "text-muted-foreground/40 hover:text-roast-medium",
+                      ? "fill-roast-accent text-roast-accent"
+                      : "text-muted-foreground/40 hover:text-roast-accent",
                   )}
                 />
               </button>

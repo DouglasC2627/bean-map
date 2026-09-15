@@ -10,6 +10,7 @@ import { FilterPanel } from "@/components/filter/FilterPanel";
 import { UrlStateSync } from "@/components/shared/UrlStateSync";
 import { ComparisonTray } from "@/components/compare/ComparisonTray";
 import { FlavorWheelOverlay } from "@/components/map/FlavorWheelOverlay";
+import { MapBeanList } from "@/components/map/MapBeanList";
 import { OnboardingGate } from "@/components/onboarding/OnboardingGate";
 import { usePrefersReducedMotion } from "@/lib/use-media-query";
 
@@ -89,6 +90,10 @@ export function MapView({ beans, methods, flavorNotes }: Props) {
       <div className="relative flex h-[calc(100svh-3.5rem)] min-h-104 flex-col">
         {/* Persistent LCP anchor behind the map (see MapBackdrop). */}
         <MapBackdrop />
+        {/* First in DOM order inside the map section, so a keyboard or screen
+            reader user meets the map's accessible equivalent before the
+            canvas they cannot use. */}
+        <MapBeanList beans={beans} flavorNotes={flavorNotes} />
         <CoffeeMap beans={beans} flavorNotes={flavorNotes} />
         <FilterPanel
           beans={beans}
