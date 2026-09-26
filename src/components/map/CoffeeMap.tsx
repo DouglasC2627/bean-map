@@ -146,7 +146,7 @@ export function CoffeeMap({ beans, flavorNotes }: Props) {
     selectBean,
     filters,
     setHoveredRegion,
-    fitBoundsRequestId,
+    fitBoundsRequest,
     flyToRequest,
     setMapLoaded: publishMapLoaded,
   } = useBeanMap(
@@ -155,7 +155,7 @@ export function CoffeeMap({ beans, flavorNotes }: Props) {
       selectBean: s.selectBean,
       filters: s.filters,
       setHoveredRegion: s.setHoveredRegion,
-      fitBoundsRequestId: s.fitBoundsRequestId,
+      fitBoundsRequest: s.fitBoundsRequest,
       flyToRequest: s.flyToRequest,
       setMapLoaded: s.setMapLoaded,
     })),
@@ -210,16 +210,20 @@ export function CoffeeMap({ beans, flavorNotes }: Props) {
     });
   }, [flyToRequest, mapLoaded, flightMs]);
 
-  // Fit map to filtered results when a fit-bounds request is dispatched.
+  // Fit the map when a fit-bounds request is dispatched: to the request's own
+  // points (a country picked in the home page intro), else to the filtered
+  // results.
   useEffect(() => {
-    if (fitBoundsRequestId === 0 || !mapLoaded) return;
+    if (!fitBoundsRequest || !mapLoaded) return;
     const map = mapRef.current;
-    const targets = matchingBeansRef.current;
+    const targets =
+      fitBoundsRequest.points ??
+      matchingBeansRef.current.map((b) => b.coordinates);
     if (!map || targets.length === 0) return;
 
     if (targets.length === 1) {
       map.flyTo({
-        center: targets[0].coordinates,
+        center: targets[0],
         zoom: 5,
         duration: flightMs,
       });
@@ -230,8 +234,7 @@ export function CoffeeMap({ beans, flavorNotes }: Props) {
       minLat = Infinity,
       maxLng = -Infinity,
       maxLat = -Infinity;
-    for (const b of targets) {
-      const [lng, lat] = b.coordinates;
+    for (const [lng, lat] of targets) {
       if (lng < minLng) minLng = lng;
       if (lat < minLat) minLat = lat;
       if (lng > maxLng) maxLng = lng;
@@ -244,7 +247,7 @@ export function CoffeeMap({ beans, flavorNotes }: Props) {
       ],
       { padding: 80, duration: flightMs, maxZoom: 6 },
     );
-  }, [fitBoundsRequestId, mapLoaded, flightMs]);
+  }, [fitBoundsRequest, mapLoaded, flightMs]);
 
   const geojson = useMemo(
     () => ({

@@ -93,8 +93,13 @@ export interface BeanMapState {
   setMapLoaded: (loaded: boolean) => void;
 
   // events
-  fitBoundsRequestId: number;
-  requestFitBounds: () => void;
+  // Fit the camera to `points` — or, when a request carries none, to the
+  // beans matching the current filters.
+  fitBoundsRequest: {
+    id: number;
+    points: [number, number][] | null;
+  } | null;
+  requestFitBounds: (points?: [number, number][]) => void;
   flyToRequest: {
     id: number;
     coords: [number, number];
@@ -227,9 +232,14 @@ export const useBeanMap = create<BeanMapState>((set) => ({
   isMapLoaded: false,
   setMapLoaded: (loaded) => set({ isMapLoaded: loaded }),
 
-  fitBoundsRequestId: 0,
-  requestFitBounds: () =>
-    set((s) => ({ fitBoundsRequestId: s.fitBoundsRequestId + 1 })),
+  fitBoundsRequest: null,
+  requestFitBounds: (points) =>
+    set((s) => ({
+      fitBoundsRequest: {
+        id: (s.fitBoundsRequest?.id ?? 0) + 1,
+        points: points ?? null,
+      },
+    })),
 
   flyToRequest: null,
   requestFlyTo: (coords, zoom = 5) =>

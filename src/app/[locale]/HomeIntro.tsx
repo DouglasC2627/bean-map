@@ -5,6 +5,7 @@ import { getCatalogStats } from "@/lib/catalog-stats";
 import { getBeans } from "@/lib/data";
 import { ORIGIN_REGIONS } from "@/lib/origins";
 import { countryFlagEmoji } from "@/lib/utils";
+import { OriginLink } from "./OriginLink";
 
 /**
  * The prose half of the map home page, rendered below the fold.
@@ -15,9 +16,6 @@ import { countryFlagEmoji } from "@/lib/utils";
  * is the fix — a server-rendered <h1>, a real description of what the site is,
  * the catalog counts, and links into every hub — so the home page finally
  * carries the text that the map is showing.
- *
- * Server component: it is in the initial HTML and adds no client JS to the
- * heaviest route in the app.
  */
 
 const CARDS = [
@@ -28,25 +26,32 @@ const CARDS = [
 ] as const;
 
 /**
- * Every producing country in the catalog, grouped by region, with its bean
- * count — built from the localized records so the names render in the reader's
- * language.
+ * Every producing country in the catalog, grouped by region, with its beans'
+ * coordinates (the chip's count, and where the map flies to) — built from the
+ * localized records so the names render in the reader's language.
  */
 function originsByRegion(locale: string) {
   const beans = getBeans(locale);
 
-  const counts = new Map<string, { name: string; count: number }>();
+  const byCountry = new Map<
+    string,
+    { name: string; points: [number, number][] }
+  >();
   for (const bean of beans) {
-    const entry = counts.get(bean.countryCode);
-    if (entry) entry.count += 1;
-    else counts.set(bean.countryCode, { name: bean.country, count: 1 });
+    const entry = byCountry.get(bean.countryCode);
+    if (entry) entry.points.push(bean.coordinates);
+    else
+      byCountry.set(bean.countryCode, {
+        name: bean.country,
+        points: [bean.coordinates],
+      });
   }
 
   return ORIGIN_REGIONS.map((region) => ({
     key: region.key,
     countries: region.countries
-      .filter((code) => counts.has(code))
-      .map((code) => ({ code, ...counts.get(code)! })),
+      .filter((code) => byCountry.has(code))
+      .map((code) => ({ code, ...byCountry.get(code)! })),
   })).filter((region) => region.countries.length > 0);
 }
 
@@ -139,8 +144,9 @@ export async function HomeIntro({ locale }: { locale: string }) {
               <ul className="flex flex-wrap gap-2">
                 {region.countries.map((country) => (
                   <li key={country.code}>
-                    <Link
-                      href={{ pathname: "/", query: { region: country.code } }}
+                    <OriginLink
+                      countryCode={country.code}
+                      points={country.points}
                       className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface/60 px-3 py-1.5 text-sm transition hover:border-roast-medium"
                     >
                       <span aria-hidden className="flag">
@@ -148,13 +154,13 @@ export async function HomeIntro({ locale }: { locale: string }) {
                       </span>
                       {country.name}
                       <span className="text-xs text-muted-foreground">
-                        {country.count}
+                        {country.points.length}
                         {/* Reuses the stat-tile unit ("coffee origins" /
                             "個咖啡產地") so the bare number isn't read out as
                             part of the country name. */}
                         <span className="sr-only"> {t("stats.beans")}</span>
                       </span>
-                    </Link>
+                    </OriginLink>
                   </li>
                 ))}
               </ul>
