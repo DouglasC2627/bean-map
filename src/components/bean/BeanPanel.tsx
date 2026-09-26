@@ -138,7 +138,7 @@ export function BeanPanel({ beans, methods, flavorNotes }: Props) {
               exit={{ x: "100%" }}
               transition={springSoft}
               className={cn(
-                "pointer-events-auto absolute top-14 right-0 bottom-0 w-[50vw] max-w-none overflow-x-hidden overflow-y-auto border-l bg-background/95 shadow-xl backdrop-blur-sm lg:w-105",
+                "pointer-events-auto absolute top-14 right-0 bottom-0 w-[50vw] max-w-none overflow-x-hidden overflow-y-auto overscroll-contain border-l bg-background/95 shadow-xl backdrop-blur-sm lg:w-105",
               )}
             >
               {renderContent(asideRef)}

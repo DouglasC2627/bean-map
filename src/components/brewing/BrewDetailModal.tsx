@@ -79,21 +79,24 @@ export function BrewDetailModal({
           <h3 className="mb-2 font-sans text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             {t("grind")}
           </h3>
-          <div className="flex items-end gap-1">
+          <div className="flex items-start gap-1">
             {GRIND_SCALE.map((g, i) => (
               <div
                 key={g.id}
-                className="flex flex-1 flex-col items-center gap-1"
+                className="flex min-w-0 flex-1 flex-col items-center gap-1"
               >
-                <div
-                  className={cn(
-                    "w-full rounded-sm transition",
-                    i === grindIndex
-                      ? "bg-roast-medium"
-                      : "bg-parchment dark:bg-roast-dark",
-                  )}
-                  style={{ height: `${(7 - i) * 4 + 8}px` }}
-                />
+                {/* Fixed-height track keeps bars bottom-aligned even when labels wrap */}
+                <div className="flex h-9 w-full items-end">
+                  <div
+                    className={cn(
+                      "w-full rounded-sm transition",
+                      i === grindIndex
+                        ? "bg-roast-medium"
+                        : "bg-parchment dark:bg-roast-dark",
+                    )}
+                    style={{ height: `${(7 - i) * 4 + 8}px` }}
+                  />
+                </div>
                 <div
                   className={cn(
                     "text-[9px] leading-tight text-center",

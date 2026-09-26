@@ -177,7 +177,7 @@ export function FilterPanel({ beans, flavorNotes, triggerClassName }: Props) {
         aria-hidden={!isFilterPanelOpen}
         inert={!isFilterPanelOpen}
         className={cn(
-          "fixed z-30 flex flex-col overflow-x-hidden overflow-y-auto bg-background/95 shadow-xl backdrop-blur-sm transition-transform duration-300",
+          "fixed z-30 flex flex-col overflow-x-hidden overflow-y-auto overscroll-contain bg-background/95 shadow-xl backdrop-blur-sm transition-transform duration-300",
           // mobile: bottom sheet
           "bottom-0 left-0 right-0 max-h-[85vh] rounded-t-2xl border-t border-border",
           // desktop: left sidebar
