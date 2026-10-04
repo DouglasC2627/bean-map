@@ -6,10 +6,11 @@ import {
   useEffect,
   useId,
   useMemo,
+  useReducer,
   useRef,
 } from "react";
 import { useTranslations } from "next-intl";
-import { animated, config, useSpring } from "@react-spring/web";
+import { animated, config, useSpringValue } from "@react-spring/web";
 import { useDrag } from "@use-gesture/react";
 import { cn } from "@/lib/utils";
 import { usePrefersReducedMotion } from "@/lib/use-media-query";
@@ -62,7 +63,8 @@ export function MobileBottomSheet({
   // `y` represents the visible portion of the sheet measured from the bottom of the
   // viewport, in pixels. When closed, y = 0 (entirely off-screen). When fully open
   // y = vh * topSnap.
-  const [{ y }, api] = useSpring(() => ({ y: 0 }));
+  const y = useSpringValue(0);
+  const [, rerender] = useReducer((n: number) => n + 1, 0);
 
   // Snap positions in pixels (visible height at each snap point).
   const snapPositions = useMemo(() => {
@@ -73,36 +75,37 @@ export function MobileBottomSheet({
   const openAt = useCallback(
     (snapIdx: number) => {
       const target = snapPositions[clamp(snapIdx, 0, snapPositions.length - 1)];
-      api.start({
-        y: target,
+      y.start({
+        to: target,
         immediate: reduceMotion,
         config: reduceMotion ? config.stiff : { tension: 320, friction: 32 },
       });
     },
-    [api, snapPositions, reduceMotion],
+    [y, snapPositions, reduceMotion],
   );
 
   const close = useCallback(() => {
-    api.start({
-      y: 0,
+    y.start({
+      to: 0,
       immediate: reduceMotion,
       config: reduceMotion ? config.stiff : config.stiff,
       onRest: () => onClose(),
     });
-  }, [api, onClose, reduceMotion]);
+  }, [y, onClose, reduceMotion]);
 
   // Drive open/close from the `open` prop.
   useEffect(() => {
     if (open) {
       openAt(initialSnap);
     } else {
-      api.start({
-        y: 0,
+      y.start({
+        to: 0,
         immediate: reduceMotion,
         config: config.stiff,
+        onRest: () => rerender(),
       });
     }
-  }, [open, initialSnap, openAt, api, reduceMotion]);
+  }, [open, initialSnap, openAt, y, reduceMotion]);
 
   // Recompute snap positions on resize.
   useEffect(() => {
@@ -145,7 +148,7 @@ export function MobileBottomSheet({
       const next = clamp(startY - my, 0, highest);
 
       if (!last) {
-        api.start({ y: next, immediate: true });
+        y.start({ to: next, immediate: true });
         return startY;
       }
 
@@ -176,8 +179,8 @@ export function MobileBottomSheet({
       if (flickUp) targetIdx = Math.min(nearestIdx + 1, snapPositions.length - 1);
       else if (flickDown) targetIdx = Math.max(nearestIdx - 1, 0);
 
-      api.start({
-        y: snapPositions[targetIdx],
+      y.start({
+        to: snapPositions[targetIdx],
         immediate: reduceMotion,
         config: reduceMotion ? config.stiff : { tension: 320, friction: 32 },
       });

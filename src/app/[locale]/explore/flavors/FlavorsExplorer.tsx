@@ -213,7 +213,7 @@ export function FlavorsExplorer({ beans, flavorNotes }: Props) {
 
       <section className="rounded-lg border border-border bg-surface/60 p-5">
         <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          {selectedIds.size > 0
+          {matching.length < beans.length
             ? t("matchingBeans", { count: matching.length })
             : t("allBeans", { count: beans.length })}
         </h2>

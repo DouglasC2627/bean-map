@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getBeans, getFlavorNotes } from "@/lib/data";
 import { getCatalogStats } from "@/lib/catalog-stats";
 import { FlavorsExplorer } from "./FlavorsExplorer";
+import { FilterPanel } from "@/components/filter/FilterPanel";
 
 export async function generateMetadata({
   params,
@@ -33,7 +34,8 @@ export default async function FlavorsPage({
   const flavorNotes = getFlavorNotes(locale);
   return (
     <div className="mx-auto w-full max-w-(--breakpoint-xl) px-4 py-8 pb-24">
-      <header className="mb-6 text-center">
+      <FilterPanel beans={beans} flavorNotes={flavorNotes} />
+      <header className="mb-6 pt-8 text-center sm:pt-0">
         <h1 className="font-display text-3xl">{t("heading")}</h1>
         <p className="mt-1 text-sm text-muted-foreground">{t("subtitle")}</p>
       </header>
