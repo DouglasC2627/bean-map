@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { ArrowRight, Share2, Star } from "lucide-react";
+import { ArrowRight, Share2, Star, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -45,6 +47,8 @@ interface Props {
   bean: CoffeeBean;
   recommendation: BrewRecommendation;
   method: BrewingMethod | undefined;
+  /** Where focus goes when the modal closes — normally the card that opened it. */
+  returnFocusRef?: React.RefObject<HTMLElement | null>;
 }
 
 export function BrewDetailModal({
@@ -53,8 +57,10 @@ export function BrewDetailModal({
   bean,
   recommendation: rec,
   method,
+  returnFocusRef,
 }: Props) {
   const t = useTranslations("brew");
+  const tCommon = useTranslations("common");
   const tEnum = useTranslations("enums");
   const [tempUnit, setTempUnit] = useState<"C" | "F">("C");
   const [showShare, setShowShare] = useState(false);
@@ -65,184 +71,197 @@ export function BrewDetailModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] max-w-lg overflow-y-auto sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle>
-            {method?.name ?? rec.methodId} · {bean.name}
+      {/* The popup itself doesn't scroll: the title bar stays frozen at the
+          top and only the recipe body below it scrolls. */}
+      <DialogContent
+        showCloseButton={false}
+        finalFocus={returnFocusRef}
+        className="flex max-h-[90vh] max-w-lg flex-col gap-0 overflow-hidden p-0 sm:max-w-lg"
+      >
+        <DialogHeader className="shrink-0 flex-row items-center justify-between gap-3 border-b border-border py-2.5 pr-2.5 pl-4">
+          <DialogTitle className="leading-snug">
+            {methodName} · {bean.name}
           </DialogTitle>
+          <DialogClose render={<Button variant="ghost" size="icon-lg" />}>
+            <X className="size-5" />
+            <span className="sr-only">{tCommon("close")}</span>
+          </DialogClose>
+        </DialogHeader>
+
+        <div className="grid min-h-0 gap-4 overflow-y-auto p-4">
           <DialogDescription>
             {method?.description ?? t("recipeFallback")}
           </DialogDescription>
-        </DialogHeader>
 
-        <section>
-          <h3 className="mb-2 font-sans text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            {t("grind")}
-          </h3>
-          <div className="flex items-start gap-1">
-            {GRIND_SCALE.map((g, i) => (
-              <div
-                key={g.id}
-                className="flex min-w-0 flex-1 flex-col items-center gap-1"
-              >
-                {/* Fixed-height track keeps bars bottom-aligned even when labels wrap */}
-                <div className="flex h-9 w-full items-end">
+          <section>
+            <h3 className="mb-2 font-sans text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              {t("grind")}
+            </h3>
+            <div className="flex items-start gap-1">
+              {GRIND_SCALE.map((g, i) => (
+                <div
+                  key={g.id}
+                  className="flex min-w-0 flex-1 flex-col items-center gap-1"
+                >
+                  {/* Fixed-height track keeps bars bottom-aligned even when labels wrap */}
+                  <div className="flex h-9 w-full items-end">
+                    <div
+                      className={cn(
+                        "w-full rounded-sm transition",
+                        i === grindIndex
+                          ? "bg-roast-medium"
+                          : "bg-parchment dark:bg-roast-dark",
+                      )}
+                      style={{ height: `${(7 - i) * 4 + 8}px` }}
+                    />
+                  </div>
                   <div
                     className={cn(
-                      "w-full rounded-sm transition",
+                      "text-[9px] leading-tight text-center",
                       i === grindIndex
-                        ? "bg-roast-medium"
-                        : "bg-parchment dark:bg-roast-dark",
+                        ? "font-medium text-foreground"
+                        : "text-muted-foreground",
                     )}
-                    style={{ height: `${(7 - i) * 4 + 8}px` }}
-                  />
+                  >
+                    {tEnum(`grind.${g.id}`)}
+                  </div>
                 </div>
-                <div
-                  className={cn(
-                    "text-[9px] leading-tight text-center",
-                    i === grindIndex
-                      ? "font-medium text-foreground"
-                      : "text-muted-foreground",
-                  )}
-                >
-                  {tEnum(`grind.${g.id}`)}
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="mt-2 font-mono text-xs text-muted-foreground">
-            ~{rec.grindMicrons}μm
-          </div>
-        </section>
-
-        <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <Stat label={t("temperature")}>
-            <button
-              type="button"
-              onClick={() => setTempUnit(tempUnit === "C" ? "F" : "C")}
-              className="font-mono text-base hover:text-roast-accent"
-              aria-label={t("toggleTempUnit")}
-            >
-              {tempUnit === "C"
-                ? `${rec.waterTempC}°C`
-                : `${celsiusToFahrenheit(rec.waterTempC)}°F`}
-            </button>
-          </Stat>
-          <Stat label={t("ratio")}>
-            <span className="font-mono text-base">{rec.ratio}</span>
-          </Stat>
-          <Stat label={t("brewTime")}>
-            <span className="font-mono text-base">
-              {formatBrewTime(rec.brewSeconds)}
-            </span>
-          </Stat>
-          <Stat label={t("difficultyLabel")}>
-            <div className="flex items-center gap-0.5">
-              {Array.from({ length: 5 }, (_, i) => (
-                <Star
-                  key={i}
-                  className={cn(
-                    "h-3 w-3",
-                    i < rec.difficulty
-                      ? "fill-roast-accent text-roast-accent"
-                      : "text-muted-foreground/40",
-                  )}
-                />
               ))}
             </div>
-          </Stat>
-        </section>
-
-        {rec.bloomSeconds && (
-          <p className="text-xs text-muted-foreground">
-            {t.rich("bloom", {
-              seconds: rec.bloomSeconds,
-              mono: (chunks) => <span className="font-mono">{chunks}</span>,
-            })}
-          </p>
-        )}
-
-        <BrewTimer
-          totalSeconds={rec.brewSeconds}
-          bloomSeconds={rec.bloomSeconds}
-          stages={rec.pourStages}
-          methodName={method?.name ?? rec.methodId}
-        />
-
-        {rec.pourStages && rec.pourStages.length > 0 && (
-          <section>
-            <h3 className="mb-2 font-sans text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              {t("pourSchedule")}
-            </h3>
-            <ol className="space-y-1.5">
-              {rec.pourStages.map((stage, i) => (
-                <li
-                  key={i}
-                  className="flex items-baseline gap-3 rounded-md border border-border bg-surface/60 p-2 text-sm"
-                >
-                  <span className="font-mono text-xs text-muted-foreground">
-                    {formatBrewTime(stage.atSeconds)}
-                  </span>
-                  <span className="font-medium">{stage.label}</span>
-                  <span className="ml-auto font-mono text-xs">
-                    +{stage.waterMl}ml
-                  </span>
-                </li>
-              ))}
-            </ol>
+            <div className="mt-2 font-mono text-xs text-muted-foreground">
+              ~{rec.grindMicrons}μm
+            </div>
           </section>
-        )}
 
-        {method?.equipment && method.equipment.length > 0 && (
-          <section>
-            <h3 className="mb-2 font-sans text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              {t("equipment")}
-            </h3>
-            <ul className="flex flex-wrap gap-1.5 text-xs">
-              {method.equipment.map((e) => (
-                <li
-                  key={e}
-                  className="rounded-full bg-parchment px-2 py-0.5 text-roast-dark dark:bg-roast-dark dark:text-parchment"
-                >
-                  {e}
-                </li>
-              ))}
-            </ul>
+          <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <Stat label={t("temperature")}>
+              <button
+                type="button"
+                onClick={() => setTempUnit(tempUnit === "C" ? "F" : "C")}
+                className="font-mono text-base hover:text-roast-accent"
+                aria-label={t("toggleTempUnit")}
+              >
+                {tempUnit === "C"
+                  ? `${rec.waterTempC}°C`
+                  : `${celsiusToFahrenheit(rec.waterTempC)}°F`}
+              </button>
+            </Stat>
+            <Stat label={t("ratio")}>
+              <span className="font-mono text-base">{rec.ratio}</span>
+            </Stat>
+            <Stat label={t("brewTime")}>
+              <span className="font-mono text-base">
+                {formatBrewTime(rec.brewSeconds)}
+              </span>
+            </Stat>
+            <Stat label={t("difficultyLabel")}>
+              <div className="flex items-center gap-0.5">
+                {Array.from({ length: 5 }, (_, i) => (
+                  <Star
+                    key={i}
+                    className={cn(
+                      "h-3 w-3",
+                      i < rec.difficulty
+                        ? "fill-roast-accent text-roast-accent"
+                        : "text-muted-foreground/40",
+                    )}
+                  />
+                ))}
+              </div>
+            </Stat>
           </section>
-        )}
 
-        <section>
-          <h3 className="mb-2 font-sans text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            {t("whyThisWorks")}
-          </h3>
-          <p className="text-sm">{rec.tastingNotes}</p>
-        </section>
-
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          {guideSlug ? (
-            <Link
-              href={`/learn/brewing/${guideSlug}`}
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-roast-accent hover:underline"
-            >
-              {t("readGuide", {
-                name: method?.name ?? t("brewingFallbackName"),
+          {rec.bloomSeconds && (
+            <p className="text-xs text-muted-foreground">
+              {t.rich("bloom", {
+                seconds: rec.bloomSeconds,
+                mono: (chunks) => <span className="font-mono">{chunks}</span>,
               })}
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          ) : (
-            <span />
+            </p>
           )}
-          <button
-            type="button"
-            onClick={() => setShowShare(true)}
-            className="inline-flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1.5 text-sm text-muted-foreground transition hover:border-roast-medium hover:text-foreground"
-          >
-            <Share2 className="h-3.5 w-3.5" />
-            {t("shareRecipe")}
-          </button>
-        </div>
 
-        <BrewCalculator recommendation={rec} />
+          <BrewTimer
+            totalSeconds={rec.brewSeconds}
+            bloomSeconds={rec.bloomSeconds}
+            stages={rec.pourStages}
+            methodName={method?.name ?? rec.methodId}
+          />
+
+          {rec.pourStages && rec.pourStages.length > 0 && (
+            <section>
+              <h3 className="mb-2 font-sans text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                {t("pourSchedule")}
+              </h3>
+              <ol className="space-y-1.5">
+                {rec.pourStages.map((stage, i) => (
+                  <li
+                    key={i}
+                    className="flex items-baseline gap-3 rounded-md border border-border bg-surface/60 p-2 text-sm"
+                  >
+                    <span className="font-mono text-xs text-muted-foreground">
+                      {formatBrewTime(stage.atSeconds)}
+                    </span>
+                    <span className="font-medium">{stage.label}</span>
+                    <span className="ml-auto font-mono text-xs">
+                      +{stage.waterMl}ml
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          )}
+
+          {method?.equipment && method.equipment.length > 0 && (
+            <section>
+              <h3 className="mb-2 font-sans text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                {t("equipment")}
+              </h3>
+              <ul className="flex flex-wrap gap-1.5 text-xs">
+                {method.equipment.map((e) => (
+                  <li
+                    key={e}
+                    className="rounded-full bg-parchment px-2 py-0.5 text-roast-dark dark:bg-roast-dark dark:text-parchment"
+                  >
+                    {e}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          <section>
+            <h3 className="mb-2 font-sans text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              {t("whyThisWorks")}
+            </h3>
+            <p className="text-sm">{rec.tastingNotes}</p>
+          </section>
+
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            {guideSlug ? (
+              <Link
+                href={`/learn/brewing/${guideSlug}`}
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-roast-accent hover:underline"
+              >
+                {t("readGuide", {
+                  name: method?.name ?? t("brewingFallbackName"),
+                })}
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            ) : (
+              <span />
+            )}
+            <button
+              type="button"
+              onClick={() => setShowShare(true)}
+              className="inline-flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1.5 text-sm text-muted-foreground transition hover:border-roast-medium hover:text-foreground"
+            >
+              <Share2 className="h-3.5 w-3.5" />
+              {t("shareRecipe")}
+            </button>
+          </div>
+
+          <BrewCalculator recommendation={rec} />
+        </div>
 
         <ShareRecipeDialog
           open={showShare}

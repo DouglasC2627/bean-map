@@ -9,7 +9,7 @@ interface Props {
   recommendation: BrewRecommendation;
   method: BrewingMethod | undefined;
   isBest?: boolean;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export function BrewCard({

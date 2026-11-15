@@ -78,6 +78,12 @@ export function BeanPanel({ beans, methods, flavorNotes }: Props) {
   const sheetScrollRef = useRef<HTMLDivElement>(null);
 
   const [openRec, setOpenRec] = useState<BrewRecommendation | null>(null);
+  // The brew card that opened the modal, so closing it can hand focus back.
+  // Without an explicit target Base UI falls back to the last focused element,
+  // which in Safari (buttons don't take focus on click) is the `tabIndex={-1}`
+  // <main> — and since that isn't tabbable, focus lands on its first tabbable
+  // child: the hidden "Browse beans as a list" trigger, which then appears.
+  const brewTriggerRef = useRef<HTMLElement | null>(null);
 
   const sortedRecs = useMemo(
     () =>
@@ -107,7 +113,10 @@ export function BeanPanel({ beans, methods, flavorNotes }: Props) {
           selectBean(id);
           requestFlyTo(coords, 5);
         }}
-        onOpenRec={setOpenRec}
+        onOpenRec={(rec, trigger) => {
+          brewTriggerRef.current = trigger;
+          setOpenRec(rec);
+        }}
         onClose={clearSelection}
       />
     ) : null;
@@ -167,6 +176,7 @@ export function BeanPanel({ beans, methods, flavorNotes }: Props) {
           bean={bean}
           recommendation={openRec}
           method={methodById.get(openRec.methodId)}
+          returnFocusRef={brewTriggerRef}
         />
       )}
     </>
@@ -216,7 +226,7 @@ interface ContentProps {
   similar: CoffeeBean[];
   scrollRef: React.RefObject<HTMLElement | null>;
   onSelectBean: (id: string, coords: [number, number]) => void;
-  onOpenRec: (rec: BrewRecommendation) => void;
+  onOpenRec: (rec: BrewRecommendation, trigger: HTMLElement) => void;
   onClose: () => void;
 }
 
@@ -388,7 +398,7 @@ function BeanPanelContent({
               recommendation={rec}
               method={methodById.get(rec.methodId)}
               isBest={i === 0}
-              onClick={() => onOpenRec(rec)}
+              onClick={(e) => onOpenRec(rec, e.currentTarget)}
             />
           ))}
         </div>

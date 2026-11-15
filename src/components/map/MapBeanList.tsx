@@ -63,8 +63,10 @@ export function MapBeanList({ beans, flavorNotes }: Props) {
           "flex items-center gap-2 rounded-md border border-border bg-background/90 px-3 py-2 text-sm shadow-md backdrop-blur",
           // Out of the visual design until a keyboard user reaches it, at
           // which point it has to become visible — an invisible focus target
-          // fails WCAG 2.4.7.
-          "sr-only focus:not-sr-only focus:relative",
+          // fails WCAG 2.4.7. `focus-visible`, not `focus`: a dialog closed
+          // with the mouse can programmatically return focus into <main>, and
+          // that must not pop this open for a pointer user.
+          "sr-only focus-visible:not-sr-only focus-visible:relative",
           open && "not-sr-only relative",
         )}
       >
