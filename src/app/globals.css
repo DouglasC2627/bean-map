@@ -326,6 +326,44 @@ pre,
   }
 }
 
+/* Indeterminate progress bar on the map's loading backdrop: a short segment
+   sweeping across a faint track. Pure CSS so it is already moving at first
+   paint, before hydration or the Mapbox bundle. The segment's resting (non-
+   animated) transform centres it, so under reduced motion — where the rule
+   below collapses the animation to one instant run — it settles as a static
+   centred bar instead of vanishing off the end of the track. */
+.map-loading-bar {
+  position: relative;
+  overflow: hidden;
+  width: 10rem;
+  height: 3px;
+  border-radius: 9999px;
+  background-color: color-mix(in srgb, var(--color-roast-accent) 20%, transparent);
+}
+
+.map-loading-bar::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 40%;
+  border-radius: inherit;
+  background-color: var(--color-roast-accent);
+  transform: translateX(75%);
+  animation: map-loading-slide 1.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+/* Percentages are of the 40%-wide segment: -100% parks it just off the left
+   edge of the track, 250% just off the right. */
+@keyframes map-loading-slide {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(250%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

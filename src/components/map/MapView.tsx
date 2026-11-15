@@ -13,6 +13,7 @@ import { FlavorWheelOverlay } from "@/components/map/FlavorWheelOverlay";
 import { MapBeanList } from "@/components/map/MapBeanList";
 import { OnboardingGate } from "@/components/onboarding/OnboardingGate";
 import { usePrefersReducedMotion } from "@/lib/use-media-query";
+import { useBeanMap } from "@/store";
 
 /**
  * Branded backdrop rendered *behind* the map and left permanently in the DOM.
@@ -28,6 +29,10 @@ import { usePrefersReducedMotion } from "@/lib/use-media-query";
  */
 function MapBackdrop() {
   const t = useTranslations("map");
+  // Drops the loading bar once the map is up: the backdrop stays mounted
+  // behind the opaque map for good, and an infinite animation would otherwise
+  // keep running there unseen.
+  const isMapLoaded = useBeanMap((s) => s.isMapLoaded);
   return (
     <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center overflow-hidden bg-parchment dark:bg-roast-dark">
       <div aria-hidden className="skeleton absolute inset-0" />
@@ -36,6 +41,9 @@ function MapBackdrop() {
           {t("loadingTitle")}
         </p>
         <p className="text-sm text-muted-foreground">{t("loadingSubtitle")}</p>
+        {/* Decorative: the subtitle already says it's loading, and a live
+            region here would linger in the a11y tree after the map is up. */}
+        {!isMapLoaded && <div aria-hidden className="map-loading-bar mt-2" />}
       </div>
     </div>
   );
